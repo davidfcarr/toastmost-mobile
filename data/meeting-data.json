@@ -1,0 +1,3385 @@
+{
+    "current_user_id": 1,
+    "is_user_logged_in": true,
+    "current_user_name": "David F. Carr, DTM",
+    "newSignupDefault": true,
+    "admin_url": "https:\/\/op.toastmost.org\/wp-admin\/",
+    "second_language_feedback": false,
+    "upcoming": [
+        {
+            "value": "6853",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/contest-2\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6853&action=edit",
+            "label": "Template: Contest"
+        },
+        {
+            "value": "6858",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/evaluation-contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6858&action=edit",
+            "label": "Template: Evaluation Contest"
+        },
+        {
+            "value": "6855",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/humorous-speech-contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6855&action=edit",
+            "label": "Template: Humorous Speech Contest"
+        },
+        {
+            "value": "6854",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/international-speech-contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6854&action=edit",
+            "label": "Template: International Speech Contest"
+        },
+        {
+            "value": "7",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/toastmasters-meeting\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=7&action=edit",
+            "label": "Template: Online Presenters Meeting"
+        },
+        {
+            "value": "3377",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/online-presenters-may-speechathon-2\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=3377&action=edit",
+            "label": "Template: Online Presenters Speakathon"
+        },
+        {
+            "value": "6857",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/table-topics-contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6857&action=edit",
+            "label": "Template: Table Topics Contest"
+        },
+        {
+            "value": "6856",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/tall-tales-speech-contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6856&action=edit",
+            "label": "Template: Tall Tales Speech Contest"
+        },
+        {
+            "value": "1060",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=1060&action=edit",
+            "label": "Template: Video Speech Contest 2021"
+        },
+        {
+            "value": "10519",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/webinar-contest\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=10519&action=edit",
+            "label": "Template: Webinar Contest"
+        },
+        {
+            "value": "6902",
+            "permalink": "https:\/\/op.toastmost.org\/rsvpmaker_template\/weekly-meeting-speakathon\/",
+            "edit_link": "https:\/\/op.toastmost.org\/wp-admin\/wp-admin\/post.php?post=6902&action=edit",
+            "label": "Template: Weekly Meeting Speakathon"
+        }
+    ],
+    "postdata": "WP_Post::__set_state(array(\n   'ID' => 21176,\n   'post_author' => '1',\n   'post_date' => '2024-09-26 21:58:53',\n   'post_date_gmt' => '2024-09-27 01:58:53',\n   'post_content' => '<!-- wp:wp4toastmasters\/help \/-->\n\n<!-- wp:wp4toastmasters\/signupnote -->\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-signupnote\">If you have a password, sign up for meeting roles below. Guests should complete the RSVP registration form at the bottom of the agenda. (If you have a password, it\\'s not necessary to also fill out the RSVP form - we would rather get you signed up for a specific role). <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:wp4toastmasters\/signupnote -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>Members can find the online meetings details <a href=\"https:\/\/op.toastmost.org\/2020\/04\/06\/zoom-meeting-link-members-only\/\">here<\/a> (password protected).<\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>THIS MEETING WILL BE RECORDED. Stills and excerpts from the video may be used by the club in its public relations and social media outreach.<\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>Members and guests are encouraged to sign in anytime after <strong>7:15 pm<\/strong> U.S. Eastern Time for an informal meet and greet and to allow time for any technical troubleshooting. We also do self introductions during this time. The meeting will officially starts at <strong>7:45 pm<\/strong>.<\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:wp4toastmasters\/agendanoterich2 {\"time_allowed\":\"2\",\"uid\":\"note426731821\"} -->\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">Sergeant at Arms opens the meeting, explains the meeting will be recorded, and hands over to the President\/Presiding Officer.<\/p>\n\n\n<!-- \/wp:wp4toastmasters\/agendanoterich2 -->\n\n<!-- wp:wp4toastmasters\/agendanoterich2 {\"time_allowed\":\"2\",\"uid\":\"note7651\"} -->\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">Presiding Officer gives a brief orientation and overview of the club mission. Introduces the Toastmaster of the Day <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:wp4toastmasters\/agendanoterich2 -->\n\n<!-- wp:wp4toastmasters\/agendaedit {\"editable\":\"Meeting Theme\",\"uid\":\"Theme and Word of the Day\"} \/-->\n\n<!-- wp:wp4toastmasters\/agendaedit {\"editable\":\"Word of the Day\",\"uid\":\"editable16618122488620.39078999530424974\"} \/-->\n\n<!-- wp:wp4toastmasters\/agendaedit {\"editable\":\"Member Inductions Ceremony\",\"uid\":\"editable15831830\"} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Toastmaster of the Day\",\"count\":\"1\",\"agenda_note\":\"Introduces supporting roles. Leads the meeting.\",\"time_allowed\":\"2\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Tip of the Day\",\"custom_role\":\"Tip of the Day\",\"agenda_note\":\"3-5 minutes for a tip about tech, technique, or leadership.\",\"time_allowed\":\"5\",\"show_timing_summary\":true,\"count\":1,\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Timer\",\"count\":\"1\",\"start\":1} \/-->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p><em>For the purpose of voting, please see<strong> Timer\\'s Notes<\/strong> below on expected duration of the different speeches<\/em><\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Ah Counter\",\"count\":\"1\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Grammarian\",\"count\":\"1\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Watcher\",\"count\":\"1\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Chat Monitor\",\"count\":\"1\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Vote Counter\",\"count\":\"1\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Speaker\",\"count\":\"3\",\"agenda_note\":\"As a rule, we should have no more than one speech longer than 5-7 minutes.\",\"time_allowed\":\"27\",\"backup\":\"1\",\"start\":1} \/-->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p><em>Toastmaster asks for the Timer\\'s Report &amp; vote for the Best Speaker of the Day<\/em><\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:wp4toastmasters\/agendaedit {\"editable\":\"Prospective Member Speeches\",\"uid\":\"editable1583183064513\",\"time_allowed\":\"3\"} \/-->\n\n<!-- wp:wp4toastmasters\/agendanoterich2 {\"time_allowed\":\"5\",\"uid\":\"note1583182694661\"} -->\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">The Vice President of Membership leads this part of the meeting, which includes time for introducing new members and for speeches by prospective members. A prospective member who does not meet our default requirement for Toastmasters experience (more than 6 Toastmasters speeches) has the option of making a 3-5 minute speech about why that requirement should be waived.<\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:wp4toastmasters\/agendanoterich2 -->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Topics Master\",\"count\":\"1\",\"agenda_note\":\"Leads the Table Topics impromptu speaking section of the meeting. Priority toward members not performing any roles.\",\"time_allowed\":\"12\",\"start\":1} \/-->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p><em>Topics Master asks for the Timer\\'s Report &amp; vote for the Best Topics Speaker of the Day<\/em> <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"General Evaluator\",\"count\":\"1\",\"agenda_note\":\"General Evaluator leads the evaluation portion of the meeting, starting with the prepared speech evaluations.\",\"time_allowed\":\"5\",\"start\":1} \/-->\n\n<!-- wp:wp4toastmasters\/role {\"role\":\"Evaluator\",\"count\":\"3\",\"time_allowed\":\"9\",\"start\":1} \/-->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>General Evaluator asks for the Timer\\'s Report &amp; vote for the Best Evaluator of the Day  <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>General Evaluator continues with the functionary reports (the Grammarian, the Watcher, the Ah Counter, and the Chat Monitor (1 minute each)). <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>General Evaluator rounds out this portion of the meeting by giving an overall evaluation, 2-3 minutes. General Evaluator should aim ONLY to add any new insights, not re-evaluate speakers or repeat information covered by others. <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p>General Evaluator asks Vote Counter to reveal the winners of the meeting<\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:wp4toastmasters\/agendanoterich2 {\"time_allowed\":\"2\",\"uid\":\"note1562007905774\"} -->\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">President\/Presiding Officer closing remarks. Be sure to wrap up meeting by 9 pm<\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:wp4toastmasters\/agendanoterich2 -->\n\n<!-- wp:wp4toastmasters\/agendanoterich2 {\"time_allowed\":\"1\",\"uid\":\"note1552630427565\"} -->\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\"> Meeting officially ends. Visitors Feedback <\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:wp4toastmasters\/agendanoterich2 -->\n\n<!-- wp:paragraph -->\n\n\n\n\n\n\n\n\n<p><strong>Timer\\'s Notes<\/strong><\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:list -->\n\n\n\n\n\n\n\n\n<ul>\n\n\n\n<\/ul>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n<!-- wp:list-item -->\n\n\n\n\n\n\n\n\n<li><em>Only Prepared Speeches with duration of more than four (4) minutes 30 seconds or less than seven (7) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n\n\n\n\n\n\n\n\n<li><em>Only Table Topics speeches with duration of more than one (1) minute or less than two (2) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n\n\n\n\n\n\n\n\n<li><em>Only Evaluation Speeches of more than one (1) minute 30 seconds or less than three (3) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n<!-- \/wp:list-item -->\n\n<!-- \/wp:list -->\n\n<!-- wp:paragraph {\"align\":\"justify\"} -->\n\n\n\n\n\n\n\n\n<p class=\"has-text-align-justify\"><em>Timing will begin with the contestant\u2019s first definite verbal or nonverbal communication with the audience. This usually will be the first word uttered by the contestant, but would include any other communication such as sound effects, a staged act by another person, etc.<\/em><\/p>\n\n\n\n\n\n\n\n\n<!-- \/wp:paragraph -->\n\n<!-- wp:wp4toastmasters\/absences {\"show_on_agenda\":\"1\"} \/-->\n\n\n',\n   'post_title' => 'Online Presenters Meeting',\n   'post_excerpt' => '',\n   'post_status' => 'publish',\n   'comment_status' => 'closed',\n   'ping_status' => 'closed',\n   'post_password' => '',\n   'post_name' => 'online-presenters-meeting-2024-12-02-194500',\n   'to_ping' => '',\n   'pinged' => '',\n   'post_modified' => '2024-11-18 20:23:29',\n   'post_modified_gmt' => '2024-11-19 01:23:29',\n   'post_content_filtered' => '',\n   'post_parent' => 0,\n   'guid' => 'https:\/\/op.toastmost.org\/rsvpmaker\/online-presenters-meeting-2024-12-02-194500\/',\n   'menu_order' => 0,\n   'post_type' => 'rsvpmaker',\n   'post_mime_type' => '',\n   'comment_count' => '0',\n   'filter' => 'raw',\n))",
+    "absences": [
+        {
+            "ID": "1",
+            "name": "David F. Carr, DTM"
+        },
+        {
+            "ID": "4043",
+            "name": "Rosena Duncanson, DTM"
+        }
+    ],
+    "subscribers_can_edit_signups": true,
+    "subscribers_can_organize_agenda": true,
+    "permissionsurl": "https:\/\/op.toastmost.org\/wp-admin\/options-general.php?page=wp4toastmasters_settings&rules=1#rules",
+    "wpt_rest": {
+        "nonce": "a74766dbbe",
+        "url": "https:\/\/op.toastmost.org\/wp-json\/",
+        "post_id": 21176,
+        "post_type": "rsvpmaker",
+        "is_agenda": true
+    },
+    "post_id": "21176",
+    "editor": "https:\/\/op.toastmost.org\/wp-admin\/post.php?action=edit&post=21176",
+    "request_evaluation": "https:\/\/op.toastmost.org\/wp-admin\/admin.php?page=wp4t_evaluations&speaker=1",
+    "has_template": "7",
+    "is_template": false,
+    "datetime": "2024-12-02 19:45:00",
+    "permissions": {
+        "member": true,
+        "edit_post": true,
+        "edit_signups": true,
+        "organize_agenda": true,
+        "manage_options": true
+    },
+    "allmembers": [
+        {
+            "label": "Open",
+            "name": "Open",
+            "value": 0
+        },
+        {
+            "label": "Guest",
+            "name": "Guest",
+            "value": "Guest"
+        },
+        {
+            "label": "Not Available",
+            "name": "Not Available",
+            "value": -1
+        },
+        {
+            "label": "To Be Announced",
+            "name": "To Be Announced",
+            "value": -2
+        },
+        {
+            "label": "Ask VPE",
+            "name": "Ask VPE",
+            "value": -3
+        },
+        {
+            "value": 7537,
+            "label": "Allison Blakeman",
+            "name": "Allison Blakeman"
+        },
+        {
+            "value": 513,
+            "label": "Andrew Bern",
+            "name": "Andrew Bern"
+        },
+        {
+            "value": 3935,
+            "label": "Andriy Smolenko",
+            "name": "Andriy Smolenko"
+        },
+        {
+            "value": 4171,
+            "label": "Angela Heath",
+            "name": "Angela Heath"
+        },
+        {
+            "value": 2731,
+            "label": "Antoinette Trim",
+            "name": "Antoinette Trim"
+        },
+        {
+            "value": 4945,
+            "label": "Assyl  (Speaker)",
+            "name": "Assyl "
+        },
+        {
+            "value": 3472,
+            "label": "Carl Walsh",
+            "name": "Carl Walsh"
+        },
+        {
+            "value": 7336,
+            "label": "Carmen Elena Sandoval",
+            "name": "Carmen Elena Sandoval"
+        },
+        {
+            "value": 5301,
+            "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+            "name": "Carolina Ram\u00edrez"
+        },
+        {
+            "value": 1,
+            "label": "David F. Carr (Planned Absence)",
+            "name": "David F. Carr"
+        },
+        {
+            "value": 1024,
+            "label": "Debra Carr",
+            "name": "Debra Carr"
+        },
+        {
+            "value": 3413,
+            "label": "Emily Thompson",
+            "name": "Emily Thompson"
+        },
+        {
+            "value": 6710,
+            "label": "Evie Hartman",
+            "name": "Evie Hartman"
+        },
+        {
+            "value": 961,
+            "label": "Graham Cairns",
+            "name": "Graham Cairns"
+        },
+        {
+            "value": 7035,
+            "label": "Gregory Bundschoks",
+            "name": "Gregory Bundschoks"
+        },
+        {
+            "value": 5262,
+            "label": "Hector Cabrera Farjat",
+            "name": "Hector Cabrera Farjat"
+        },
+        {
+            "value": 6458,
+            "label": "Isabel Kadoorie",
+            "name": "Isabel Kadoorie"
+        },
+        {
+            "value": 1912,
+            "label": "Jim Barber (General Evaluator)",
+            "name": "Jim Barber"
+        },
+        {
+            "value": 6271,
+            "label": "Joni-Renee Laidlaw",
+            "name": "Joni-Renee Laidlaw"
+        },
+        {
+            "value": 7356,
+            "label": "Karry Kong (Topics Master)",
+            "name": "Karry Kong"
+        },
+        {
+            "value": 5512,
+            "label": "Kim Leaming",
+            "name": "Kim Leaming"
+        },
+        {
+            "value": 6844,
+            "label": "Kirthikka Devi Venkataram",
+            "name": "Kirthikka Devi Venkataram"
+        },
+        {
+            "value": 1033,
+            "label": "Louis Brown",
+            "name": "Louis Brown"
+        },
+        {
+            "value": 6272,
+            "label": "Maggie Liu",
+            "name": "Maggie Liu"
+        },
+        {
+            "value": 3849,
+            "label": "Marianne Grady",
+            "name": "Marianne Grady"
+        },
+        {
+            "value": 2801,
+            "label": "Mike Woodall",
+            "name": "Mike Woodall"
+        },
+        {
+            "value": 4804,
+            "label": "Natatia Vanellison",
+            "name": "Natatia Vanellison"
+        },
+        {
+            "value": 4043,
+            "label": "Rosena Duncanson (Planned Absence)",
+            "name": "Rosena Duncanson"
+        },
+        {
+            "value": 7284,
+            "label": "Ruth-Ellen Danquah",
+            "name": "Ruth-Ellen Danquah"
+        },
+        {
+            "value": 7351,
+            "label": "Samuel Irwin",
+            "name": "Samuel Irwin"
+        },
+        {
+            "value": 3508,
+            "label": "Sarra Idehen",
+            "name": "Sarra Idehen"
+        },
+        {
+            "value": 7324,
+            "label": "Sherry Blake",
+            "name": "Sherry Blake"
+        },
+        {
+            "value": 6421,
+            "label": "Sunny Fridge (Tip of the Day)",
+            "name": "Sunny Fridge"
+        },
+        {
+            "value": 6123,
+            "label": "Toru Maruyama",
+            "name": "Toru Maruyama"
+        },
+        {
+            "value": 7330,
+            "label": "Traca Savadogo",
+            "name": "Traca Savadogo"
+        },
+        {
+            "value": 3321,
+            "label": "Tricia Smith",
+            "name": "Tricia Smith"
+        }
+    ],
+    "blocksdata": [
+        {
+            "blockName": "wp4toastmasters\/help",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd0"
+        },
+        {
+            "blockName": "wp4toastmasters\/signupnote",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-signupnote\">If you have a password, sign up for meeting roles below. Guests should complete the RSVP registration form at the bottom of the agenda. (If you have a password, it's not necessary to also fill out the RSVP form - we would rather get you signed up for a specific role). <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-signupnote\">If you have a password, sign up for meeting roles below. Guests should complete the RSVP registration form at the bottom of the agenda. (If you have a password, it's not necessary to also fill out the RSVP form - we would rather get you signed up for a specific role). <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd1"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>Members can find the online meetings details <a href=\"https:\/\/op.toastmost.org\/2020\/04\/06\/zoom-meeting-link-members-only\/\">here<\/a> (password protected).<\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>Members can find the online meetings details <a href=\"https:\/\/op.toastmost.org\/2020\/04\/06\/zoom-meeting-link-members-only\/\">here<\/a> (password protected).<\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd2"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>THIS MEETING WILL BE RECORDED. Stills and excerpts from the video may be used by the club in its public relations and social media outreach.<\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>THIS MEETING WILL BE RECORDED. Stills and excerpts from the video may be used by the club in its public relations and social media outreach.<\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd3"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>Members and guests are encouraged to sign in anytime after <strong>7:15 pm<\/strong> U.S. Eastern Time for an informal meet and greet and to allow time for any technical troubleshooting. We also do self introductions during this time. The meeting will officially starts at <strong>7:45 pm<\/strong>.<\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>Members and guests are encouraged to sign in anytime after <strong>7:15 pm<\/strong> U.S. Eastern Time for an informal meet and greet and to allow time for any technical troubleshooting. We also do self introductions during this time. The meeting will officially starts at <strong>7:45 pm<\/strong>.<\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd4"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendanoterich2",
+            "attrs": {
+                "time_allowed": "2",
+                "uid": "note426731821"
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">Sergeant at Arms opens the meeting, explains the meeting will be recorded, and hands over to the President\/Presiding Officer.<\/p>\n\n\n",
+            "innerContent": [
+                "\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">Sergeant at Arms opens the meeting, explains the meeting will be recorded, and hands over to the President\/Presiding Officer.<\/p>\n\n\n"
+            ],
+            "DnDid": "dnd5"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendanoterich2",
+            "attrs": {
+                "time_allowed": "2",
+                "uid": "note7651"
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">Presiding Officer gives a brief orientation and overview of the club mission. Introduces the Toastmaster of the Day <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">Presiding Officer gives a brief orientation and overview of the club mission. Introduces the Toastmaster of the Day <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd6"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendaedit",
+            "attrs": {
+                "editable": "Meeting Theme",
+                "uid": "Theme and Word of the Day"
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "edithtml": "<p>End of year reflections<\/p>",
+            "DnDid": "dnd7"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendaedit",
+            "attrs": {
+                "editable": "Word of the Day",
+                "uid": "editable16618122488620.39078999530424974"
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "edithtml": "<p>Brood on<\/p>",
+            "DnDid": "dnd8"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendaedit",
+            "attrs": {
+                "editable": "Member Inductions Ceremony",
+                "uid": "editable15831830"
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "edithtml": "",
+            "DnDid": "dnd9"
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Toastmaster of the Day",
+                "count": "1",
+                "agenda_note": "Introduces supporting roles. Leads the meeting.",
+                "time_allowed": "2",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd10",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Tuesday March 5, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday February 19, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday August 29, 2022)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday February 20, 2023)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval (Last did: Monday August 5, 2024)",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday November 8, 2021)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday June 28, 2021)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday August 14, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday May 27, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat (Last did: Monday August 2, 2021)",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday August 12, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday May 20, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday July 29, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday December 19, 2022)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday March 25, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday October 9, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison (Last did: Monday June 21, 2021)",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Friday September 20, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday September 2, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday September 25, 2023)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday August 8, 2022)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "5301",
+                    "name": "Carolina Ram\u00edrez"
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Tip of the Day",
+                "custom_role": "Tip of the Day",
+                "agenda_note": "3-5 minutes for a tip about tech, technique, or leadership.",
+                "time_allowed": "5",
+                "show_timing_summary": true,
+                "count": 1,
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd11",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday November 20, 2023)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday January 29, 2024)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday June 20, 2022)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday May 13, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks (Last did: Monday December 4, 2023)",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday July 22, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday May 20, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday February 26, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday January 16, 2023)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday September 12, 2022)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo (Last did: Monday August 5, 2024)",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "6421",
+                    "name": "Sunny Fridge, DTM"
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Timer",
+                "count": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd12",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday September 2, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday March 18, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday May 22, 2023)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday August 24, 2020)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday October 19, 2020)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday April 3, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday July 15, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat (Last did: Monday January 31, 2022)",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday November 14, 2022)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday February 12, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday April 1, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday April 24, 2023)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday September 21, 2020)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison (Last did: Monday December 28, 2020)",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Monday September 16, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday July 15, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday July 17, 2023)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday February 20, 2023)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p><em>For the purpose of voting, please see<strong> Timer's Notes<\/strong> below on expected duration of the different speeches<\/em><\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p><em>For the purpose of voting, please see<strong> Timer's Notes<\/strong> below on expected duration of the different speeches<\/em><\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd13"
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Ah Counter",
+                "count": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd14",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday July 17, 2023)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday August 26, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday June 28, 2021)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday April 15, 2024)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval (Last did: Monday April 22, 2024)",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday November 16, 2020)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday April 19, 2021)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday August 21, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday January 31, 2022)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks (Last did: Monday October 16, 2023)",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday January 16, 2023)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday July 8, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday May 15, 2023)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday April 3, 2023)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday November 23, 2020)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday August 7, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison (Last did: Monday October 31, 2022)",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah (Last did: Monday September 2, 2024)",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin (Last did: Monday July 1, 2024)",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Monday September 18, 2023)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday July 29, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday November 21, 2022)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo (Last did: Monday May 20, 2024)",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday August 10, 2020)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Grammarian",
+                "count": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd15",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Friday September 13, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday May 6, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday January 24, 2022)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday May 20, 2024)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday December 12, 2022)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday April 24, 2017)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday June 21, 2021)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday August 28, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday August 14, 2023)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat (Last did: Monday November 29, 2021)",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday September 9, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday January 22, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday January 23, 2023)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday August 26, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday November 6, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah (Last did: Monday June 3, 2024)",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Monday September 2, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday August 12, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday October 31, 2022)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday January 16, 2023)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Watcher",
+                "count": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd16",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday February 5, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday August 12, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday February 12, 2024)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday November 28, 2022)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday August 16, 2021)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday May 15, 2023)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday September 18, 2023)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday February 27, 2023)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday August 19, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday June 17, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday August 26, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday February 28, 2022)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday November 15, 2021)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday February 26, 2024)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison (Last did: Monday October 17, 2022)",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin (Last did: Monday July 8, 2024)",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Friday August 21, 2020)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday May 6, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo (Last did: Monday September 9, 2024)",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday November 30, 2020)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Chat Monitor",
+                "count": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd17",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday August 12, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday September 9, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday January 8, 2024)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday July 31, 2023)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval (Last did: Monday May 20, 2024)",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday June 27, 2022)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday June 15, 2020)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday June 5, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday July 29, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks (Last did: Monday November 27, 2023)",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday February 13, 2023)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday August 26, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday April 8, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday September 2, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday December 5, 2022)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday July 22, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison (Last did: Monday December 7, 2020)",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin (Last did: Monday May 27, 2024)",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Monday April 3, 2023)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday October 3, 2022)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Vote Counter",
+                "count": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd18",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday July 10, 2023)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday September 9, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday June 13, 2022)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday April 29, 2019)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday July 19, 2021)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday December 5, 2022)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday May 18, 2020)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday July 31, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday April 24, 2023)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday January 9, 2023)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday July 22, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday February 27, 2023)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu (Last did: Monday July 25, 2022)",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Monday July 8, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday March 25, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday January 24, 2022)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Speaker",
+                "count": "3",
+                "agenda_note": "As a rule, we should have no more than one speech longer than 5-7 minutes.",
+                "time_allowed": "27",
+                "backup": "1",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd19",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Friday September 20, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday July 15, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday July 31, 2023)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday May 29, 2023)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday August 21, 2023)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval (Last did: Monday September 9, 2024)",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday May 31, 2021)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday August 7, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday July 29, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks (Last did: Monday February 5, 2024)",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat (Last did: Monday October 25, 2021)",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday December 19, 2022)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday August 19, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday May 22, 2023)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday August 12, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday December 12, 2022)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu (Last did: Monday December 12, 2022)",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday August 5, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday October 30, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison (Last did: Monday July 25, 2022)",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah (Last did: Monday February 19, 2024)",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin (Last did: Monday May 13, 2024)",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Friday September 13, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday April 22, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday September 11, 2023)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo (Last did: Monday September 16, 2024)",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday March 27, 2023)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                },
+                {
+                    "post_id": "21176",
+                    "ID": "4945",
+                    "name": "Assyl ",
+                    "manual": "Path Not Set Level 1 Mastering Fundamentals",
+                    "project": "",
+                    "project_text": "",
+                    "maxtime": "7",
+                    "display_time": "5 - 7 minutes",
+                    "title": "",
+                    "intro": "",
+                    "evaluation_link": "https:\/\/op.toastmost.org\/rsvpmaker\/online-presenters-meeting-2024-12-02-194500\/?evalme=4945"
+                },
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                },
+                {
+                    "ID": 0,
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p><em>Toastmaster asks for the Timer's Report &amp; vote for the Best Speaker of the Day<\/em><\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p><em>Toastmaster asks for the Timer's Report &amp; vote for the Best Speaker of the Day<\/em><\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd20"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendaedit",
+            "attrs": {
+                "editable": "Prospective Member Speeches",
+                "uid": "editable1583183064513",
+                "time_allowed": "3"
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "edithtml": "",
+            "DnDid": "dnd21"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendanoterich2",
+            "attrs": {
+                "time_allowed": "5",
+                "uid": "note1583182694661"
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">The Vice President of Membership leads this part of the meeting, which includes time for introducing new members and for speeches by prospective members. A prospective member who does not meet our default requirement for Toastmasters experience (more than 6 Toastmasters speeches) has the option of making a 3-5 minute speech about why that requirement should be waived.<\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">The Vice President of Membership leads this part of the meeting, which includes time for introducing new members and for speeches by prospective members. A prospective member who does not meet our default requirement for Toastmasters experience (more than 6 Toastmasters speeches) has the option of making a 3-5 minute speech about why that requirement should be waived.<\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd22"
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Topics Master",
+                "count": "1",
+                "agenda_note": "Leads the Table Topics impromptu speaking section of the meeting. Priority toward members not performing any roles.",
+                "time_allowed": "12",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd23",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday July 8, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday March 25, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday May 2, 2022)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday July 19, 2021)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday July 25, 2022)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday April 4, 2022)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday October 5, 2020)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday March 13, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday August 5, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat (Last did: Monday September 27, 2021)",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday February 6, 2023)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday July 1, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday April 1, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday May 27, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday May 10, 2021)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday May 13, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday December 4, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Friday June 14, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday July 4, 2022)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo (Last did: Monday August 12, 2024)",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday January 23, 2023)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "7356",
+                    "name": "Karry Kong"
+                }
+            ]
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p><em>Topics Master asks for the Timer's Report &amp; vote for the Best Topics Speaker of the Day<\/em> <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p><em>Topics Master asks for the Timer's Report &amp; vote for the Best Topics Speaker of the Day<\/em> <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd24"
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "General Evaluator",
+                "count": "1",
+                "agenda_note": "General Evaluator leads the evaluation portion of the meeting, starting with the prepared speech evaluations.",
+                "time_allowed": "5",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd25",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Friday August 30, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday October 2, 2023)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday June 21, 2021)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday July 5, 2021)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday April 3, 2023)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday August 29, 2022)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday April 12, 2021)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday July 31, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday September 9, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks (Last did: Monday January 22, 2024)",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat (Last did: Monday February 14, 2022)",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday June 24, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday May 13, 2024)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday July 8, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday November 21, 2022)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday August 12, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday March 13, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah (Last did: Monday March 11, 2024)",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Friday July 12, 2024)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday May 20, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday May 29, 2023)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday September 12, 2022)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "1912",
+                    "name": "Jim Barber"
+                }
+            ]
+        },
+        {
+            "blockName": "wp4toastmasters\/role",
+            "attrs": {
+                "role": "Evaluator",
+                "count": "3",
+                "time_allowed": "9",
+                "start": 1
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd26",
+            "memberoptions": [
+                {
+                    "label": "Open",
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "label": "Guest",
+                    "name": "Guest",
+                    "value": "Guest"
+                },
+                {
+                    "label": "Not Available",
+                    "name": "Not Available",
+                    "value": -1
+                },
+                {
+                    "label": "To Be Announced",
+                    "name": "To Be Announced",
+                    "value": -2
+                },
+                {
+                    "label": "Ask VPE",
+                    "name": "Ask VPE",
+                    "value": -3
+                },
+                {
+                    "value": 7537,
+                    "label": "Allison Blakeman",
+                    "name": "Allison Blakeman"
+                },
+                {
+                    "value": 513,
+                    "label": "Andrew Bern (Last did: Monday September 9, 2024)",
+                    "name": "Andrew Bern"
+                },
+                {
+                    "value": 3935,
+                    "label": "Andriy Smolenko (Last did: Monday August 12, 2024)",
+                    "name": "Andriy Smolenko"
+                },
+                {
+                    "value": 4171,
+                    "label": "Angela Heath (Last did: Monday February 27, 2023)",
+                    "name": "Angela Heath"
+                },
+                {
+                    "value": 2731,
+                    "label": "Antoinette Trim (Last did: Monday November 21, 2022)",
+                    "name": "Antoinette Trim"
+                },
+                {
+                    "value": 4945,
+                    "label": "Assyl  (Speaker)",
+                    "name": "Assyl "
+                },
+                {
+                    "value": 3472,
+                    "label": "Carl Walsh (Last did: Monday September 18, 2023)",
+                    "name": "Carl Walsh"
+                },
+                {
+                    "value": 7336,
+                    "label": "Carmen Elena Sandoval",
+                    "name": "Carmen Elena Sandoval"
+                },
+                {
+                    "value": 5301,
+                    "label": "Carolina Ram\u00edrez (Toastmaster of the Day)",
+                    "name": "Carolina Ram\u00edrez"
+                },
+                {
+                    "value": 1,
+                    "label": "David F. Carr (Planned Absence)",
+                    "name": "David F. Carr"
+                },
+                {
+                    "value": 1024,
+                    "label": "Debra Carr (Last did: Monday December 20, 2021)",
+                    "name": "Debra Carr"
+                },
+                {
+                    "value": 3413,
+                    "label": "Emily Thompson (Last did: Monday May 10, 2021)",
+                    "name": "Emily Thompson"
+                },
+                {
+                    "value": 6710,
+                    "label": "Evie Hartman (Last did: Monday July 24, 2023)",
+                    "name": "Evie Hartman"
+                },
+                {
+                    "value": 961,
+                    "label": "Graham Cairns (Last did: Monday September 9, 2024)",
+                    "name": "Graham Cairns"
+                },
+                {
+                    "value": 7035,
+                    "label": "Gregory Bundschoks",
+                    "name": "Gregory Bundschoks"
+                },
+                {
+                    "value": 5262,
+                    "label": "Hector Cabrera Farjat",
+                    "name": "Hector Cabrera Farjat"
+                },
+                {
+                    "value": 6458,
+                    "label": "Isabel Kadoorie (Last did: Monday March 13, 2023)",
+                    "name": "Isabel Kadoorie"
+                },
+                {
+                    "value": 1912,
+                    "label": "Jim Barber (General Evaluator)",
+                    "name": "Jim Barber"
+                },
+                {
+                    "value": 6271,
+                    "label": "Joni-Renee Laidlaw (Last did: Monday September 2, 2024)",
+                    "name": "Joni-Renee Laidlaw"
+                },
+                {
+                    "value": 7356,
+                    "label": "Karry Kong (Topics Master)",
+                    "name": "Karry Kong"
+                },
+                {
+                    "value": 5512,
+                    "label": "Kim Leaming (Last did: Monday May 1, 2023)",
+                    "name": "Kim Leaming"
+                },
+                {
+                    "value": 6844,
+                    "label": "Kirthikka Devi Venkataram (Last did: Monday May 20, 2024)",
+                    "name": "Kirthikka Devi Venkataram"
+                },
+                {
+                    "value": 1033,
+                    "label": "Louis Brown (Last did: Monday October 31, 2022)",
+                    "name": "Louis Brown"
+                },
+                {
+                    "value": 6272,
+                    "label": "Maggie Liu (Last did: Monday July 18, 2022)",
+                    "name": "Maggie Liu"
+                },
+                {
+                    "value": 3849,
+                    "label": "Marianne Grady (Last did: Monday September 2, 2024)",
+                    "name": "Marianne Grady"
+                },
+                {
+                    "value": 2801,
+                    "label": "Mike Woodall (Last did: Monday November 13, 2023)",
+                    "name": "Mike Woodall"
+                },
+                {
+                    "value": 4804,
+                    "label": "Natatia Vanellison",
+                    "name": "Natatia Vanellison"
+                },
+                {
+                    "value": 4043,
+                    "label": "Rosena Duncanson (Planned Absence)",
+                    "name": "Rosena Duncanson"
+                },
+                {
+                    "value": 7284,
+                    "label": "Ruth-Ellen Danquah (Last did: Monday September 9, 2024)",
+                    "name": "Ruth-Ellen Danquah"
+                },
+                {
+                    "value": 7351,
+                    "label": "Samuel Irwin",
+                    "name": "Samuel Irwin"
+                },
+                {
+                    "value": 3508,
+                    "label": "Sarra Idehen (Last did: Friday May 15, 2020)",
+                    "name": "Sarra Idehen"
+                },
+                {
+                    "value": 7324,
+                    "label": "Sherry Blake (Last did: Monday August 19, 2024)",
+                    "name": "Sherry Blake"
+                },
+                {
+                    "value": 6421,
+                    "label": "Sunny Fridge (Tip of the Day)",
+                    "name": "Sunny Fridge"
+                },
+                {
+                    "value": 6123,
+                    "label": "Toru Maruyama (Last did: Monday September 18, 2023)",
+                    "name": "Toru Maruyama"
+                },
+                {
+                    "value": 7330,
+                    "label": "Traca Savadogo (Last did: Monday August 5, 2024)",
+                    "name": "Traca Savadogo"
+                },
+                {
+                    "value": 3321,
+                    "label": "Tricia Smith (Last did: Monday August 9, 2021)",
+                    "name": "Tricia Smith"
+                }
+            ],
+            "assignments": [
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                },
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                },
+                {
+                    "post_id": "21176",
+                    "ID": "",
+                    "name": ""
+                }
+            ]
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>General Evaluator asks for the Timer's Report &amp; vote for the Best Evaluator of the Day  <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>General Evaluator asks for the Timer's Report &amp; vote for the Best Evaluator of the Day  <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd27"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>General Evaluator continues with the functionary reports (the Grammarian, the Watcher, the Ah Counter, and the Chat Monitor (1 minute each)). <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>General Evaluator continues with the functionary reports (the Grammarian, the Watcher, the Ah Counter, and the Chat Monitor (1 minute each)). <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd28"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>General Evaluator rounds out this portion of the meeting by giving an overall evaluation, 2-3 minutes. General Evaluator should aim ONLY to add any new insights, not re-evaluate speakers or repeat information covered by others. <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>General Evaluator rounds out this portion of the meeting by giving an overall evaluation, 2-3 minutes. General Evaluator should aim ONLY to add any new insights, not re-evaluate speakers or repeat information covered by others. <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd29"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p>General Evaluator asks Vote Counter to reveal the winners of the meeting<\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p>General Evaluator asks Vote Counter to reveal the winners of the meeting<\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd30"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendanoterich2",
+            "attrs": {
+                "time_allowed": "2",
+                "uid": "note1562007905774"
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">President\/Presiding Officer closing remarks. Be sure to wrap up meeting by 9 pm<\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\">President\/Presiding Officer closing remarks. Be sure to wrap up meeting by 9 pm<\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd31"
+        },
+        {
+            "blockName": "wp4toastmasters\/agendanoterich2",
+            "attrs": {
+                "time_allowed": "1",
+                "uid": "note1552630427565"
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\"> Meeting officially ends. Visitors Feedback <\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p class=\"wp-block-wp4toastmasters-agendanoterich2\"> Meeting officially ends. Visitors Feedback <\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd32"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": [],
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p><strong>Timer's Notes<\/strong><\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p><strong>Timer's Notes<\/strong><\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd33"
+        },
+        {
+            "blockName": "core\/list",
+            "attrs": [],
+            "innerBlocks": [
+                {
+                    "blockName": "core\/list-item",
+                    "attrs": [],
+                    "innerBlocks": [],
+                    "innerHTML": "\n\n\n\n\n\n\n\n\n<li><em>Only Prepared Speeches with duration of more than four (4) minutes 30 seconds or less than seven (7) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n",
+                    "innerContent": [
+                        "\n\n\n\n\n\n\n\n\n<li><em>Only Prepared Speeches with duration of more than four (4) minutes 30 seconds or less than seven (7) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n"
+                    ]
+                },
+                {
+                    "blockName": "core\/list-item",
+                    "attrs": [],
+                    "innerBlocks": [],
+                    "innerHTML": "\n\n\n\n\n\n\n\n\n<li><em>Only Table Topics speeches with duration of more than one (1) minute or less than two (2) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n",
+                    "innerContent": [
+                        "\n\n\n\n\n\n\n\n\n<li><em>Only Table Topics speeches with duration of more than one (1) minute or less than two (2) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n"
+                    ]
+                },
+                {
+                    "blockName": "core\/list-item",
+                    "attrs": [],
+                    "innerBlocks": [],
+                    "innerHTML": "\n\n\n\n\n\n\n\n\n<li><em>Only Evaluation Speeches of more than one (1) minute 30 seconds or less than three (3) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n",
+                    "innerContent": [
+                        "\n\n\n\n\n\n\n\n\n<li><em>Only Evaluation Speeches of more than one (1) minute 30 seconds or less than three (3) minutes 30 seconds are eligible for voting.<\/em><\/li>\n\n\n\n\n\n\n\n\n"
+                    ]
+                }
+            ],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<ul>\n\n\n\n<\/ul>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<ul>\n\n\n\n<\/ul>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+                null,
+                "\n\n",
+                null,
+                "\n\n",
+                null,
+                "\n\n"
+            ],
+            "DnDid": "dnd34"
+        },
+        {
+            "blockName": "core\/paragraph",
+            "attrs": {
+                "align": "justify"
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n\n\n\n\n\n\n\n<p class=\"has-text-align-justify\"><em>Timing will begin with the contestant\u2019s first definite verbal or nonverbal communication with the audience. This usually will be the first word uttered by the contestant, but would include any other communication such as sound effects, a staged act by another person, etc.<\/em><\/p>\n\n\n\n\n\n\n\n\n",
+            "innerContent": [
+                "\n\n\n\n\n\n\n\n\n<p class=\"has-text-align-justify\"><em>Timing will begin with the contestant\u2019s first definite verbal or nonverbal communication with the audience. This usually will be the first word uttered by the contestant, but would include any other communication such as sound effects, a staged act by another person, etc.<\/em><\/p>\n\n\n\n\n\n\n\n\n"
+            ],
+            "DnDid": "dnd35"
+        },
+        {
+            "blockName": "wp4toastmasters\/absences",
+            "attrs": {
+                "show_on_agenda": "1"
+            },
+            "innerBlocks": [],
+            "innerHTML": "",
+            "innerContent": [],
+            "DnDid": "dnd36"
+        }
+    ]
+}
