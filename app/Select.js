@@ -2,7 +2,6 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { Text, View, TextInput, Pressable, StyleSheet, FlatList, useWindowDimensions } from "react-native";
 
 export default function Select(props) {
-    console.log('chooser select props,',props);
 
     const styles = StyleSheet.create({
         dropdownButtonStyle: {
@@ -59,7 +58,6 @@ export default function Select(props) {
     defaultValueByIndex={props.defaultValueByIndex}
     onSelect={(selectedItem, index) => {
     props.onChange(selectedItem.value);
-    console.log(selectedItem, index);
     }}
     renderButton={(selectedItem, isOpened) => {
       return (

@@ -7,9 +7,10 @@ import styles from './styles'
 
 export default function ProjectChooser(props) {
 
-    console.log('project chooser props',props);
-
     const choices = props.projects;
+    const updateRole = props.updateRole;
+
+    const [role, setRole] = useState(props);
 
     const [path, setPath] = useState((props.project) ? props.project.replace(/ Level.+/,'') : 'Path Not Set');
 
@@ -38,24 +39,17 @@ export default function ProjectChooser(props) {
     }
 
     function updateSpeech() {
-        console.log('update speech props',props);
-        const update = {'post_id':props.post_id,'key':props.assignment_key,'speechdata':[]}
-        update.speechdata.push({'key':'manual','value':manual});
-        update.speechdata.push({'key':'title','value':title});
-        update.speechdata.push({'key':'project','value':project});
-        update.speechdata.push({'key':'maxtime','value':maxtime});
-        update.speechdata.push({'key':'display_time','value':display_time});
-        props.mutation.mutate(update);
+        update = {...props};
+        update.manual = manual;
+        update.title = title;
+        update.project = project;
+        update.maxtime = maxtime;
+        update.display_time = display_time;
+        updateRole(update);
     }
 
     if(!choices || typeof choices.manuals == 'undefined')
-
         return <View><Text>Loading project choices</Text></View>
-
-    console.log('project chooser project',project);
-    console.log('project chooser path',path);
-    console.log('project chooser path choices',choices['paths']);
-    console.log('project chooser path index ',choices['paths'].findIndex((item) => item.value == path));
 
     return (
 
@@ -74,7 +68,7 @@ export default function ProjectChooser(props) {
         <TextInput 
         placeholder="Display Time"
         placeholderTextColor="gray"
-        placeholdertext="Display Time" onChangeText={(value) => { let match = value.match(/\- ([0-9]+)/); console.log('time match',match); if(match[1]) setMaxTime(match[1]); setDisplayTime(value); updateSpeech(); } } value={display_time}  style={styles.input} />
+        placeholdertext="Display Time" onChangeText={(value) => { let match = value.match(/\- ([0-9]+)/); if(match[1]) setMaxTime(match[1]); setDisplayTime(value); updateSpeech(); } } value={display_time}  style={styles.input} />
         </View>
 
         </View>
@@ -87,7 +81,5 @@ export default function ProjectChooser(props) {
         <Pressable onPress={updateSpeech} style={styles.addButton}><Text style={styles.addButtonText}>Save Speech Details</Text></Pressable>
 
         </View>
-
     )
-
 }
