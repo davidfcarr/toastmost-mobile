@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carrcommunications.toastmost"
     },
     "android": {
   "package": "com.toastmost.mobileagenda",
