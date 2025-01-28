@@ -215,7 +215,7 @@ export default function Timer ({roles, setShowTimer, members}) {
     timerOptions.push({'role':'Table Topics','name':'','display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
     members.forEach(
         (member) => {
-            timerOptions.push({'role':'Table Topics','name':member,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
+            timerOptions.push({'role':'Table Topics','name':member.name,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
         }
     );
 
