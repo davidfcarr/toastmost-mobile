@@ -1,5 +1,5 @@
 {
-  "name": "crudapp",
+  "name": "toastmost",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -34,6 +34,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
+    "react-native-autocomplete-input": "^5.5.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-html-render": "^1.0.5",
     "react-native-reanimated": "~3.10.1",

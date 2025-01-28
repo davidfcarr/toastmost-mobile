@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "CrudApp",
-    "slug": "CrudApp",
+    "name": "Toastmost",
+    "slug": "toastmost",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/ToastmostMobileLogo.png",
+    "scheme": "toastmost",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -17,8 +17,8 @@
       "bundleIdentifier": "com.carrcommunications.toastmost"
     },
     "android": {
-  "package": "com.toastmost.mobileagenda",
-  "versionCode": 1,
+      "package": "com.toastmost.mobileagenda",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -34,6 +34,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "cc09ad29-3bdf-4bbc-860f-77deae4e0332"
+      }
+    },
+    "owner": "davidfcarr"
   }
 }

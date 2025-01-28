@@ -19,6 +19,7 @@ export default function ProjectChooser(props) {
     const [project, setProject] = useState((props.project) ? props.project : '');
 
     const [title, setTitle] = useState(props.title);
+    const [intro, setIntro] = useState(props.intro);
 
     const [display_time, setDisplayTime] = useState(props.display_time);
 
@@ -39,12 +40,13 @@ export default function ProjectChooser(props) {
     }
 
     function updateSpeech() {
-        update = {...props};
+        const update = {...props};
         update.manual = manual;
         update.title = title;
         update.project = project;
         update.maxtime = maxtime;
         update.display_time = display_time;
+        update.intro = intro;
         updateRole(update);
     }
 
@@ -68,7 +70,7 @@ export default function ProjectChooser(props) {
         <TextInput 
         placeholder="Display Time"
         placeholderTextColor="gray"
-        placeholdertext="Display Time" onChangeText={(value) => { let match = value.match(/\- ([0-9]+)/); if(match[1]) setMaxTime(match[1]); setDisplayTime(value); updateSpeech(); } } value={display_time}  style={styles.input} />
+        placeholdertext="Display Time" onChangeText={(value) => { let match = value.match(/\- ([0-9]+)/); if(match && match[1]) setMaxTime(match[1]); setDisplayTime(value); updateSpeech(); } } value={display_time}  style={styles.input} />
         </View>
 
         </View>
@@ -77,6 +79,13 @@ export default function ProjectChooser(props) {
         placeholder="Title"
         placeholderTextColor="gray"
         value={title} onChangeText={(value) => {setTitle(value); }} style={styles.input} />
+
+        <TextInput 
+        placeholder="Intro"
+        placeholderTextColor="gray"
+        multiline={true}
+        numberOfLines={4}
+        value={intro} onChangeText={(value) => {setIntro(value); }} style={styles.input} />
 
         <Pressable onPress={updateSpeech} style={styles.addButton}><Text style={styles.addButtonText}>Save Speech Details</Text></Pressable>
 

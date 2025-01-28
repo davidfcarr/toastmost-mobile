@@ -8,8 +8,10 @@ function createStyles() {
       container: {
         flex: 1,
         backgroundColor: 'white',
+        width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto',
+        padding: 5,
       },
       inputContainer: {
         flexDirection: 'row',
@@ -69,6 +71,60 @@ function createStyles() {
         fontSize: 18,
         fontFamily: 'Inter_500Medium',
         color: 'black',
+      },
+      instructions: {
+        margin: 5,
+      },
+      dropdownButtonStyle: {
+        width: '95%',
+        height: 50,
+        backgroundColor: '#E9ECEF',
+        borderRadius: 12,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        marginBottom: 5,
+        borderWidth: 2,
+        borderColor: 'black',
+        width: '70%',
+      },
+      dropdownButtonTxtStyle: {
+        flex: 1,
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#151E26',
+      },
+      dropdownButtonArrowStyle: {
+        fontSize: 28,
+      },
+      dropdownButtonIconStyle: {
+        fontSize: 28,
+        marginRight: 8,
+      },
+      dropdownMenuStyle: {
+        backgroundColor: '#E9ECEF',
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: 'black',
+      },
+      dropdownItemStyle: {
+        width: '100%',
+        flexDirection: 'row',
+        paddingHorizontal: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 8,
+      },
+      dropdownItemTxtStyle: {
+        flex: 1,
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#151E26',
+      },
+      dropdownItemIconStyle: {
+        fontSize: 28,
+        marginRight: 8,
       },
     })
   }
