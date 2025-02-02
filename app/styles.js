@@ -7,6 +7,7 @@ function createStyles() {
     return StyleSheet.create({
       container: {
         flex: 1,
+        flexGrow: 1,
         backgroundColor: 'white',
         width: '100%',
         marginLeft: 'auto',

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Toastmost",
     "slug": "toastmost",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/ToastmostMobileLogo.png",
     "scheme": "toastmost",
@@ -19,6 +19,7 @@
     "android": {
       "package": "com.toastmost.mobileagenda",
       "versionCode": 1,
+      "permissions": ["CAMERA"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

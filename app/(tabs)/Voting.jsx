@@ -1,15 +1,20 @@
 import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Octicons } from '@expo/vector-icons'
 import SelectDropdown from 'react-native-select-dropdown'
-import styles from './styles'
+import styles from '../styles'
 import RenderHtml from 'react-native-render-html';
-import EditContestants from './EditContestants';
+import EditContestants from '../EditContestants';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { ClubContext } from '../ClubContext';
+import useAgenda from '../useAgenda';
 
-export default function Voting({club, agenda, members, setScreen, post_id, userName, user_id, takeVoteCounter}) {
-
+//{club, agenda, members, setScreen, post_id, userName, user_id, takeVoteCounter}
+export default function Voting(props) {
+  const context = useContext(ClubContext);
+  const {club, meeting, agenda, members, user_id} = context;
+  const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, takeVoteCounter} = useAgenda();
   const timeNow = new Date().getTime();
   const refreshTime = 30000; // 30 seconds
   const memberOptions = [{'value':'','label':'Select Member'}];
@@ -18,7 +23,6 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
     const [ballots, setBallots] = useState([]);
     const [ballotToUpdate, setBallotToUpdate] = useState('');
     const [newBallot, setNewBallot] = useState('');
-    const [message, setMessage] = useState('');
     const [candidate, setCandidate] = useState(memberOptions[0]);
     const [candidates, setCandidates] = useState([{key:'speaker',label:'Speaker',options:[],signature:false},{key:'evaluator',label:'Evaluator',options:[],signature:false},{key:'tabletopics',label:'Table Topics',options:[],signature:false}]);
     const [contests, setContests] = useState(['speaker','evaluator','tabletopics']);
@@ -29,15 +33,30 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
     const [signature,setSignature] = useState(false);
     const [controls,setControls] = useState(false);
     const [voteCount,setVoteCount] = useState('');
-    const voteCounterRole = agenda.roles.find(role => role.assignment_key.includes('Vote_Counter'));
+    const { width } = useWindowDimensions();
+    const post_id = (queryData && queryData.agendas && queryData.agendas.length) ? queryData.agendas[meeting].post_id : 0;
+
+    useEffect(() => {
+      getBallots();
+      polling();
+    }, [])
+
+    let roles = [];
+    if(agenda && agenda.roles && agenda.roles.length) { 
+      roles = agenda.roles; 
+    }
+    if(!roles.length | !queryData.user_id) { 
+      return <Text>Roles loading ...</Text>;
+    }
+  
+    const voteCounterRole = roles.find(role => role.assignment_key.includes('Vote_Counter'));
     const isVoteCounter = (voteCounterRole && voteCounterRole.ID == user_id);
     const contestUpdateIndex = contests.indexOf(ballotToUpdate);
-    const { width } = useWindowDimensions();
 
     if(members && members.length)
     members.forEach(
       (member) => {
-          memberOptions.push({value:member,label:member});
+          memberOptions.push({value:member.name,label:member.name});
       }
     );
 
@@ -76,6 +95,8 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
       }
     
       function getBallots() {
+        if(!post_id)
+          return null;
         const ts = new Date().getTime();
         const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+post_id+'?mobile='+club.code+'&t='+ts;
         console.log('get ballots' + url);
@@ -122,7 +143,7 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
         } else {
           const speakers = [];
           const evaluators = [];
-          agenda.roles.forEach(
+          roles.forEach(
             (role) => {
                 if('Speaker' == role.role) {
                   if(role.name) {
@@ -156,11 +177,6 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
           }
         )
       }
-
-      useEffect(() => {
-        getBallots();
-        polling();
-      }, [])
 
       function saveCandidates() {
         console.log('save candidates',candidates);
@@ -208,10 +224,6 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={{flexDirection: 'row'}}>
-            <Pressable onPress={() => { clearInterval(pollingInterval); setScreen(''); }} style={{ marginLeft: 10}}>
-      <Octicons name="arrow-left" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
-      </Pressable>
-      <Text style={{marginLeft: 20, fontSize: 20}}>Voting</Text>
       <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
       <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
       {isVoteCounter ? <><Pressable onPress={() => { setControls(true); }} style={{ marginLeft: 10 }}>
@@ -234,7 +246,8 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
       <Text>Summary {summaryLine()}</Text>
       <SyncSpeechesEvaluators />
       <Text style={{paddingTop: 15, color: 'red'}}>Add or update ballot:</Text>
-      <View style={{flexDirection: 'row', alignContent: 'center'}} ><SelectDropdown
+      <View style={{flexDirection: 'row', alignContent: 'center'}} >
+        <SelectDropdown
         data={['choose ballot or "new"',...contests,'new']}
         defaultValue={ballotToUpdate ? ballotToUpdate : 'choose ballot or "new"'}
         onSelect={(selectedItem, index) => {
@@ -302,6 +315,7 @@ export default function Voting({club, agenda, members, setScreen, post_id, userN
       newcandidates[contestUpdateIndex].options.push(selectedItem.value);
       setCandidates(newcandidates);
       setCandidate(memberOptions[0]);
+      polling();/*postpone next update*/
       }}
       renderButton={(selectedItem, isOpened) => {
         return (

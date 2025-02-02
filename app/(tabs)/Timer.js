@@ -1,14 +1,52 @@
 import { Text, View, ScrollView, TextInput, Pressable, Dimensions, StyleSheet, AppState } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Octicons } from '@expo/vector-icons'
 //import Autocomplete from 'react-native-autocomplete-input';
-
+import { ClubContext } from '../ClubContext';
 import SelectDropdown from 'react-native-select-dropdown'
-  
-export default function Timer ({roles, setShowTimer, members}) {
+import useAgenda from '../useAgenda';
+
+export default function Timer (props) {
+
+  const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, addClub, updateClub, updateRole, sendEmail, takeVoteCounter} = useAgenda();
+  const {members} = queryData;
+  const context = useContext(ClubContext);
+  const {club, meeting, agenda} = context;
+  const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
+  const [timing,setTiming] = useState(timerOptions[0]);
+  const [start, setStart] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const [pause, setPause] = useState(0);
+  const [color, setColor] = useState('');
+  const [tracker, setTracker] = useState(null);
+  const [log, setLog] = useState([]);
+  const [clockColor, setClockColor] = useState('white');
+  useEffect(() => {
+    if(start) {
+        if(tracker)
+            clearInterval(tracker);
+        const track = setInterval(() => {
+            const elapsed = calcElapsed();
+            console.log('focus state',AppState.currentState);
+            setElapsed(elapsed);
+            let c = timerColor(elapsed);
+            setColor(c);
+            let colorWas = clockColor;
+            setClockColor((Math.floor(elapsed/1000) % 2 === 0) ? '#909090' : '#383838');
+        }, 55);
+        setTracker(track);    
+    }
+    else {
+        clearInterval(tracker);
+    }
+},[start]);
+
+  const {roles} = agenda;
+  if(!roles || !roles.length)
+    return <Text>Loading</Text>;
 
     const styles = StyleSheet.create({
         dropdownButtonStyle: {
@@ -108,15 +146,6 @@ export default function Timer ({roles, setShowTimer, members}) {
           },
       });
 
-    const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
-    const [timing,setTiming] = useState(timerOptions[0]);
-    const [start, setStart] = useState(0);
-    const [elapsed, setElapsed] = useState(0);
-    const [pause, setPause] = useState(0);
-    const [color, setColor] = useState('');
-    const [tracker, setTracker] = useState(null);
-    const [log, setLog] = useState([]);
-    const [clockColor, setClockColor] = useState('white');
     const yellow = timing.min + ((timing.max - timing.min) / 2);
     function calcElapsed () { return new Date().getTime() - start + pause};
     
@@ -139,26 +168,6 @@ export default function Timer ({roles, setShowTimer, members}) {
         console.log(color);
         return color;
     }
-
-    useEffect(() => {
-        if(start) {
-            if(tracker)
-                clearInterval(tracker);
-            const track = setInterval(() => {
-                const elapsed = calcElapsed();
-                console.log('focus state',AppState.currentState);
-                setElapsed(elapsed);
-                let c = timerColor(elapsed);
-                setColor(c);
-                let colorWas = clockColor;
-                setClockColor((Math.floor(elapsed/1000) % 2 === 0) ? '#909090' : '#383838');
-            }, 55);
-            setTracker(track);    
-        }
-        else {
-            clearInterval(tracker);
-        }
-    },[start]);
 
     function getMinMax(display_time) {
         const derived = {min:5,max:7};
@@ -213,6 +222,7 @@ export default function Timer ({roles, setShowTimer, members}) {
     timerOptions.push({'role':'Speaker','name':'','display_time':'10 to 12 minutes','min':10*60*1000,"max":12*60*1000});
     timerOptions.push({'role':'Speaker','name':'','display_time':'12 to 15 minutes','min':12*60*1000,"max":15*60*1000});
     timerOptions.push({'role':'Table Topics','name':'','display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
+    if(members)
     members.forEach(
         (member) => {
             timerOptions.push({'role':'Table Topics','name':member.name,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
@@ -222,12 +232,6 @@ export default function Timer ({roles, setShowTimer, members}) {
     return (
         <SafeAreaView style={{'flex':1}}>
             <View>
-        <View style={{flexDirection: 'row'}}>
-            <Pressable onPress={() => { setShowTimer(false) }} style={{ marginLeft: 10}}>
-      <Octicons name="arrow-left" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
-      </Pressable>
-      <Text style={{marginLeft: 20, fontSize: 20}}>Speech Timer</Text>
-      </View>
         <SelectDropdown
     data={timerOptions}
     defaultValue={timerOptions[0]}

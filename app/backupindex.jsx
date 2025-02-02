@@ -1,18 +1,21 @@
-import { Text, View, ScrollView, TextInput, Pressable, Image, AppState } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, Switch, FlatList } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Octicons } from '@expo/vector-icons'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ProjectChooser from './ProjectChooser';
-import Timer from './Timer';
-import Voting from './Voting';
+import EditRole from './EditRole';
+import Timer from './(tabs)/Timer';
+import Voting from './(tabs)/Voting';
+/* import QRScanner from "./QRScanner"; */
 import styles from './styles'
 import RenderHtml from 'react-native-render-html';
 import * as Linking from 'expo-linking';
 import { useWindowDimensions } from 'react-native';
 import { Platform } from 'react-native';
+import useAgenda from './useAgenda';
 
 export default function Index() {
   return (
@@ -68,203 +71,19 @@ const RenderRole = ({ item, index, updateRole, user_id, name }) => {
 } 
 
 function MobileAgenda (props) {
-  const timeNow = new Date().getTime();
-  const version = 0.1;
-  const refreshTime = 30000;
-  const [lastUpdate, setLastUpdate] = useState(timeNow);
-  const [meeting, setMeeting] = useState(0)
-  const [clubs, setClubs] = useState([])
-  const [club, setClub] = useState({'domain':'','code':'','url':''})
-  const [showSettings, setShowSettings] = useState(false)
-  const [showInstructions, setShowInstructions] = useState(false)
-  const [viewAgenda, setViewAgenda] = useState(false)
-  const [queryData, setQueryData] = useState({})
-  const [toastmostData, setToastmostData] = useState({})
-  const [message,setMessage] = useState('');
-  const [showTimer,setShowTimer] = useState(false);
-  const [screen,setScreen] = useState('');
   const [showLogo,setShowLogo] = useState(true);
-  const [pollingInterval,setPollingInterval] = useState(null);
-  const { width } = useWindowDimensions();
+  const [emailPrompt,setEmailPrompt] = useState(false);
+  const { width, height } = useWindowDimensions();
+
+  const {clubs, setClubs, club, setClub, screen, setScreen, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, meeting, setMeeting, addClub, updateClub, updateRole, sendEmail, takeVoteCounter} = useAgenda();
+
+  const toggleSwitch = () => setEmailPrompt(previousState => !previousState);
 
   const [loaded, error] = useFonts({
     Inter_500Medium,
   })
 
   setTimeout(() => {setShowLogo(false)},10000);
-
-  if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
-    setLastUpdate(timeNow);
-    polling();/*fresh update needed after app was out of focus*/
-  }
-
-  useEffect(() => {
-    let jsonValue;
-    const fetchData = async () => {
-      try {
-        jsonValue = await AsyncStorage.getItem("infoScreen")
-        const infoScreen = jsonValue != null ? JSON.parse(jsonValue) : null
-        if (infoScreen && !toastmostData.infoScreen) {
-          setToastmostData({infoScreen:infoScreen});
-        }
-      } catch (e) {
-        console.error(e)
-      }
-
-      try {
-        jsonValue = await AsyncStorage.getItem("clubslist")
-        const storageClubs = jsonValue != null ? JSON.parse(jsonValue) : null
-        if (storageClubs && storageClubs.length) {
-          setClubs(storageClubs)
-          setClub(storageClubs[0])
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    fetchData()
-    getToastInfo();
-
-  }, [])
-
-  const storeData = async () => {
-    try {
-      const jsonValue = JSON.stringify(clubs)
-      await AsyncStorage.setItem("clubslist", jsonValue)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  useEffect(() => {
-    if(!clubs.length) {
-      return;
-    }
-    storeData()
-  }, [clubs])
-
-  function polling() {
-    if(pollingInterval)
-      clearInterval(pollingInterval);
-    setPollingInterval(setInterval(() => {
-      if('active' == AppState.currentState) {
-        setMessage('Checking server for updates ...');
-        getToastData();  
-      }
-      else {
-        console.log('do not poll server for updates if not in foreground');
-      }
-    }, refreshTime)
-    ) 
-  }
-
-  function getToastData() {
-    if(message && message.includes('Updating ...'))
-      return;
-    fetch(club.url).then((res) => {
-      if(res.ok) {
-        console.log('fetch connection ok');
-        setMessage('');
-        return res.json();
-      }
-      else {
-        console.log('fetch not ok',res);
-        if('401' == res.status)
-        setMessage('Problem connecting to server. Check access code.');
-        else
-        setMessage('Problem connecting, status code: '+res.status);
-        if(pollingInterval)
-          clearInterval(pollingInterval);  
-      }
-    }).then((data) => {setQueryData(data);}).catch(
-      (error) => {
-        console.log('fetch error',error);
-        setMessage('Unable to connect. Possibly a network error or typo in domain name '+club.domain+'.');
-      }
-    )
-  }
-
-  function getToastInfo() {
-    if(message && message.includes('Checking with Toastmost World Headquarters'))
-      return;
-    fetch('https://toastmost.org/wp-json/toastmost/v1/mobileinfo?t='+timeNow+'&version='+version).then((res) => {
-      if(res.ok) {
-        console.log('fetch connection ok');
-        setMessage('');
-        return res.json();
-      }
-      else {
-        console.log('fetch not ok',res);
-        if('401' == res.status)
-        setMessage('Problem connecting to server. Check access code.');
-        else
-        setMessage('Problem connecting, status code: '+res.status);
-      }
-    }).then((data) => {
-      ('data for '+club.url,data);
-      setToastmostData(data);
-    }   ).catch(
-      (error) => {
-        console.log('fetch error',error);
-        setMessage('Unable to connect with Toastmost.org. Check your network connection');
-      }
-    )
-  }
-
-  useEffect(() => {
-      if(club.domain && club.code && club.url) {
-        setMessage('Loading data for '+club.domain);
-        getToastData();
-        polling();
-      }
-    }, [club]
-  )
-
-    function itemUpdateMatch(i,v) {
-      if((i.post_id == v.post_id) && (i.assignment_key == v.key)) {
-        return (v.ID == 0) ? 'remove' : 'add';
-      }
-      return false;
-    }
-
-    if (!loaded && !error) {
-    return null
-  }
-
-  const addClub = () => {
-    const update = {...club};
-    update.url = 'https://'+update.domain+'/wp-json/rsvptm/v1/mobile/'+update.code;
-    setClubs([update, ...clubs]);
-    setClub(update);
-    setShowSettings(false);
-  }
-
-  function updateClub (input, name) {
-    const update = {...club};
-    update[name] = input;
-    setClub(update);
-  }
-
-  function takeVoteCounter() {
-    updateRole({ID:queryData.user_id,post_id:agenda.post_id,assignment_key:'_role_Vote_Counter_1',role:'Vote Counter'});
-  }
-
-  function updateRole(roleData) {
-    const currentData = {...queryData};
-    currentData.agendas[meeting].roles[roleData.index] = roleData;
-    setQueryData(currentData);
-    setMessage('Updating ...');
-    console.log('Updating '+club.url);
-    console.log('roledata',roleData);
-    fetch(club.url, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
-      setMessage('');
-      setQueryData(data);
-      console.log('results of role update',data);
-    }).catch((e) => {
-      console.log('update error',e);
-      setMessage('Data update error');
-    })
-  }
 
   function diffClubs () {
     if(!queryData || !queryData.userblogs)
@@ -286,7 +105,7 @@ function MobileAgenda (props) {
     newclubs.push(newclub);
     setClubs(newclubs);
     setClub(newclub);
-    setShowSettings(false);
+    setScreen('home');
     setQueryData({});
   }
 
@@ -304,8 +123,8 @@ function MobileAgenda (props) {
   const agenda = (queryData && queryData.agendas && queryData.agendas.length) ? queryData.agendas[meeting] : {'title':'','date':'','roles':[]};
   const source = (agenda.html) ? {'html':'<html><body>'+agenda.html+'</body></html>'} : {};
   
-    if(showTimer && agenda.roles) {
-      return <Timer roles={agenda.roles} members={queryData.members} setShowTimer={setShowTimer} />
+    if('timer' == screen && agenda.roles) {
+      return <Timer roles={agenda.roles} members={queryData.members}  setScreen={setScreen} />
     }
 
     if('voting' == screen) {
@@ -313,32 +132,42 @@ function MobileAgenda (props) {
     }
 
     const different = diffClubs();
- 
+ //,position: 'absolute',bottom: 0, 
     return (
-      <SafeAreaView style={styles.container}>
-      <View style={{width: '100%', marginBottom: 50, paddingBottom: 50 }}>
-      <Text>{club.domain}</Text>
-      <View style={styles.inputContainer}>
-      <Pressable onPress={() => { if(!showSettings); setClub({'domain':'','code':'','url':''}); setShowSettings(!showSettings) }} style={{ marginLeft: 10 }}>
+      <SafeAreaView  style={styles.container}>
+      <View style={{position: 'absolute', top: 0, flexDirection: 'row',width: '100%', padding: 20, paddingBottom: 50, zIndex: 3, backgroundColor: 'white'}}>
+      <Pressable onPress={() => { if(club.code) setScreen('home'); else setMessage('You must choose a club first'); }} style={{ marginLeft: 10 }}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <FontAwesome name="home" size={24} color="black" />
+      <Text style={{fontSize:8}}>Settings</Text>
+      </View>
+      </Pressable>
+      <Pressable onPress={() => { setScreen('edit'); }} style={{ marginLeft: 10 }}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <Octicons name="pencil" size={24} color='black' selectable={undefined} style={{ width: 24}} />
       <Text style={{fontSize:8}}>Settings</Text>
       </View>
       </Pressable>
-      <Pressable onPress={() => { setShowInstructions(!showInstructions); setViewAgenda(false); }} style={{ marginLeft: 10}}>
+      <Pressable onPress={() => { setScreen(''); setClub({'domain':'','code':'','url':''}); }} style={{ marginLeft: 10 }}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Octicons name="gear" size={24} color='black' selectable={undefined} style={{ width: 24}} />
+      <Text style={{fontSize:8}}>Edit</Text>
+      </View>
+      </Pressable>
+      <Pressable onPress={() => { setScreen('info'); }} style={{ marginLeft: 10}}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <Octicons name="info" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
       <Text style={{fontSize:8}}>Info</Text>
       </View>      
       </Pressable>
-      {agenda.title ? <Pressable onPress={() => { setViewAgenda(!viewAgenda); setShowInstructions(false); }} style={{ marginLeft: 10}}>
+      {agenda.title ? <Pressable onPress={() => { setScreen('agenda'); }} style={{ marginLeft: 10}}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Octicons name="eye" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
         <Text style={{fontSize:8}}>Agenda</Text>
         </View>
         </Pressable> : null}
       {agenda ?
-      <Pressable onPress={() => { setShowTimer(!showTimer); setViewAgenda(false); setShowInstructions(false); }} style={{ marginLeft: 10 }}>
+      <Pressable onPress={() => { setScreen('timer'); }} style={{ marginLeft: 10 }}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <Octicons name="clock" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
       <Text style={{fontSize:8}}>Timer</Text>
@@ -361,8 +190,9 @@ function MobileAgenda (props) {
       </View></Pressable>
  : null}
       </View>
-      {toastmostData && toastmostData.androidUpdatePrompt && ('android' == Platform.OS) ? <View style={{marginLeft:5,marginRight: 5, padding: 5, borderWidth:1,borderColor:'red'}}><RenderHtml source={{'html':toastmostData.androidUpdatePrompt}} contentWidth={width - 10} /></View> : null}
-      {(!clubs.length || showSettings) ?
+      <View style={{width: '100%', marginBottom: 50, paddingBottom: 50 }}>
+      <Text>{club.domain}</Text>
+      {(!clubs.length || '' == screen) ?
       <View>
         <View>
         <TextInput
@@ -380,38 +210,63 @@ function MobileAgenda (props) {
             else updateClub(input,'domain')}}
         />
         </View>
-        <View>
+        {emailPrompt ? <View>
         <TextInput
           style={styles.input}
           autoCapitalize="none"
           autoCorrect={false}
           maxLength={30}
-          placeholder="Mobile code"
+          placeholder="Enter your email address"
           placeholderTextColor="gray"
-          value={(club && club.code) ? club.code : ''}
-          onChangeText={(input) => {updateClub(input,'code')}}
+          value={(club && club.email) ? club.email : ''}
+          onChangeText={(input) => {updateClub(input,'email')}}
         />
+</View>
+  : <View>
+  <TextInput
+    style={styles.input}
+    autoCapitalize="none"
+    autoCorrect={false}
+    maxLength={30}
+    placeholder="Mobile code"
+    placeholderTextColor="gray"
+    value={(club && club.code) ? club.code : ''}
+    onChangeText={(input) => {updateClub(input,'code')}}
+  />
+  </View>
+}
+        <View style={{flexDirection: 'row',padding: 5}}>
+        <Switch
+          trackColor={{false: '#767577', true: '#81b0ff'}}
+          thumbColor={emailPrompt ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={emailPrompt}
+        /> Show Email Prompt
         </View>
         <View>
-        <Pressable onPress={addClub} style={styles.addButton}>
-          <Text style={styles.addButtonText}>Add</Text>
+        <Pressable onPress={emailPrompt ? sendEmail : addClub} style={styles.addButton}>
+          <Text style={styles.addButtonText}>{emailPrompt ? 'Request by Email' : 'Add'}</Text>
         </Pressable>
         </View>
-        <Text style={styles.instructions}>If you have copied a domain|code string, paste it in the first field above. Or get the code from the <Text style={{fontWeight: 'bold'}}>Moble App Setup</Text> screen under the <Text style={{fontWeight: 'bold'}}>Toastmasters</Text> menu of the club website dashboard.</Text>
-        </View> : null
+        <Text style={styles.instructions}>If you have copied a domain|code string, paste it in the first field above. Toggle <Text style={{fontWeight: 'bold'}}>Show Email Prompt</Text> on to have instructions emailed to you.</Text>
+        </View>
+
+        : null
       }
+
       {message ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>{message}</Text></View> : null}
       {club.url && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
 
       <ScrollView>
-      {(showSettings && clubs.length > 0) ? clubs.map(
+      {('' == screen && clubs.length > 0) ? clubs.map(
         (clubChoice, index) => {
           return (
             <View style={{flexDirection: 'row'}} key={index}>
               <Pressable key={'remove'+index} onPress={() => { setClubs(() => {let current = [...clubs]; current.splice(index, 1); setClub({}); return current;} ); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                 <Text style={styles.addButtonText}>-</Text>
               </Pressable>
-              <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); setClub(clubChoice); setMessage('Reloading ...'); setShowSettings(false); setQueryData({}); } } style={styles.chooseButton}>
+              <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); setClub(clubChoice); setMessage('Reloading ...'); setScreen('home'); setQueryData({}); } } style={styles.chooseButton}>
                 <Text style={styles.addButtonText}>Choose {clubChoice.domain}</Text>
               </Pressable>
             </View>
@@ -419,12 +274,12 @@ function MobileAgenda (props) {
         }
       )
       : null}
-      {(showSettings && clubs.length > 0) ?
-      <Pressable onPress={() => {setClub({domain:'',code:'',url:''}); setClubs([]); setQueryData({}); AsyncStorage.setItem("clubslist", null);} } style={styles.chooseButton}>
+      {('' == screen && clubs.length > 0) ?
+      <Pressable onPress={() => {setClub({domain:'',code:'',url:''}); setReset(true); setClubs([]); setQueryData({}); } } style={styles.chooseButton}>
       <Text style={styles.addButtonText}>Reset Clubs List</Text>
       </Pressable> : null}
 
-      {(showSettings && queryData && different.length) ? different.map(
+      {('' == screen && queryData && different.length) ? different.map(
         (domain, index) => {
           return (
             <View style={{flexDirection: 'row'}} key={index}>
@@ -450,7 +305,7 @@ function MobileAgenda (props) {
       {(toastmostData && toastmostData.infoScreen) ? <View style={{marginLeft: 5}}><RenderHtml source={{'html':'<html><body>'+toastmostData.infoScreen+'</body></html>'}} contentWidth={width - 20} /></View> : null}
       </View> : null}
 
-      {showInstructions || !queryData || !queryData.agendas || !queryData.agendas.length ? (
+      {'info' == screen || !queryData || !queryData.agendas || !queryData.agendas.length ? (
       <View style={{borderWidth: 1, borderColor: 'gray'}}>
         <Text style={styles.instructions}>This app makes it easy to sign up for roles, update speech details, time speeches, and perform other useful functions TBD. The app works with websites that are hosted on Toastmost.org or that have installed the WordPress for Toastmasters software.</Text>
         <Text style={styles.instructions}>If you are a member of more than one club that uses the Toastmost service, you will be able to use the same access code for all of those clubs.</Text>
@@ -458,17 +313,21 @@ function MobileAgenda (props) {
       </View>
       ) : null}
       
-      {viewAgenda ? <ScrollView><RenderHtml source={source} contentWidth={width - 20} /></ScrollView> : null}
-      {(club.domain && !viewAgenda && agenda.roles.length > 0) ? 
-        <ScrollView>
-{
-      agenda.roles.map((item, itemindex) => {
-        return <RenderRole key={item.assignment_key} item={{...item,'projects':queryData.projects,'index':itemindex}} updateRole={updateRole} user_id={queryData.user_id} name={queryData.name} style={styles} />
-      })
+      {'agenda' == screen ? <ScrollView><RenderHtml source={source} contentWidth={width - 20} /></ScrollView> : null}
+      {(club.domain && ('home' == screen || 'edit' == screen) && agenda.roles.length > 0) ? 
+      <FlatList
+      data={agenda.roles}
+      renderItem={({item,itemindex}) => {
+        if('edit' == screen)
+          return <EditRole key={item.assignment_key} item={{...item,'projects':queryData.projects,'index':itemindex}} updateRole={updateRole} user_id={queryData.user_id} name={queryData.name} style={styles} members={queryData.members} />
+        else
+          return <RenderRole key={item.assignment_key} item={{...item,'projects':queryData.projects,'index':itemindex}} updateRole={updateRole} user_id={queryData.user_id} name={queryData.name} style={styles} />
+      }}
+      keyExtractor={item => item.assignment_key}
+      />
+ : null
 }
-</ScrollView> : null
-      }
       </View>
-      </SafeAreaView>  
+      </SafeAreaView> 
     )
 }
