@@ -1,21 +1,6 @@
 import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, Switch, FlatList } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect } from "react";
-import { Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Octicons } from '@expo/vector-icons'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ProjectChooser from './ProjectChooser';
-import EditRole from './EditRole';
-import Timer from './(tabs)/Timer';
-import Voting from './(tabs)/Voting';
-/* import QRScanner from "./QRScanner"; */
 import styles from './styles'
-import RenderHtml from 'react-native-render-html';
-import * as Linking from 'expo-linking';
-import { useWindowDimensions } from 'react-native';
-import { Platform } from 'react-native';
-import useAgenda from './useAgenda';
 
 export default function RenderRole({ item, index, updateRole, user_id, name }) {
       

@@ -1,7 +1,6 @@
 import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, Switch, FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useState, useContext } from "react";
-import { Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Octicons } from '@expo/vector-icons'
 import FontAwesome from '@expo/vector-icons/FontAwesome';

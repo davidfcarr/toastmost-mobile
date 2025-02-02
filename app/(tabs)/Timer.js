@@ -1,8 +1,6 @@
 import { Text, View, ScrollView, TextInput, Pressable, Dimensions, StyleSheet, AppState } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useContext } from "react";
-import { Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Octicons } from '@expo/vector-icons'
 //import Autocomplete from 'react-native-autocomplete-input';
 import { ClubContext } from '../ClubContext';
