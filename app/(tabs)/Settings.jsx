@@ -10,15 +10,28 @@ import { useWindowDimensions } from 'react-native';
 import { Platform } from 'react-native';
 import useAgenda from '../useAgenda';
 import { ClubContext } from '../ClubContext';
+import { router } from 'expo-router';
+import BrandHeader from '../BrandHeader';
 
 export default function Settings (props) {
-    const {club, setClub} = React.useContext(ClubContext);
+    const {club, setClub,setMeeting,setAgenda, pollingInterval} = React.useContext(ClubContext);
     const [emailPrompt,setEmailPrompt] = useState(false);
     const [tempClub,setTempClub] = useState(!club.domain ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
     const { width, height } = useWindowDimensions();
-  
-    const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, addClub, updateClub, updateRole, sendEmail, takeVoteCounter} = useAgenda();
-  
+    const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, addClub, sendEmail, setReset} = useAgenda();
+
+    function resetClubData() {
+      setQueryData({});
+      setMeeting(0);
+      setQueryData({...queryData,agendas:[]});
+      setAgenda({roles:[]});
+      router.replace('/');
+      if(pollingInterval) {
+        console.log('cleared pollingInterval',pollingInterval);
+        clearInterval(pollingInterval);
+      }
+      }
+    
     console.log('clubs',clubs);
     console.log('club',clubs);
     
@@ -66,6 +79,7 @@ export default function Settings (props) {
       return (
         <SafeAreaView  style={styles.container}>
         <View style={{width: '100%', flex: 1 }}>
+        {!props.hideHeader ? <BrandHeader /> : null}
         <View>
           <View>
           <TextInput
@@ -100,7 +114,7 @@ export default function Settings (props) {
     />
     </View>
 <View>
-          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {addClub(tempClub);} }} style={styles.addButton}>
+          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {addClub(tempClub);resetClubData();} }} style={styles.addButton}>
             <Text style={styles.addButtonText}>{emailPrompt ? <Text>Request by Email</Text> : <Text>Add</Text>}</Text>
           </Pressable>
           </View>
@@ -118,7 +132,7 @@ export default function Settings (props) {
                 <Pressable key={'remove'+index} onPress={() => { setClubs(() => {let current = [...clubs]; current.splice(index, 1); setClub({}); return current;} ); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
-                <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); setClub(clubChoice); setMessage('Reloading ...'); setQueryData({}); } } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); setClub(clubChoice); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}>Choose {clubChoice.domain}</Text>
                 </Pressable>
               </View>
@@ -127,7 +141,7 @@ export default function Settings (props) {
         )
         : null}
         {(clubs.length > 0) ?
-        <Pressable onPress={() => {setClub({domain:'',code:'',url:''}); setReset(true); setClubs([]); setQueryData({}); } } style={styles.chooseButton}>
+        <Pressable onPress={() => {setClub({domain:'',code:'',url:''}); setReset(true); setClubs([]); resetClubData(); setQueryData({}); } } style={styles.chooseButton}>
         <Text style={styles.addButtonText}>Reset Clubs List</Text>
         </Pressable>
          : null}
@@ -136,7 +150,7 @@ export default function Settings (props) {
           (domain, index) => {
             return (
               <View style={{flexDirection: 'row'}} key={'different'+index}>
-                <Pressable key={'choose'+index} onPress={() => {addDomainSame(domain);} } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {addDomainSame(domain); resetClubData()} } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}>Add {domain}</Text>
                 </Pressable>
               </View>

@@ -14,22 +14,22 @@ import Settings from './Settings';
 
 export default function Home (props) {
     const [edit,setEdit] = useState(false);
-    const { width, height } = useWindowDimensions();
-    const [isInitialRender, setIsInitialRender] = useState(true);
     const context = useContext(ClubContext);
-    const {club, agenda} = context;
+    const {club, agenda, meeting, setMeeting} = context;
     const {queryData, message, updateRole} = useAgenda();
   
     const toggleSwitch = () => setEdit(previousState => !previousState);
 
-    if(!club.domain)  {
-      return (<View><View style={{flexDirection: 'row'}}><Image style={{width:100,height:100}} source={require('../../assets/images/ToastmostMobileLogo.png')} /><View style={{width:'100%',paddingLeft:10,alignContent:'center',justifyContent:'center',backgroundColor:'black'}}><Text style={{fontSize:30,color:'white',fontWeight:'bold'}}>Toastmost.org</Text><Text style={{fontSize:14,fontStyle:'italic',color:'white',fontWeight:'bold'}}>Digital tools for speakers and leaders</Text></View></View><Settings /></View>);
+    if(!club.code)  {
+      return <Settings />;
     }
 
-    if(!agenda || !agenda.roles) {
-      return <View><BrandHeader /><Text>Loading ...</Text></View>;
+    if(!agenda || !agenda.domain || agenda.domain != club.domain || !agenda.roles.length) {
+      return <SafeAreaView><View><BrandHeader /><Text>Loading ...</Text></View></SafeAreaView>;
     }
-  
+    console.log('agenda domain',agenda.domain);
+    console.log('club domain',club.domain);
+    
       return (
         <SafeAreaView  style={styles.container}>
         <View style={{width: '100%', flex:1 }}>

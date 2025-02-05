@@ -8,15 +8,14 @@ export default function useAgenda() {
     const [clubs, setClubs] = useState([]);
     const [queryData, setQueryData] = useState({});
     const [toastmostData, setToastmostData] = useState({});
-    const [message, setMessage] = useState('');
     const [reset, setReset] = useState(false);
-    const [pollingInterval, setPollingInterval] = useState(null);
+    const [message, setMessage] = useState('');
     const [timeNow, setTimeNow] = useState(Date.now());
     const [lastUpdate, setLastUpdate] = useState(Date.now());
     const refreshTime = 60000;
     const version = '1.0.0';
     const context = useContext(ClubContext);
-    const {club, setClub, meeting, setMeeting, setAgenda, members, setMembers, user_id, setUserId} = context;
+    const {club, setClub, meeting, setAgenda, members, setMembers, user_id, setUserId, pollingInterval, setPollingInterval} = context;
 
 if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     setLastUpdate(timeNow);
@@ -71,8 +70,10 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
   }, [clubs])
 
   useEffect(() => {
-    if(queryData.agendas && queryData.agendas.length)
-    setAgenda(queryData.agendas[meeting]);
+    if(queryData.agendas && queryData.agendas.length) {
+      queryData.agendas[meeting].domain = club.domain;
+      setAgenda(queryData.agendas[meeting]);
+    }
     setMembers(queryData.members);
     setUserId(queryData.user_id);
   }, [club, meeting, queryData])
@@ -82,7 +83,7 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
       clearInterval(pollingInterval);
     setPollingInterval(setInterval(() => {
       if('active' == AppState.currentState) {
-        setMessage('Checking server for updates ...');
+        setMessage('Checking server for updates ...'+club.domain);
         getToastData();  
       }
       else {
@@ -92,10 +93,13 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     ) 
   }
 
+  function getCurrentClub() { return club; }
+
   function getToastData() {
     if(message && message.includes('Updating ...'))
       return;
-    fetch(club.url).then((res) => {
+    const currentClub = getCurrentClub(); // get current state, even from within Timer
+    fetch(currentClub.url).then((res) => {
       if(res.ok) {
         console.log('fetch connection ok');
         setMessage('');
@@ -150,7 +154,7 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
         setMessage('Loading data for '+club.domain);
         getToastData();
         polling();
-        router.replace('/');
+        //console.log('route to replace',router.toString());
       }
     }, [club]
   )
@@ -164,6 +168,7 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     setClub(newclub);
     console.log('addClub newclubs',newclubs);
     setMessage('New club set to '+newclub.domain);
+    router.replace('/');
   }
 
   function updateClub (input, name) {
@@ -173,7 +178,7 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
   }
 
   function takeVoteCounter() {
-    updateRole({ID:queryData.user_id,post_id:agenda.post_id,assignment_key:'_role_Vote_Counter_1',role:'Vote Counter'});
+    updateRole({ID:queryData.user_id,post_id:queryData.agendas[meeting].post_id,assignment_key:'_role_Vote_Counter_1',role:'Vote Counter'});
   }
 
   function updateRole(roleData) {
@@ -219,6 +224,6 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     }
   }
 
-   return {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, 
+   return {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, getToastData, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, 
     addClub, updateClub, updateRole, sendEmail, takeVoteCounter};
 }

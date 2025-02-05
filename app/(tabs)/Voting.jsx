@@ -9,6 +9,7 @@ import EditContestants from '../EditContestants';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { ClubContext } from '../ClubContext';
 import useAgenda from '../useAgenda';
+import BrandHeader from "../BrandHeader";
 
 //{club, agenda, members, setScreen, post_id, userName, user_id, takeVoteCounter}
 export default function Voting(props) {
@@ -223,6 +224,8 @@ export default function Voting(props) {
       
     return (
       <SafeAreaView style={{flex: 1}}>
+        <BrandHeader />
+
         <View style={{flexDirection: 'row'}}>
       <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
       <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>

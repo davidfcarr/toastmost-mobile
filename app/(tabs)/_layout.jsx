@@ -20,7 +20,7 @@ export default function TabLayout() {
         options={{
           title: 'Agenda',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="list" color={color} />,
-          canGoBack: true
+          headerShown: false
         }}
       />
       <Tabs.Screen
@@ -28,7 +28,7 @@ export default function TabLayout() {
         options={{
           title: 'Timer',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="clock-o" color={color} />,
-          canGoBack: true
+          headerShown: false
         }}
       />
       <Tabs.Screen
@@ -36,7 +36,7 @@ export default function TabLayout() {
         options={{
           title: 'Voting',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="ballot" size={24} color="black" />,
-          canGoBack: true
+          headerShown: false
         }}
       />
       <Tabs.Screen
@@ -44,7 +44,7 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
-          canGoBack: true
+          headerShown: false
         }}
       />
     </Tabs>
