@@ -4,13 +4,12 @@ import { useState, useContext } from "react";
 import styles from '../styles'
 import RenderHtml from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
-import { ClubContext } from '../ClubContext';
+import { useAgenda } from '../useAgenda';
 import BrandHeader from '../BrandHeader';
 
 export default function Agenda (props) {
     const { width, height } = useWindowDimensions();
-    const context = useContext(ClubContext);
-    const {agenda} = context;
+    const {agenda} = useAgenda();
  
     if(!agenda.html)
       return <Text>Loading ...</Text>;

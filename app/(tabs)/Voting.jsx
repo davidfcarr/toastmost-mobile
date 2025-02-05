@@ -13,9 +13,7 @@ import BrandHeader from "../BrandHeader";
 
 //{club, agenda, members, setScreen, post_id, userName, user_id, takeVoteCounter}
 export default function Voting(props) {
-  const context = useContext(ClubContext);
-  const {club, meeting, agenda, members, user_id} = context;
-  const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, takeVoteCounter} = useAgenda();
+  const {club, meeting, agenda, members, user_id, clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, takeVoteCounter} = useAgenda();
   const timeNow = new Date().getTime();
   const refreshTime = 30000; // 30 seconds
   const memberOptions = [{'value':'','label':'Select Member'}];

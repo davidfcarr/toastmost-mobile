@@ -8,17 +8,16 @@ import RenderHtml from 'react-native-render-html';
 import * as Linking from 'expo-linking';
 import { useWindowDimensions } from 'react-native';
 import { Platform } from 'react-native';
-import useAgenda from '../useAgenda';
 import { ClubContext } from '../ClubContext';
 import { router } from 'expo-router';
 import BrandHeader from '../BrandHeader';
+import useAgenda from '../useAgenda';
 
 export default function Settings (props) {
-    const {club, setClub,setMeeting,setAgenda, pollingInterval} = React.useContext(ClubContext);
-    const [emailPrompt,setEmailPrompt] = useState(false);
-    const [tempClub,setTempClub] = useState(!club.domain ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
+  const {club, setClub,setMeeting,setAgenda, pollingInterval,clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, addClub, sendEmail, setReset} = useAgenda();
+  const [emailPrompt,setEmailPrompt] = useState(false);
+    const [tempClub,setTempClub] = useState(!club || !club.domain ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
     const { width, height } = useWindowDimensions();
-    const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, addClub, sendEmail, setReset} = useAgenda();
 
     function resetClubData() {
       setQueryData({});

@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useContext } from "react";
 import { Octicons } from '@expo/vector-icons'
 //import Autocomplete from 'react-native-autocomplete-input';
-import { ClubContext } from '../ClubContext';
 import SelectDropdown from 'react-native-select-dropdown'
 import useAgenda from '../useAgenda';
 import BrandHeader from '../BrandHeader';
@@ -11,8 +10,7 @@ import BrandHeader from '../BrandHeader';
 export default function Timer (props) {
 
   /*const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, addClub, updateClub, updateRole, sendEmail, takeVoteCounter} = useAgenda();*/
-  const context = useContext(ClubContext);
-  const {agenda, members} = context;
+  const {agenda, members} = useAgenda();
   const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
   const [timing,setTiming] = useState(timerOptions[0]);
   const [start, setStart] = useState(0);

@@ -9,22 +9,22 @@ import styles from '../styles'
 import { useWindowDimensions } from 'react-native';
 import BrandHeader from '../BrandHeader';
 import useAgenda from '../useAgenda';
-import { ClubContext } from '../ClubContext';
 import Settings from './Settings';
 
 export default function Home (props) {
     const [edit,setEdit] = useState(false);
-    const context = useContext(ClubContext);
-    const {club, agenda, meeting, setMeeting} = context;
-    const {queryData, message, updateRole} = useAgenda();
-  
+    const {club, meeting, setMeeting,queryData, message, updateRole,getAgenda} = useAgenda();
+    const agenda = getAgenda();
     const toggleSwitch = () => setEdit(previousState => !previousState);
+
+    console.log('Home club',club);
+    console.log('Home agenda',agenda);
 
     if(!club.code)  {
       return <Settings />;
     }
 
-    if(!agenda || !agenda.domain || agenda.domain != club.domain || !agenda.roles.length) {
+    if(!club || !agenda || !agenda.domain || agenda.domain != club.domain || !agenda.roles.length) {
       return <SafeAreaView><View><BrandHeader /><Text>Loading ...</Text></View></SafeAreaView>;
     }
     console.log('agenda domain',agenda.domain);

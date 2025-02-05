@@ -1,11 +1,9 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Tabs } from 'expo-router';
-import { ClubProvider } from '../ClubContext';
 
 export default function TabLayout() {
   return (
-    <ClubProvider>
     <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
       <Tabs.Screen
         name="index"
@@ -48,6 +46,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-</ClubProvider>
   );
 }

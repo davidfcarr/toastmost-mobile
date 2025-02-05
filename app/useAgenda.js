@@ -1,7 +1,6 @@
 import {useState, useEffect,useContext} from 'react';
 import {AppState} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ClubContext } from './ClubContext';
 import { router } from 'expo-router';
 
 export default function useAgenda() {
@@ -12,10 +11,14 @@ export default function useAgenda() {
     const [message, setMessage] = useState('');
     const [timeNow, setTimeNow] = useState(Date.now());
     const [lastUpdate, setLastUpdate] = useState(Date.now());
+    const [club, setClub] = useState({'domain':'','code':'','url':''});
+    const [meeting, setMeeting] = useState(0);
+    const [agenda, setAgenda] = useState({});
+    const [members, setMembers] = useState([]);
+    const [user_id, setUserId] = useState(0);
+    const [pollingInterval, setPollingInterval] = useState(null);
     const refreshTime = 60000;
     const version = '1.0.0';
-    const context = useContext(ClubContext);
-    const {club, setClub, meeting, setAgenda, members, setMembers, user_id, setUserId, pollingInterval, setPollingInterval} = context;
 
 if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     setLastUpdate(timeNow);
@@ -69,9 +72,18 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     }
   }, [clubs])
 
+  function getAgenda() {
+    if(queryData.agendas && queryData.agendas.length) {
+      queryData.agendas[meeting].domain = club.domain;
+      return queryData.agendas[meeting];   
+    }
+    return {};    
+  }
+
   useEffect(() => {
     if(queryData.agendas && queryData.agendas.length) {
       queryData.agendas[meeting].domain = club.domain;
+      console.log('setAgenda',queryData.agendas[meeting]);
       setAgenda(queryData.agendas[meeting]);
     }
     setMembers(queryData.members);
@@ -225,5 +237,5 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
   }
 
    return {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, getToastData, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, 
-    addClub, updateClub, updateRole, sendEmail, takeVoteCounter};
+    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, club, setClub, meeting, setMeeting, setAgenda, members, setMembers, user_id, setUserId, pollingInterval, setPollingInterval, getAgenda};
 }
