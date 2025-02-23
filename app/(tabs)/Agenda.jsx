@@ -1,18 +1,18 @@
 import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, Switch, FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useState, useContext } from "react";
 import styles from '../styles'
 import RenderHtml from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
-import { ClubContext } from '../ClubContext';
+import useAgenda from '../useAgenda';
 import BrandHeader from '../BrandHeader';
+import useClubMeetingStore from "../store";
 
 export default function Agenda (props) {
     const { width, height } = useWindowDimensions();
-    const context = useContext(ClubContext);
-    const {agenda} = context;
- 
-    if(!agenda.html)
+    const {meeting, queryData} = useClubMeetingStore();
+    const agenda = (queryData && queryData.agendas) ? queryData.agendas[meeting] : {};
+     
+    if(!agenda || !agenda.html)
       return <Text>Loading ...</Text>;
   
     const source = (agenda.html) ? {'html':'<html><body>'+agenda.html+'</body></html>'} : {};

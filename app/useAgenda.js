@@ -1,26 +1,35 @@
-import {useState, useEffect,useContext} from 'react';
+import {useState, useEffect} from 'react';
 import {AppState} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ClubContext } from './ClubContext';
 import { router } from 'expo-router';
+import useClubMeetingStore from './store';
 
 export default function useAgenda() {
-    const [clubs, setClubs] = useState([]);
-    const [queryData, setQueryData] = useState({});
+    //const [meeting, setMeeting] = useState(0);
+    //const [clubs, setClubs] = useState([]);
     const [toastmostData, setToastmostData] = useState({});
     const [reset, setReset] = useState(false);
     const [message, setMessage] = useState('');
-    const [timeNow, setTimeNow] = useState(Date.now());
     const [lastUpdate, setLastUpdate] = useState(Date.now());
     const refreshTime = 60000;
     const version = '1.0.0';
-    const context = useContext(ClubContext);
-    const {club, setClub, meeting, setAgenda, members, setMembers, user_id, setUserId, pollingInterval, setPollingInterval} = context;
+    const timeNow = Date.now();
+    const [members, setMembers] = useState([]);
+    const [user_id, setUserId] = useState(0);
+    const [pollingInterval, setPollingInterval] = useState(null);
+    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda} = useClubMeetingStore();
 
-if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
-    setLastUpdate(timeNow);
-    polling();/*fresh update needed after app was out of focus*/
-}
+  function setDefaultClub(index) 
+  {
+    const defaultClub = clubs[index];
+    console.log('setDefaultClub',defaultClub);
+    console.log('setDefaultClub clubs',clubs);
+    const clubsCopy = [...clubs];
+    clubsCopy.splice(index,1);
+    clubsCopy.unshift(defaultClub);
+    console.log('setDefaultClub clubsCopy',clubsCopy);
+    setClubs(clubsCopy);
+  }
 
   useEffect(() => {
     let jsonValue;
@@ -38,15 +47,15 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
       try {
         jsonValue = await AsyncStorage.getItem("clubslist")
         const storageClubs = jsonValue != null ? JSON.parse(jsonValue) : null
-        if (storageClubs && storageClubs.length) {
+        if (!clubs.length && storageClubs && storageClubs.length) {
+          console.log('setting clubs from storage',storageClubs);
           setClubs(storageClubs)
-          setClub(storageClubs[0])
         }
       } catch (e) {
         console.error(e)
       }
     }
-    fetchData()
+    fetchData();
     getToastInfo();
   }, [])
 
@@ -69,55 +78,52 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     }
   }, [clubs])
 
+  function getAgenda() {
+    if(queryData && queryData.agendas && queryData.agendas.length) {
+      return queryData.agendas[meeting];
+    }
+  }
+
   useEffect(() => {
     if(queryData.agendas && queryData.agendas.length) {
-      queryData.agendas[meeting].domain = club.domain;
       setAgenda(queryData.agendas[meeting]);
     }
     setMembers(queryData.members);
     setUserId(queryData.user_id);
-  }, [club, meeting, queryData])
+  }, [clubs, queryData])
 
-  function polling() {
-    if(pollingInterval)
-      clearInterval(pollingInterval);
-    setPollingInterval(setInterval(() => {
-      if('active' == AppState.currentState) {
-        setMessage('Checking server for updates ...'+club.domain);
-        getToastData();  
-      }
-      else {
-        console.log('do not poll server for updates if not in foreground');
-      }
-    }, refreshTime)
-    ) 
-  }
+  function getCurrentClub() { console.log('getCurrentClubs',clubs); return (clubs && clubs.length) ? clubs[0] : null; }
 
-  function getCurrentClub() { return club; }
-
-  function getToastData() {
+  function getToastData(currentClub) {
+    console.log('getToastData called',currentClub);
+    if(!currentClub || !currentClub.url) {
+      return;
+    }
     if(message && message.includes('Updating ...'))
       return;
-    const currentClub = getCurrentClub(); // get current state, even from within Timer
     fetch(currentClub.url).then((res) => {
       if(res.ok) {
-        console.log('fetch connection ok');
+        console.log('getToastData fetch connection ok');
         setMessage('');
         return res.json();
       }
       else {
-        console.log('fetch not ok',res);
+        console.log('getToastData fetch not ok',res);
         if('401' == res.status)
         setMessage('Problem connecting to server. Check access code.');
         else
         setMessage('Problem connecting, status code: '+res.status);
+
         if(pollingInterval)
           clearInterval(pollingInterval);  
       }
-    }).then((data) => {setQueryData(data);}).catch(
+    }).then((data) => {
+      setQueryData(data);
+      setAgenda(data.agendas[meeting]);
+    }).catch(
       (error) => {
         console.log('fetch error',error);
-        setMessage('Unable to connect. Possibly a network error or typo in domain name '+club.domain+'.');
+        setMessage('Unable to connect. Possibly a network error or typo in domain name '+clubs[0].domain+'.');
       }
     )
   }
@@ -139,7 +145,6 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
         setMessage('Problem connecting, status code: '+res.status);
       }
     }).then((data) => {
-      ('data for '+club.url,data);
       setToastmostData(data);
     }   ).catch(
       (error) => {
@@ -149,23 +154,12 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     )
   }
 
-  useEffect(() => {
-      if(club.domain && club.code && club.url) {
-        setMessage('Loading data for '+club.domain);
-        getToastData();
-        polling();
-        //console.log('route to replace',router.toString());
-      }
-    }, [club]
-  )
-
   function addClub (newclub) {
     newclub.url = 'https://'+newclub.domain+'/wp-json/rsvptm/v1/mobile/'+newclub.code;
     console.log('addClub',newclub);
     console.log('addClub clubs before',clubs);
     const newclubs = [newclub, ...clubs]
     setClubs(newclubs);
-    setClub(newclub);
     console.log('addClub newclubs',newclubs);
     setMessage('New club set to '+newclub.domain);
     router.replace('/');
@@ -186,9 +180,9 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     currentData.agendas[meeting].roles[roleData.index] = roleData;
     setQueryData(currentData);
     setMessage('Updating ...');
-    console.log('Updating '+club.url);
+    console.log('Updating '+clubs[0].url);
     console.log('roledata',roleData);
-    fetch(club.url, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
+    fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
       setMessage('');
       setQueryData(data);
       console.log('results of role update',data);
@@ -224,6 +218,6 @@ if(('active' == AppState.currentState) && (timeNow > lastUpdate + 30000)) {
     }
   }
 
-   return {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, getToastData, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, 
-    addClub, updateClub, updateRole, sendEmail, takeVoteCounter};
+   return {clubs, setClubs, setDefaultClub, queryData, setQueryData, toastmostData, message, setMessage, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version, 
+    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, pollingInterval, setPollingInterval, setAgenda};
 }

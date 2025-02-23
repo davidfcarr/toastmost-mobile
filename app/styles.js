@@ -1,10 +1,26 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet,Platform } from "react-native";
 
 const styles = createStyles();
 export default styles;
 
 function createStyles() {
     return StyleSheet.create({
+      h1: {
+        fontSize: 25,
+        margin: 10,
+      },
+      h2: {
+        fontSize: 20,
+        margin: 10,
+      },
+      button: {minWidth: 120,maxWidth: 500, backgroundColor: 'black',borderRadius:4, marginLeft: 20, marginRight: 10, height: 50, padding: 10,justifyContent:'center',alignContentContent:'center'},
+      plusbutton: {backgroundColor: 'black',borderRadius:4,marginRight: 10, marginLeft: 10, justifyContent:'center',alignContentContent:'center', padding: 10},
+      minusbutton: {backgroundColor: 'red',borderRadius:4,marginRight: 10, marginLeft: 10, justifyContent:'center',alignContentContent:'center', padding:10},
+      nobutton: {backgroundColor: 'gray',borderRadius:4,marginRight: 10, marginLeft: 10, justifyContent:'center',alignContentContent:'center', padding:10},
+      plusMinusText: {color: 'white', fontSize: 20, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' },
+      buttonText: {color: 'white', fontSize:20},
+      role: {marginLeft: 10},
+      name: {marginLeft: 10},
       container: {
         flex: 1,
         flexGrow: 1,
@@ -14,6 +30,8 @@ function createStyles() {
         marginRight: 'auto',
         padding: 5,
       },
+      choice: {flexDirection:'row', alignItems: 'left',padding: 5, alignContent: 'center'},
+      choiceText: {fontSize:30},
       inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',

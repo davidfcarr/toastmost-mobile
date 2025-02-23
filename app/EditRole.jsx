@@ -5,7 +5,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import styles from './styles'
 import { Octicons } from '@expo/vector-icons'
 
-export default function EditRole ({ item, index, updateRole, user_id, name, members }) {
+export default function EditRole ({ item, updateRole, members }) {
 
 const [guestBlank, setGuestBlank] = useState(false);
 const [guestName, setGuestName] = useState('');

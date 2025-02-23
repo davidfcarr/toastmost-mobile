@@ -1,6 +1,6 @@
 import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
 import SelectDropdown from 'react-native-select-dropdown'
 import styles from '../styles'
@@ -10,96 +10,52 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { ClubContext } from '../ClubContext';
 import useAgenda from '../useAgenda';
 import BrandHeader from "../BrandHeader";
+import { useFocusEffect } from 'expo-router';
+import useClubMeetingStore from "../store";
+//import * as SplashScreen from 'expo-splash-screen';
 
-//{club, agenda, members, setScreen, post_id, userName, user_id, takeVoteCounter}
+//SplashScreen.preventAutoHideAsync(); // Prevent auto-hiding
+
+//{club, agenda, members, setScreen, agenda.post_id, userName, user_id, takeVoteCounter}
 export default function Voting(props) {
-  const context = useContext(ClubContext);
-  const {club, meeting, agenda, members, user_id} = context;
-  const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, takeVoteCounter} = useAgenda();
-  const timeNow = new Date().getTime();
-  const refreshTime = 30000; // 30 seconds
-  const memberOptions = [{'value':'','label':'Select Member'}];
-  const [lastUpdate, setLastUpdate] = useState(timeNow);
-    const [pollingInterval, setPollingInterval] = useState(null);
-    const [ballots, setBallots] = useState([]);
-    const [ballotToUpdate, setBallotToUpdate] = useState('');
-    const [newBallot, setNewBallot] = useState('');
-    const [candidate, setCandidate] = useState(memberOptions[0]);
-    const [candidates, setCandidates] = useState([{key:'speaker',label:'Speaker',options:[],signature:false},{key:'evaluator',label:'Evaluator',options:[],signature:false},{key:'tabletopics',label:'Table Topics',options:[],signature:false}]);
-    const [contests, setContests] = useState(['speaker','evaluator','tabletopics']);
-    const [contestLabels, setContestLabels] = useState(['Speaker','Evaluator','Table Topics']);
-    const [voted,setVoted] = useState({});
-    const [yesno,setYesno] = useState(false);
-    const [checkForVotes,setCheckForVotes] = useState(false);
-    const [signature,setSignature] = useState(false);
-    const [controls,setControls] = useState(false);
-    const [voteCount,setVoteCount] = useState('');
-    const { width } = useWindowDimensions();
-    const post_id = (queryData && queryData.agendas && queryData.agendas.length) ? queryData.agendas[meeting].post_id : 0;
+  const {user_id, message, setMessage, reset} = useAgenda();
+  const {clubs, meeting, queryData, agenda} = useClubMeetingStore();
+  const club = (clubs && clubs.length) ? clubs[0] : {};
+  const [votingdata,setVotingdata] = useState({});
+  const memberDefault = {'value':'','label':'Select Member'};
+  const [candidate, setCandidate] = useState(memberDefault);
+  const [yesno,setYesno] = useState(false);
+  const [signature,setSignature] = useState(false);
+  const [controls,setControls] = useState('');
+  const [guest,setGuest] = useState('');
+  const [newBallot,setNewBallot] = useState('');
+  const [votesToAdd,setVotesToAdd] = useState(false);
+  const [copied,setCopied] = useState(false);
+  const [checkForVotes,setCheckForVotes] = useState(false);
+  const { width } = useWindowDimensions();
+  const [appIsReady, setAppIsReady] = React.useState(false);
 
-    useEffect(() => {
+  const identifier = club.code;
+
+  console.log('voting agenda',agenda);
+
+  useEffect(
+    () => {
       getBallots();
-      polling();
-    }, [])
+      console.log('voting useEffect, initial query');
+    }, []);
+    useEffect(
+      () => {
+        getBallots();
+        console.log('voting useEffect');
+    }, [queryData,agenda]);
 
-    let roles = [];
-    if(agenda && agenda.roles && agenda.roles.length) { 
-      roles = agenda.roles; 
-    }
-    if(!roles.length | !queryData.user_id) { 
-      return <Text>Roles loading ...</Text>;
-    }
-  
-    const voteCounterRole = roles.find(role => role.assignment_key.includes('Vote_Counter'));
-    const isVoteCounter = (voteCounterRole && voteCounterRole.ID == user_id);
-    const contestUpdateIndex = contests.indexOf(ballotToUpdate);
-
-    if(members && members.length)
-    members.forEach(
-      (member) => {
-          memberOptions.push({value:member.name,label:member.name});
-      }
-    );
-
-    if(('active' == AppState.currentState) && (timeNow > lastUpdate + (refreshTime * 2))) {
-      setLastUpdate(timeNow);
-      polling();//fresh update needed after app was out of focus
-    }
-
-    function vote(voteData) {
-      const ts = new Date().getTime();
-      const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+post_id+'?mobile='+club.code+'&t='+ts;
-      setMessage('Sending vote ...');
-     fetch(url, {method: 'POST', body: JSON.stringify(voteData)}).then((res) => res.json()).then((data) => {
-        setMessage('Vote sent '+voteData.key);
-        setBallots(data.meetingvotes);
-        setVoted(data.myvote);
-    }).catch((e) => {
-        console.log('update error',e);
-        setMessage('Data update error');
-      })
-    }
-  
-    function polling() {
-        if(pollingInterval)
-          clearInterval(pollingInterval);
-        setPollingInterval(setInterval(() => {
-          if('active' == AppState.currentState) {
-            setMessage('Checking server for ballots ...');
-            getBallots();  
-          }
-          else {
-            console.log('do not poll server for updates if not in foreground');
-          }
-        }, refreshTime)
-        ) 
-      }
-    
       function getBallots() {
-        if(!post_id)
+        if(!agenda || !agenda.post_id)
           return null;
         const ts = new Date().getTime();
-        const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+post_id+'?mobile='+club.code+'&t='+ts;
+        const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+agenda.post_id+'?mobile='+club.code+'&t='+ts;
+        setMessage('Checking for ballots ...');
         console.log('get ballots' + url);
         fetch(url).then((res) => {
           if(res.ok) {
@@ -116,62 +72,16 @@ export default function Voting(props) {
               clearInterval(pollingInterval);  
           }
         }).then((data) => {
-        const blankSlate = !ballots.length;
-          setBallots(data.meetingvotes);
-          setVoted(data.myvote);
-          setVoteCount('<html><body>'+data.votecount+'</body></html>');
-          console.log('data fetched');
-          console.log('blankSlate',blankSlate);
-        if(blankSlate) {
-        //first time, set candidates to ballots
-        const newcontests = [];
-        const newContestLabels = [];
-        data.meetingvotes.forEach(
-          (ballot) => {
-            newcontests.push(ballot.key);
-            newContestLabels.push(ballot.label);
+          console.log('getBallots data',data);
+          setVotingdata(data);
+          setAppIsReady(true);
+          /*
+          async function hideSplash() {
+            await SplashScreen.hideAsync(); // Hide the splash screen
           }
-        );
-        newcontests.push('Table Topics');
-        newContestLabels.push('Table Topics');
-        if(data.meetingvotes.length) {
-          setContests(newcontests);
-          setContestLabels(newContestLabels);
-          setCandidates(data.meetingvotes);  
-          console.log('candidates based on ballots from server',data.meetingvotes);
-          console.log('contests',newcontests);
-          console.log('labels',newContestLabels);
-        } else {
-          const speakers = [];
-          const evaluators = [];
-          roles.forEach(
-            (role) => {
-                if('Speaker' == role.role) {
-                  if(role.name) {
-                    speakers.push(role.name);
-                    console.log('add speaker from agenda',role.name);  
-                  }
-                }
-                if('Evaluator' == role.role) {
-                  if(role.name)
-                  evaluators.push(role.name);
-                }
-            }        
-          );
-          let contestIndex;
-          const candidatesCopy = {...candidates};
-          if(speakers.length || evaluators.length) {
-            contestIndex = contests.indexOf('speaker');
-            candidatesCopy[contestIndex].options = speakers;
-            contestIndex = contests.indexOf('evaluator');
-            candidatesCopy[contestIndex].options = evaluators;
-            setCandidates(candidatesCopy);
-            console.log('candidates based on agenda',candidatesCopy);
-          }
-        }
-
-        }//end blankslate
-        }   ).catch(
+          hideSplash();
+          */
+    }   ).catch(
           (error) => {
             console.log('fetch error',error);
             setMessage('Unable to connect. Possibly a network error or typo in domain name '+club.domain+'.');
@@ -179,89 +89,122 @@ export default function Voting(props) {
         )
       }
 
-      function saveCandidates() {
-        console.log('save candidates',candidates);
-        const ts = new Date().getTime();
-        const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+post_id+'?mobile='+club.code+'&t='+ts;
-        setMessage('Saving ballots ...');
-        console.log('posting to '+url);
-       fetch(url, {method: 'POST', body: JSON.stringify({candidates: candidates})}).then((res) => res.json()).then((data) => {
-          console.log('data posted',candidates);
-          console.log('data returned',data);
-          setMessage('');
-          setBallots(data.meetingvotes);
-          setVoted(data.myvote);
-      }).catch((e) => {
-          console.log('update error',e);
-          setMessage('Data update error');
-        })
-      }
+  function sendVotingUpdate(update) {
+    const ts = new Date().getTime();
+    const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+agenda.post_id+'?mobile='+club.code+'&t='+ts;
+    fetch(url, {method: 'POST', body: JSON.stringify(update)}).then((res) => res.json()).then((data) => {
+      setMessage('');
+      setVotingdata(data);
+      console.log('results of voting update',data);
+    }).catch((e) => {
+      console.log('update error',e);
+      setMessage('Data update error');
+    })    
+  }
 
-      function summaryLine() {
-        let output = '';
-        contests.forEach(
-          (contest, contestIndex) => {
-            if(contestLabels[contestIndex])
-              output += contestLabels[contestIndex];
-            if(ballots[contestIndex] && ballots[contestIndex].options && ballots[contestIndex].options.length)
-              output += ' ('+ballots[contestIndex].options.join(', ')+') ';
-            else 
-              output += ' (list not set) ';
-          }
-        );
-        return <Text>{output}</Text>;
-      }
-
-      function SyncSpeechesEvaluators() {
-        if(!ballots.length && candidates[1] && (candidates[0].options.length || candidates[1].options.length) )  {
-          return <Pressable style={styles.addButton} onPress={() => {
-            setBallots(candidates);
-            saveCandidates();
-          }}><Text style={styles.addButtonText}>Sync Speakers/Evaluators from Agenda</Text></Pressable>
-        }
-        return null
-      } 
-      
+  if (!appIsReady || !votingdata.ballot) {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <BrandHeader />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View>
+          <BrandHeader {...queryData} />
+          <Text>Voting tool loading ...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
-        <View style={{flexDirection: 'row'}}>
-      <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
-      <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
-      {isVoteCounter ? <><Pressable onPress={() => { setControls(true); }} style={{ marginLeft: 10 }}>
+  const contestlist = Object.keys(votingdata.ballot);
+
+  if (votingdata.is_vote_counter && 'check' == controls) {
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView>
+          <View>
+            <BrandHeader {...queryData} {...agenda} />
+            <View style={{ flexDirection: 'row' }}>
+              <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
+                <MaterialCommunityIcons name="ballot-outline" size={24} color="black" />
+              </Pressable>
+              <Pressable onPress={() => { setControls('vote'); }} style={{ marginLeft: 10 }}>
+                <MaterialCommunityIcons name="vote" size={24} color="black" />
+              </Pressable>
+              <Pressable style={{ marginLeft: 10 }} onPress={() => { setControls('results'); }}>
+                <MaterialCommunityIcons name="chart-bar" size={24} color="black" />
+              </Pressable>
+            </View>
+            {contestlist.map((contest, index) => (
+              <View key={index}>
+                <Text>{contest}</Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  if(votingdata.is_vote_counter && 'vote' != controls) {
+      return (
+        <SafeAreaView style={{flex:1}} >
+          <ScrollView>
+          <View>
+          <BrandHeader {...queryData} {...agenda} />
+              <Text style={styles.h1}>Vote Counter's Tool</Text>
+              <View style={{flexDirection: 'row'}}>
+        <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
       <MaterialCommunityIcons name="ballot-outline" size={24} color="black" />
       </Pressable>
-      <Pressable onPress={() => { setControls(false); }} style={{ marginLeft: 10 }}>
-      <MaterialCommunityIcons name="vote" size={24} color="black" />
-      </Pressable>
-      <Pressable style={{ marginLeft: 10 }}
-      onPress={() => {
-        setControls(false);
-        setCheckForVotes(true);
-        getBallots();
-      }}
-      ><MaterialCommunityIcons name="poll" size={24} color="black" /></Pressable></> : null}
-      </View>
-      <Text style={{height: 15}}>{message}</Text>
-      {!controls ? <Text style={{fontSize:30,borderTop:3,borderColor:'gray',marginTop:15}}>Voting <MaterialCommunityIcons name="vote" size={24} color="black" /></Text> : null}
-      {isVoteCounter && controls ? <><Text style={{fontSize:30,borderTop:3,borderColor:'gray',marginTop:15}}>Vote Counter Controls <MaterialCommunityIcons name="ballot-outline" size={24} color="black" /></Text>
-      <Text>Summary {summaryLine()}</Text>
-      <SyncSpeechesEvaluators />
-      <Text style={{paddingTop: 15, color: 'red'}}>Add or update ballot:</Text>
-      <View style={{flexDirection: 'row', alignContent: 'center'}} >
-        <SelectDropdown
-        data={['choose ballot or "new"',...contests,'new']}
-        defaultValue={ballotToUpdate ? ballotToUpdate : 'choose ballot or "new"'}
+          <Pressable onPress={() => { setControls('vote'); }} style={{ marginLeft: 10 }}>
+        <MaterialCommunityIcons name="vote" size={24} color="black" />
+        </Pressable>
+        <Pressable style={{ marginLeft: 10 }}
+        onPress={() => {
+          setControls('check');
+          setCheckForVotes(true);
+          getBallots();
+        }}
+        >
+        <MaterialCommunityIcons name="poll" size={24} color="black" /></Pressable>
+        <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
+        <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
+        </View>
+              <Text>As the Vote Counter, you create ballots based on the speakers and evaluators on the agenda, editing them as necessary.</Text>
+              <Text>You can also create ballots for Table Topics speakers and votes on club business.</Text>
+              {contestlist.map(
+                (c, cindex) => {
+                    if(('Template' == c) || ('C' == c) || ('c' == c))
+                        return;
+                    const currentBallot = votingdata.ballot[c];
+                    return <View key={'contest'+cindex}>
+                        <Text style={styles.h2}>{c}</Text>
+                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice}  key={'contestant'+index}>
+                        <Pressable style={styles.minusbutton} onPress={() => {currentBallot.deleted.push(contestant);currentBallot.contestants.splice(index,1); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]); setVotingdata({...votingdata,ballot:ballotCopy}); }}><Text style={styles.buttonText}>-</Text></Pressable>
+                         <Text style={styles.choiceText}>{contestant}</Text></View>})}
+                        {currentBallot.new.length ? <View  style={styles.choice} ><Text>Pending:</Text>{
+                        currentBallot.new.map((maybecontestant,index) => {if(!maybecontestant) return; 
+                        return <View style={styles.choice} key={'pending'+index}>
+                        <Pressable style={styles.plusbutton} onPress={() => {currentBallot.contestants.push(maybecontestant);currentBallot.new.splice(index,1); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy}); }}><Text style={styles.buttonText}>+</Text></Pressable> 
+                        <Text style={styles.choiceText}>{maybecontestant}</Text></View>})}</View> : null}
+                        
+                        {currentBallot.deleted.length ? <View><Text>Deleted:</Text>{currentBallot.deleted.map((deletedcontestant,index) => {return (<View key={'deleted'+index} style={styles.choice}>
+                          <Pressable style={styles.plusbutton} onPress={() => {currentBallot.contestants.push(deletedcontestant);currentBallot.deleted.splice(index,1); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]); setVotingdata({...votingdata,ballot:ballotCopy}); }}><Text style={styles.buttonText}>+</Text></Pressable>
+                           <Text style={{textDecorationLine:'line-through',fontSize:30}}>{deletedcontestant}</Text></View>)})}</View> : null}
+                        <View style={{padding: 10}}>
+                        <Text>Pick from List</Text> 
+                        <SelectDropdown
+        data={[memberDefault,...votingdata.memberlist]}
+        defaultValue={candidate}
         onSelect={(selectedItem, index) => {
-        setBallotToUpdate(selectedItem);
+          const choice = selectedItem.value;
+          console.log('add on select',choice); currentBallot.contestants.push(choice); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy});
+          sendVotingUpdate({ballot:ballotCopy,post_id:agenda.post_id,identifier:identifier});
         }}
         renderButton={(selectedItem, isOpened) => {
           return (
             <View style={styles.dropdownButtonStyle}>
               <Octicons name="chevron-down" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
               <Text style={styles.dropdownButtonTxtStyle}>
-                {selectedItem && selectedItem}
+                {selectedItem && selectedItem.label}
               </Text>
             </View>
           );
@@ -269,176 +212,110 @@ export default function Voting(props) {
         renderItem={(item, index, isSelected) => {
           return (
             <View key={index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
-              <Text style={styles.dropdownItemTxtStyle}>{item}</Text>
+              <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
             </View>
           );
         }}
         showsVerticalScrollIndicator={false}
         dropdownStyle={styles.dropdownMenuStyle}
-      /></View></>
-      : null}
- 
-      <ScrollView style={{margin: 10, paddingBottom: 10, flex: 1}}>
-      {checkForVotes && <RenderHtml source={{'html':voteCount}} contentWidth={width - 10} />}
-      {!controls && ballots.length ? ballots.map((ballot, ballotindex) => {
-        if(!ballot.options.length) {
-          return null;
-        }
-        
-        return (
-          <View key={'ballot'+ballotindex}>
-            <Text style={{fontSize: 30}}>{ballot.label}</Text>
-            {voted[ballot.key] ? <Text>Voted</Text> : ballot.options && ballot.options.map( (o, optindex) => {
-              return (<Pressable key={'opt'+optindex} onPress={() => {
-                setMessage('Vote for '+o+' for '+ballot.key );
-                vote({vote:o,key:ballot.key,signature:(ballot.signature) ? userName : ''});
-              }}>
-                <Text style={{fontSize: 25, backgroundColor: 'black', border: 1, borderColor: 'black', color: 'white', margin: 5, marginLeft: 15, padding: 5, width: '60%'}}>{o}</Text>
-              </Pressable>)
-            }) }
-            {ballot.signature ? <View><Text>Vote will be signed {userName}</Text></View> : null}
+      />
+      <Text>Or Type Choice</Text>      
+        <View style={{display: 'flex',flexDirection:'row',alignContent:'left'}}><View style={{width: '90%'}}><TextInput style={styles.input} label="Type Choice to Add" value={guest} onChangeText={ (value) => { console.log('text entry value',value); setGuest(value); } } /></View>
+        <View ><Pressable style={styles.plusbutton} onPress={() => {currentBallot.contestants.push(guest); setGuest(''); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy});
+      sendVotingUpdate({ballot:ballotCopy,post_id:agenda.post_id,identifier:identifier});
+      }}><Text style={styles.buttonText}>+</Text></Pressable></View></View>
+      </View>                    
+                        {currentBallot.status == 'publish' ? <View><Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'draft'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Unpublish</Text></Pressable></Text></View> 
+                        : <Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'publish'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Publish</Text></Pressable></Text>}
+                    </View>
+                }
+            )}
+            <Text style={styles.h2}>New Ballot</Text>
+            <View style={{display: 'flex',flex:1,flexDirection:'row'}}><View style={{width:'90%'}}><TextInput style={styles.input} label="Contest or Question" value={newBallot} onChangeText={ (value) => { setNewBallot(value); } } /></View><View><Pressable style={styles.plusbutton} onPress={() => {const newBallotEntry = {...votingdata.ballot}; newBallotEntry[newBallot] = {...votingdata.ballot.Template}; setVotingdata({...votingdata,ballot:newBallotEntry}); setNewBallot('');}}><Text style={styles.buttonText}>+</Text></Pressable></View></View>
+            {contestlist.map(
+                (c, cindex) => {
+                    if(('Template' == c) || ('C' == c) || ('c' == c))
+                        return;
+                    const currentBallot = votingdata.ballot[c];
+                    if(currentBallot.status != 'publish')
+                        return;
+                    const added_votes = [...votingdata.added_votes];
+                    return <View key={'contestadd'+cindex}>
+                        <Text style={styles.h2}>Add Votes: {c}</Text>
+                        <Text>If you received votes from outside of this app, you can add them here.</Text>
+                        {currentBallot.contestants.map((contestant,index) => {if(!contestant || contestant.trim() == '') return; console.log('contestant for '+c,contestant); let addvote = added_votes.find((item,itemindex) => {if(item.ballot == c && item.contestant == contestant) {item.index = itemindex; return item;} }); if(!addvote) {addvote = {'ballot':c,'contestant':contestant,add:0,index:added_votes.length}; added_votes.push(addvote); console.log('created addvote object',addvote)} 
+                        return <Text key={'addvotes'+index} style={styles.choice} >
+                        <Pressable style={styles.plusbutton} onPress={() => {console.log('add vote',contestant); setVotesToAdd(true); addvote.add++; console.log(addvote); added_votes[addvote.index].add = addvote.add; console.log('added',added_votes); const update = {...votingdata,added_votes:added_votes}; console.log('added update',update); setVotingdata(update); } }><Text style={styles.buttonText}>+</Text></Pressable> 
+                        <Pressable style={styles.minusbutton} onPress={() => {console.log('add vote',contestant);  setVotesToAdd(true); if(addvote.add > 0) addvote.add--; console.log(addvote); added_votes[addvote.index].add = addvote.add; console.log('added',added_votes); const update = {...votingdata,added_votes:added_votes}; console.log('added update',update); setVotingdata(update); } }><Text style={styles.buttonText}>-</Text></Pressable> 
+                        {contestant} +{addvote.add}</Text>})}
+                        {votesToAdd ? <Text><Pressable style={styles.button} onPress={() =>{ sendVotingUpdate({added:votingdata.added_votes,post_id:agenda.post_id,identifier:identifier}); setVotesToAdd(false); }}><Text style={styles.buttonText}>Update</Text></Pressable></Text> : null}
+                    </View>
+                }
+            )}
+            <Text style={styles.h2}>Reset</Text>
+            <Text><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Reset Ballot</Text></Pressable></Text>
           </View>
-      )
-      })
-      : null     
-    }
+          </ScrollView>
+          </SafeAreaView>          
+      );  
+  }
 
-      {isVoteCounter && controls && contestUpdateIndex > -1 ?  <><Text style={{fontSize: 25}}>Contestants: {contestLabels[contestUpdateIndex]}</Text>
-      <EditContestants candidates={candidates} ballotContestants={ballots[contestUpdateIndex] && ballots[contestUpdateIndex].options ? ballots[contestUpdateIndex].options : [] } saveCandidates={saveCandidates} setCandidates={setCandidates} contestUpdateIndex={contestUpdateIndex} />
-      {candidates[contestUpdateIndex]
-    && <><Text style={{fontSize: 20}}>Add Contestant: {contestLabels[contestUpdateIndex]}</Text>
-       <View style={{flexDirection:'row'}}><Text style={{paddingTop:20}}>Select:</Text>
-       <SelectDropdown
-      data={memberOptions}
-      defaultValue={candidate}
-      onSelect={(selectedItem, index) => {
-      console.log('selected item',selectedItem);
-      //setCandidate(selectedItem);
-      const newcandidates = [...candidates];
-      newcandidates[contestUpdateIndex].options.push(selectedItem.value);
-      setCandidates(newcandidates);
-      setCandidate(memberOptions[0]);
-      polling();/*postpone next update*/
-      }}
-      renderButton={(selectedItem, isOpened) => {
-        return (
-          <View style={styles.dropdownButtonStyle}>
-            <Octicons name="chevron-down" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
-            <Text style={styles.dropdownButtonTxtStyle}>
-              {selectedItem && selectedItem.label}
-            </Text>
-          </View>
-        );
-      }}
-      renderItem={(item, index, isSelected) => {
-        return (
-          <View key={index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
-            <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
-          </View>
-        );
-      }}
-      showsVerticalScrollIndicator={false}
-      dropdownStyle={styles.dropdownMenuStyle}
-    /></View>
-      <Text>or enter below and click Add</Text>
-      <TextInput
-      style={styles.input}
-      autoCorrect={false}
-      placeholder="Name or choice"
-      placeholderTextColor="gray"
-      value={candidate.value}
-      onChangeText={(input) => {
-      setCandidate({label:input,value:input})
-      }}
-     />
-      <Pressable style={styles.addButton}
-      onPress={() => {
-        const newcandidates = [...candidates];
-        newcandidates[contestUpdateIndex].options.push(candidate.value);
-        setCandidates(newcandidates);
-        setCandidate(memberOptions[0]);
-      }}
-      ><Text style={styles.addButtonText}>Add</Text></Pressable>
-    </>
-   }
-    </> : null}
-    {isVoteCounter && ballotToUpdate == 'new' ? 
-    <View><Text>New Ballot</Text>
-      <TextInput
-      style={styles.input}
-      autoCorrect={false}
-      placeholder="Role or Question"
-      placeholderTextColor="gray"
-      value={newBallot}
-      onChangeText={(input) => {
-      setNewBallot(input)
-      }} />
-      <View style={{flexDirection:'row', margin: 5}} >
-        <Pressable onPress={() => {setYesno(true)} } style={{padding: 5, backgroundColor: yesno ? 'black' : 'gray',marginRight: 10}}><Text style={{color:'white'}}>Yes/No</Text>
-        </Pressable>
-        <Pressable onPress={() => {setYesno(false)} } style={{padding: 5, backgroundColor: !yesno ? 'black' : 'gray'}}><Text style={{color:'white'}}>Multiple Choice</Text>
-        </Pressable>
+  let openBallots = false;
+
+  return (
+    <SafeAreaView>
+      <View>
+      <BrandHeader {...queryData} {...agenda} />
+      <Text style={styles.h1}>Voting</Text>
+          {votingdata.is_vote_counter ? 
+                      <View style={{flexDirection: 'row'}}>
+                      <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
+                    <MaterialCommunityIcons name="ballot-outline" size={24} color="black" />
+                    </Pressable>
+                      <Pressable style={{ marginLeft: 10 }}
+                      onPress={() => {
+                        setControls('check');
+                        getBallots();
+                      }}
+                      >
+                      <MaterialCommunityIcons name="poll" size={24} color="black" /></Pressable>
+                      <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
+                      <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
+                      </View>
+           : <View style={{flexDirection: 'row'}}>
+           <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
+           <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
+           </View>}
+                {contestlist.map(
+                (c, cindex) => {
+                    if('Template' == c)
+                        return;
+                    const currentBallot = votingdata.ballot[c];
+                    if(currentBallot.status != 'publish')
+                        return null;
+                    if(votingdata.myvotes.includes(c))
+                        return (<View key={'contest'+cindex}>
+                    <Text style={styles.h2}>{c}</Text>
+                    <Text>Voted</Text>
+                    </View>)
+                    openBallots = true;
+                    return (<View key={'contest'+cindex}>
+                        <Text style={styles.h2}>{c}</Text>
+                        {currentBallot.contestants.length ? <Text>Vote for:</Text> : null}
+                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Text><Pressable style={styles.button} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id}; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>{contestant}</Text></Pressable></Text></View>})}
+                    </View>)
+                }
+            )}
+          {!votingdata.is_vote_counter && (!openBallots) ? 
+          <View><Text>The current vote counter is "{(votingdata.vote_counter_name) ? votingdata.vote_counter_name : '(none assigned)'}" but no ballots have been created yet.</Text>
+          <Text style={styles.h2}>Assume the role of Vote Counter?</Text>
+          <Text>If no Vote Counter is available, any member can assume the role.</Text>
+          {votingdata.authorized_user ? <Text><Pressable style={styles.button} onPress={() => {sendVotingUpdate({post_id:agenda.post_id,identifier:identifier,take_vote_counter:true}) }}>Take Vote Counter Role</Pressable></Text> : <Text>Please log in first</Text>}
+          </View> : null}
+          {votingdata.is_vote_counter ? <View><Text style={styles.h2}>Back to Vote Counter Controls?</Text>
+          <Pressable style={styles.button} onPress={() => {setControls('')} }><Text style={styles.buttonText}>Go Back</Text></Pressable></View> : null}
       </View>
-      <View style={{flexDirection:'row', margin: 5}} >
-        <Pressable onPress={() => {setSignature(true)} } style={{padding: 5, backgroundColor: signature ? 'black' : 'gray',marginRight: 10}}><Text style={{color:'white'}}>Signature Required</Text>
-        </Pressable>
-        <Pressable onPress={() => {setSignature(false)} } style={{padding: 5, backgroundColor: !signature ? 'black' : 'gray'}}><Text style={{color:'white'}}>No Signature</Text>
-        </Pressable>
-      </View>
-     <Pressable style={styles.addButton}
-      onPress={() => {
-        const newcandidates = [...candidates];
-        const key = newBallot.toLowerCase().replaceAll(/[^a-z0-9]/g,'');
-        const newballot = {label:newBallot,key:key,options:(yesno) ? ['Yes','No'] : [],signature:signature};
-        setSignature(false);
-        console.log('newballot',newballot);
-        newcandidates.push(newballot);
-        const newcontests = [...contests];
-        newcontests.push(key);
-        const newContestLabels = [...contestLabels];
-        newContestLabels.push(newBallot);
-        console.log('newcontests',newcontests);
-        console.log('newlabels',newContestLabels);
-        setCandidates(newcandidates);
-        setContests(newcontests);
-        setContestLabels(newContestLabels);
-        setNewBallot('');
-        setBallotToUpdate(key);
-      }}
-      ><Text style={styles.addButtonText}>Add Ballot</Text></Pressable>
-    </View>
-    : null}
- 
- {isVoteCounter && (controls || checkForVotes) ? <Pressable style={[styles.addButton,{marginTop: 10}]}
-      onPress={() => {
-        setCheckForVotes(!checkForVotes);
-        getBallots();
-      }}
-      ><Text style={styles.addButtonText}>{checkForVotes ? 'Stop Check for Votes' : 'Check for Votes'}</Text></Pressable>
-    : null}
+      </SafeAreaView>
+  );
 
-    {!voteCounterRole || !voteCounterRole.ID ? <><Text>No Vote Counter Assigned</Text>
-      <Pressable style={styles.addButton} onPress={() => {
-        setControls(true);
-        takeVoteCounter();
-        setMessage('Updating role');
-        getBallots();
-      }}>
-      <Text style={styles.addButtonText}>Take Over</Text></Pressable></> 
-      : null}
-    {voteCounterRole && voteCounterRole.ID && !isVoteCounter ? 
-    <><Text>Vote Counter: {voteCounterRole.name}</Text>{!ballots.length ? 
-      <Pressable style={styles.addButton} onPress={() => {
-        setControls(true);
-        takeVoteCounter();
-        setMessage('Updating role');
-        getBallots();
-}}>
-      <Text style={styles.addButtonText}>Take Over</Text></Pressable> : null
-      }</>
-       : null}
-
-    </ScrollView>
-    </SafeAreaView>
-    )
 }

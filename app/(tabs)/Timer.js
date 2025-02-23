@@ -1,18 +1,20 @@
 import { Text, View, ScrollView, TextInput, Pressable, Dimensions, StyleSheet, AppState } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect} from "react";
 import { Octicons } from '@expo/vector-icons'
 //import Autocomplete from 'react-native-autocomplete-input';
-import { ClubContext } from '../ClubContext';
 import SelectDropdown from 'react-native-select-dropdown'
 import useAgenda from '../useAgenda';
 import BrandHeader from '../BrandHeader';
+import useClubMeetingStore from '../store';
 
 export default function Timer (props) {
 
   /*const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, addClub, updateClub, updateRole, sendEmail, takeVoteCounter} = useAgenda();*/
-  const context = useContext(ClubContext);
-  const {agenda, members} = context;
+  const {clubs, meeting, queryData,agenda} = useClubMeetingStore();
+  const club = (clubs && clubs.length) ? clubs[0] : {};
+  const members = queryData.members;
+  console.log('timer agenda',agenda);
   const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
   const [timing,setTiming] = useState(timerOptions[0]);
   const [start, setStart] = useState(0);
@@ -41,6 +43,9 @@ export default function Timer (props) {
         clearInterval(tracker);
     }
 },[start]);
+
+  if(!agenda)
+  return <Text>Loading</Text>;
 
   const {roles} = agenda;
   if(!roles || !roles.length)

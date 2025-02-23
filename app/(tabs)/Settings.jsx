@@ -9,35 +9,44 @@ import * as Linking from 'expo-linking';
 import { useWindowDimensions } from 'react-native';
 import { Platform } from 'react-native';
 import useAgenda from '../useAgenda';
-import { ClubContext } from '../ClubContext';
+import useClubMeetingStore from '../store';
 import { router } from 'expo-router';
 import BrandHeader from '../BrandHeader';
 
 export default function Settings (props) {
-    const {club, setClub,setMeeting,setAgenda, pollingInterval} = React.useContext(ClubContext);
     const [emailPrompt,setEmailPrompt] = useState(false);
-    const [tempClub,setTempClub] = useState(!club.domain ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
     const { width, height } = useWindowDimensions();
-    const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, addClub, sendEmail, setReset} = useAgenda();
-
+    const {setAgenda, toastmostData, message, setMessage, sendEmail, setReset} = useAgenda();
+    const url = Linking.useURL();
+    const {queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting} = useClubMeetingStore();
+    const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
+    
+    console.log('expo url',url);
+    if (url) {
+      const { hostname, path, queryParams } = Linking.parse(url);
+      if(queryParams.code && queryParams.domain) {
+        addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.domain)});
+      }
+      console.log(
+        `Linked to app with hostname: ${hostname}, path: ${path} and data: ${JSON.stringify(
+          queryParams
+        )}`
+      );
+    }
+  
     function resetClubData() {
       setQueryData({});
       setMeeting(0);
       setQueryData({...queryData,agendas:[]});
       setAgenda({roles:[]});
       router.replace('/');
-      if(pollingInterval) {
-        console.log('cleared pollingInterval',pollingInterval);
-        clearInterval(pollingInterval);
-      }
       }
     
     console.log('clubs',clubs);
     console.log('club',clubs);
     
     function diffClubs () {
-      if(!queryData || !queryData.userblogs)
-        return [];
+      if(!queryData || !queryData.userblogs || !clubs || !clubs.length) return [];
       let diff = [... queryData.userblogs];
       let index;
       clubs.forEach(
@@ -49,12 +58,15 @@ export default function Settings (props) {
       return diff.filter(Boolean);
     }
   
+    function makeUrl(domain,code) {
+      return 'https://'+domain+'/wp-json/rsvptm/v1/mobile/'+code;
+    }
+
     function addDomainSame(domain) {
       const newclubs = [...clubs];
       const newclub = {'domain':domain,'code':queryData.code,'url':'https://'+domain+'/wp-json/rsvptm/v1/mobile/'+queryData.code};
-      newclubs.push(newclub);
+      newclubs.unshift(newclub);
       setClubs(newclubs);
-      setClub(newclub);
       //setScreen('home');
       setQueryData({});
     }
@@ -69,9 +81,6 @@ export default function Settings (props) {
       );
       setClubs(newclubs);
     }
-/*         {toastmostData && toastmostData.androidUpdatePrompt && ('android' == Platform.OS) ? <View style={{marginLeft:5,marginRight: 5, padding: 5, borderWidth:1,borderColor:'red'}}><RenderHtml source={{'html':toastmostData.androidUpdatePrompt}} contentWidth={width - 10} /></View> : null}
-
-*/
     
       const different = diffClubs();
       console.log('different',different);
@@ -114,7 +123,7 @@ export default function Settings (props) {
     />
     </View>
 <View>
-          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {addClub(tempClub);resetClubData();} }} style={styles.addButton}>
+          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {addClub({...tempClub,url:makeUrl(tempClub.domain,tempClub.code)});resetClubData();} }} style={styles.addButton}>
             <Text style={styles.addButtonText}>{emailPrompt ? <Text>Request by Email</Text> : <Text>Add</Text>}</Text>
           </Pressable>
           </View>
@@ -122,7 +131,7 @@ export default function Settings (props) {
           <Text style={styles.instructions}>If you have copied a domain|code string, paste it in the first field above. To get instructions emailed to you, enter your club website domain into the first blank and your email address in the second.</Text><Text style={styles.instructions}><Text style={{fontWeight: 'bold'}}>Demo Accounts:</Text> If you do not have a Toastmost account, enter demo.toastmost.org in the first blank and your email address in the second to have a demo account created for you.</Text>
           </View>
   
-        {club.url && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
+        {clubs.length && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
         <View style={{flex:1}}>
         <ScrollView>
         {(clubs.length > 0) ? clubs.map(
@@ -132,7 +141,7 @@ export default function Settings (props) {
                 <Pressable key={'remove'+index} onPress={() => { setClubs(() => {let current = [...clubs]; current.splice(index, 1); setClub({}); return current;} ); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
-                <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); setClub(clubChoice); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); console.log('setClub new list',newclubs); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}>Choose {clubChoice.domain}</Text>
                 </Pressable>
               </View>
@@ -141,7 +150,7 @@ export default function Settings (props) {
         )
         : null}
         {(clubs.length > 0) ?
-        <Pressable onPress={() => {setClub({domain:'',code:'',url:''}); setReset(true); setClubs([]); resetClubData(); setQueryData({}); } } style={styles.chooseButton}>
+        <Pressable onPress={() => {setReset(true); setClubs([]); resetClubData(); setQueryData({}); } } style={styles.chooseButton}>
         <Text style={styles.addButtonText}>Reset Clubs List</Text>
         </Pressable>
          : null}
