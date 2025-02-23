@@ -1,12 +1,10 @@
-import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, Switch, FlatList } from "react-native";
+import { Text, View, Pressable, AppState, FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
 import EditRole from '../EditRole';
-import RenderRole from '../RenderRole';
-/* import QRScanner from "./QRScanner"; */
+/* import RenderRole from '../RenderRole'; */
 import styles from '../styles'
-import { useWindowDimensions } from 'react-native';
 import BrandHeader from '../BrandHeader';
 import useAgenda from '../useAgenda';
 import Settings from './Settings';
@@ -14,18 +12,14 @@ import { useFocusEffect } from 'expo-router';
 import useClubMeetingStore from '../store';
 
 export default function Home (props) {
-    const [edit,setEdit] = useState(false);
+    const [edit,setEdit] = useState('');
     const [pollingInterval,setPollingInterval] = useState(null);
     const refreshTime = 60000;
     const {queryData, message, setMessage, updateRole, getAgenda, getToastData} = useAgenda();
-    const toggleSwitch = () => setEdit(previousState => !previousState);
     const [lastUpdate, setLastUpdate] = useState(0);
     const timeNow = Date.now();
-    console.log('club getCurrentClub',club);
     const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda} = useClubMeetingStore();
     const club = (clubs && clubs.length) ? clubs[0] : {};
-    console.log('index clubs',clubs);
-    console.log('index setClubs',setClubs);
     useFocusEffect(
       useCallback(() => {
         console.log('focus Home');// Do something when the screen is focused
@@ -70,11 +64,17 @@ export default function Home (props) {
 
     console.log('home agenda',agenda)
     if(!agenda || !agenda.roles || !agenda.roles.length) {
-      return <SafeAreaView><View><BrandHeader /><Text>{club.domain}</Text><Text>Loading ...</Text></View></SafeAreaView>;
+      return <SafeAreaView><View><BrandHeader /><Text>Loading ...</Text></View></SafeAreaView>;
     }
-    console.log('agenda domain',agenda.domain);
-    console.log('club domain',club.domain);
-    
+
+    if(edit) {
+      const item = agenda.roles.find((element) => {if(element.assignment_key == edit) return element;});
+      return (<SafeAreaView><View><BrandHeader />
+      <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} />
+      <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setEdit('')}><Text style={styles.buttonText}>Done</Text></Pressable>
+      </View></SafeAreaView>);
+    }
+
       return (
         <SafeAreaView style={styles.container}>
           <View style={{ width: '100%', flex: 1 }}>
@@ -111,17 +111,6 @@ export default function Home (props) {
               ) : null}
             </View>
 
-            <View style={{ flexDirection: 'row', padding: 5 }}>
-              <Switch
-                trackColor={{ false: '#767577', true: '#81b0ff' }}
-                thumbColor={edit ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={edit}
-              />
-              <Text>Edit</Text>
-            </View>
-
             {club.domain && agenda.roles.length > 0 ? (
               <View style={{ width: '100%', flex: 1 }}>
                 {edit ? null : (
@@ -136,22 +125,27 @@ export default function Home (props) {
                     const isMe = (roleid == queryData.user_id);
                     console.log('item isMe '+item.role,isMe);
                     const name = (item.name) ? item.name : 'Open';
-                    //someone else
-                    if(edit)
-                      return <EditRole item={item} members={queryData.members} updateRole={updateRole} />
 
-                      if(item.ID && !isMe)
-                      return (
-                        <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
-                          <View style={styles.nobutton}><Text style={styles.plusMinusText}>✓</Text></View>
-                          <Text style={styles.role}>{item.role}</Text>
-                          <Text style={styles.name}>{name}</Text>
-                        </View>
-                      )
+                      if(item.ID && item.ID != '0' && !isMe) {
+                        console.log('nobutton item',item);
+                        return (
+                          <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
+                            <Pressable onPress={() => {setEdit(item.assignment_key);}}>
+                            <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
+                            </Pressable>
+                            <View style={styles.nobutton}><Text style={styles.plusMinusText}>✓</Text></View>
+                            <Text style={styles.role}>{item.role}</Text>
+                            <Text style={styles.name}>{name}</Text>
+                          </View>
+                        )  
+                      }
 
                       if(isMe)
                       return (
                         <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
+                          <Pressable onPress={() => {setEdit(item.assignment_key);}}>
+                          <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
+                          </Pressable>
                           <Pressable style={styles.minusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); }}>
                             <Text style={styles.plusMinusText}>-</Text>
                           </Pressable>
@@ -159,17 +153,18 @@ export default function Home (props) {
                           <Text style={styles.name}>{name}</Text>
                         </View>
                       )
-                    //available to sign up
                     return (
                       <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
-                        {!item.ID && !(queryData.user_id == parseInt(item.ID)) ? <Pressable style={styles.plusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); }}>
+                          <Pressable onPress={() => {setEdit(item.assignment_key);}}>
+                          <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
+                          </Pressable>
+                        <Pressable style={styles.plusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
                           <Text style={styles.plusMinusText}>+</Text>
-                        </Pressable> : <Text>✔</Text>}
+                        </Pressable>
                         <Text style={styles.role}>{item.role}</Text>
                         <Text style={styles.name}>{name}</Text>
                       </View>
                     )
-
 
                   }}
                 />

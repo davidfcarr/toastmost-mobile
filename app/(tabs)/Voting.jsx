@@ -4,19 +4,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
 import SelectDropdown from 'react-native-select-dropdown'
 import styles from '../styles'
-import RenderHtml from 'react-native-render-html';
-import EditContestants from '../EditContestants';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { ClubContext } from '../ClubContext';
 import useAgenda from '../useAgenda';
 import BrandHeader from "../BrandHeader";
-import { useFocusEffect } from 'expo-router';
 import useClubMeetingStore from "../store";
-//import * as SplashScreen from 'expo-splash-screen';
 
-//SplashScreen.preventAutoHideAsync(); // Prevent auto-hiding
-
-//{club, agenda, members, setScreen, agenda.post_id, userName, user_id, takeVoteCounter}
 export default function Voting(props) {
   const {user_id, message, setMessage, reset} = useAgenda();
   const {clubs, meeting, queryData, agenda} = useClubMeetingStore();
@@ -75,12 +67,6 @@ export default function Voting(props) {
           console.log('getBallots data',data);
           setVotingdata(data);
           setAppIsReady(true);
-          /*
-          async function hideSplash() {
-            await SplashScreen.hideAsync(); // Hide the splash screen
-          }
-          hideSplash();
-          */
     }   ).catch(
           (error) => {
             console.log('fetch error',error);
@@ -132,6 +118,13 @@ export default function Voting(props) {
                 <MaterialCommunityIcons name="chart-bar" size={24} color="black" />
               </Pressable>
             </View>
+            {message ? (
+              <View>
+                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
+                  {message}
+                </Text>
+              </View>
+            ) : null}
             {contestlist.map((contest, index) => (
               <View key={index}>
                 <Text>{contest}</Text>
@@ -168,7 +161,14 @@ export default function Voting(props) {
         <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
         <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
         </View>
-              <Text>As the Vote Counter, you create ballots based on the speakers and evaluators on the agenda, editing them as necessary.</Text>
+        {message ? (
+              <View>
+                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
+                  {message}
+                </Text>
+              </View>
+            ) : null}
+        <Text>As the Vote Counter, you create ballots based on the speakers and evaluators on the agenda, editing them as necessary.</Text>
               <Text>You can also create ballots for Table Topics speakers and votes on club business.</Text>
               {contestlist.map(
                 (c, cindex) => {
@@ -180,7 +180,7 @@ export default function Voting(props) {
                         {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice}  key={'contestant'+index}>
                         <Pressable style={styles.minusbutton} onPress={() => {currentBallot.deleted.push(contestant);currentBallot.contestants.splice(index,1); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]); setVotingdata({...votingdata,ballot:ballotCopy}); }}><Text style={styles.buttonText}>-</Text></Pressable>
                          <Text style={styles.choiceText}>{contestant}</Text></View>})}
-                        {currentBallot.new.length ? <View  style={styles.choice} ><Text>Pending:</Text>{
+                        {currentBallot.new.length ? <View><Text>Confirm roles from the agenda:</Text>{
                         currentBallot.new.map((maybecontestant,index) => {if(!maybecontestant) return; 
                         return <View style={styles.choice} key={'pending'+index}>
                         <Pressable style={styles.plusbutton} onPress={() => {currentBallot.contestants.push(maybecontestant);currentBallot.new.splice(index,1); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy}); }}><Text style={styles.buttonText}>+</Text></Pressable> 
@@ -244,16 +244,17 @@ export default function Voting(props) {
                         <Text style={styles.h2}>Add Votes: {c}</Text>
                         <Text>If you received votes from outside of this app, you can add them here.</Text>
                         {currentBallot.contestants.map((contestant,index) => {if(!contestant || contestant.trim() == '') return; console.log('contestant for '+c,contestant); let addvote = added_votes.find((item,itemindex) => {if(item.ballot == c && item.contestant == contestant) {item.index = itemindex; return item;} }); if(!addvote) {addvote = {'ballot':c,'contestant':contestant,add:0,index:added_votes.length}; added_votes.push(addvote); console.log('created addvote object',addvote)} 
-                        return <Text key={'addvotes'+index} style={styles.choice} >
+                        return <View key={'addvotes'+index} style={styles.choice} >
                         <Pressable style={styles.plusbutton} onPress={() => {console.log('add vote',contestant); setVotesToAdd(true); addvote.add++; console.log(addvote); added_votes[addvote.index].add = addvote.add; console.log('added',added_votes); const update = {...votingdata,added_votes:added_votes}; console.log('added update',update); setVotingdata(update); } }><Text style={styles.buttonText}>+</Text></Pressable> 
                         <Pressable style={styles.minusbutton} onPress={() => {console.log('add vote',contestant);  setVotesToAdd(true); if(addvote.add > 0) addvote.add--; console.log(addvote); added_votes[addvote.index].add = addvote.add; console.log('added',added_votes); const update = {...votingdata,added_votes:added_votes}; console.log('added update',update); setVotingdata(update); } }><Text style={styles.buttonText}>-</Text></Pressable> 
-                        {contestant} +{addvote.add}</Text>})}
-                        {votesToAdd ? <Text><Pressable style={styles.button} onPress={() =>{ sendVotingUpdate({added:votingdata.added_votes,post_id:agenda.post_id,identifier:identifier}); setVotesToAdd(false); }}><Text style={styles.buttonText}>Update</Text></Pressable></Text> : null}
+                        <Text>{contestant} +{addvote.add}</Text></View>})}
+                        {votesToAdd ? <View><Pressable style={styles.button} onPress={() =>{ sendVotingUpdate({added:votingdata.added_votes,post_id:agenda.post_id,identifier:identifier}); setVotesToAdd(false); }}><Text style={styles.buttonText}>Update</Text></Pressable></View> : null}
                     </View>
                 }
             )}
-            <Text style={styles.h2}>Reset</Text>
-            <Text><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Reset Ballot</Text></Pressable></Text>
+            <Text style={[styles.h2,{marginTop:100}]}>Reset</Text>
+            <View><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Reset Ballot</Text></Pressable></View>
+            <Text style={{marginBottom: 50}}>Click to delete all ballots and vote records</Text>
           </View>
           </ScrollView>
           </SafeAreaView>          
@@ -286,6 +287,13 @@ export default function Voting(props) {
            <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
            <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
            </View>}
+           {message ? (
+              <View>
+                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
+                  {message}
+                </Text>
+              </View>
+            ) : null}
                 {contestlist.map(
                 (c, cindex) => {
                     if('Template' == c)
@@ -310,7 +318,7 @@ export default function Voting(props) {
           <View><Text>The current vote counter is "{(votingdata.vote_counter_name) ? votingdata.vote_counter_name : '(none assigned)'}" but no ballots have been created yet.</Text>
           <Text style={styles.h2}>Assume the role of Vote Counter?</Text>
           <Text>If no Vote Counter is available, any member can assume the role.</Text>
-          {votingdata.authorized_user ? <Text><Pressable style={styles.button} onPress={() => {sendVotingUpdate({post_id:agenda.post_id,identifier:identifier,take_vote_counter:true}) }}>Take Vote Counter Role</Pressable></Text> : <Text>Please log in first</Text>}
+          {votingdata.authorized_user ? <View><Pressable style={styles.button} onPress={() => {sendVotingUpdate({post_id:agenda.post_id,identifier:identifier,take_vote_counter:true}) }}><Text style={styles.buttonText}>Take Vote Counter Role</Text></Pressable></View> : null}
           </View> : null}
           {votingdata.is_vote_counter ? <View><Text style={styles.h2}>Back to Vote Counter Controls?</Text>
           <Pressable style={styles.button} onPress={() => {setControls('')} }><Text style={styles.buttonText}>Go Back</Text></Pressable></View> : null}

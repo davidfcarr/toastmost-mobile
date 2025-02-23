@@ -7,7 +7,6 @@ import styles from '../styles'
 import RenderHtml from 'react-native-render-html';
 import * as Linking from 'expo-linking';
 import { useWindowDimensions } from 'react-native';
-import { Platform } from 'react-native';
 import useAgenda from '../useAgenda';
 import useClubMeetingStore from '../store';
 import { router } from 'expo-router';
@@ -20,27 +19,38 @@ export default function Settings (props) {
     const url = Linking.useURL();
     const {queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
-    
-    console.log('expo url',url);
-    if (url) {
-      const { hostname, path, queryParams } = Linking.parse(url);
-      if(queryParams.code && queryParams.domain) {
-        addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.domain)});
-      }
-      console.log(
-        `Linked to app with hostname: ${hostname}, path: ${path} and data: ${JSON.stringify(
-          queryParams
-        )}`
-      );
+
+    function addFromUrl() {
+      if (url) {
+        const { hostname, path, queryParams } = Linking.parse(url);
+        if(queryParams.code && queryParams.domain) {
+          addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
+        }
+        console.log(
+          `Linked to app with hostname: ${hostname}, path: ${path} and data: ${JSON.stringify(
+            queryParams
+          )}`
+        );
+      }  
     }
-  
+
+    useEffect(() => {
+      addFromUrl();
+    },
+    [])
+
+    useEffect(() => {
+      addFromUrl();
+    },
+    [url])
+
     function resetClubData() {
       setQueryData({});
       setMeeting(0);
       setQueryData({...queryData,agendas:[]});
       setAgenda({roles:[]});
       router.replace('/');
-      }
+    }
     
     console.log('clubs',clubs);
     console.log('club',clubs);
@@ -123,7 +133,7 @@ export default function Settings (props) {
     />
     </View>
 <View>
-          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {addClub({...tempClub,url:makeUrl(tempClub.domain,tempClub.code)});resetClubData();} }} style={styles.addButton}>
+          <Pressable onPress={() => {console.log('add button clicked'); if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {console.log('not email prompt'); const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; console.log('newclub for addClub',newclub); addClub(newclub);setTempClub({domain:'',code:''});resetClubData();} }} style={styles.addButton}>
             <Text style={styles.addButtonText}>{emailPrompt ? <Text>Request by Email</Text> : <Text>Add</Text>}</Text>
           </Pressable>
           </View>
@@ -138,7 +148,7 @@ export default function Settings (props) {
           (clubChoice, index) => {
             return (
               <View style={{flexDirection: 'row'}} key={index}>
-                <Pressable key={'remove'+index} onPress={() => { setClubs(() => {let current = [...clubs]; current.splice(index, 1); setClub({}); return current;} ); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
+                <Pressable key={'remove'+index} onPress={() => { setClubs(() => {let current = [...clubs]; current.splice(index, 1); return current;} ); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
                 <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); console.log('setClub new list',newclubs); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>

@@ -9,6 +9,7 @@ export default function ProjectChooser(props) {
 
     const choices = props.projects;
     const updateRole = props.updateRole;
+    const setEdit = props.setEdit;
 
     const [role, setRole] = useState(props);
 
@@ -39,7 +40,7 @@ export default function ProjectChooser(props) {
 
     }
 
-    function updateSpeech() {
+    function updateSpeech(exit = false) {
         const update = {...props};
         update.manual = manual;
         update.title = title;
@@ -48,6 +49,8 @@ export default function ProjectChooser(props) {
         update.display_time = display_time;
         update.intro = intro;
         updateRole(update);
+        if(exit)
+            setEdit('');
     }
 
     if(!choices || typeof choices.manuals == 'undefined')
@@ -56,12 +59,13 @@ export default function ProjectChooser(props) {
     return (
 
         <View>
-
+        <View style={{backgroundColor:'lightgray',padding:5,borderRadius: 3}}>
         <View><Select options={choices['paths']} defaultValueByIndex={choices['paths'].findIndex((item) => item.value==path)} label="Path" onChange={(value) => {setPath(value); updateSpeech();}} /></View>
 
         <View><Select options={choices['manuals'][path]} defaultValueByIndex={(choices['manuals'][path]) ? choices['manuals'][path].findIndex((item) => item.value==manual): -1} label="Level" onChange={(value) => {setManual(value); updateSpeech();}} /></View>
 
         <View><Select defaultValueByIndex={(choices['projects'][manual]) ? choices['projects'][manual].findIndex((item) => item.value==project) : -1} options={(choices['projects'][manual]) ? choices['projects'][manual] : [{'value':'',label:'Set Path and Level to See Projects'}] } label="Project" onChange={(value) => { setProject(value); projectTime(value); } } /></View>
+        </View>
 
         <View className="tmflexrow">
 
@@ -87,7 +91,7 @@ export default function ProjectChooser(props) {
         numberOfLines={4}
         value={intro} onChangeText={(value) => {setIntro(value); }} style={styles.input} />
 
-        <Pressable onPress={updateSpeech} style={styles.addButton}><Text style={styles.addButtonText}>Save Speech Details</Text></Pressable>
+        <Pressable onPress={() => updateSpeech(true)} style={styles.addButton}><Text style={styles.addButtonText}>Save Speech Details</Text></Pressable>
 
         </View>
     )

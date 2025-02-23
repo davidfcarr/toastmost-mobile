@@ -78,6 +78,16 @@ export default function useAgenda() {
     }
   }, [clubs])
 
+  useEffect(() => {
+    if('' == message)
+      return;
+    console.log('set message to expire',message);
+    setTimeout(() => {
+      console.log('clearing message '+message);
+      setMessage('');
+    },30000);
+  }, [message])
+
   function getAgenda() {
     if(queryData && queryData.agendas && queryData.agendas.length) {
       return queryData.agendas[meeting];
