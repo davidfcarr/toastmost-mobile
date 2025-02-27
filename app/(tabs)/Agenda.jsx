@@ -19,10 +19,12 @@ export default function Agenda (props) {
       
       return (
         <SafeAreaView  style={styles.container}>
-        <BrandHeader />
+        <ScrollView>
+          <BrandHeader />
         <View style={{width: '100%', marginBottom: 50, paddingBottom: 50 }}>
-        {source ? <ScrollView><RenderHtml source={source} contentWidth={width - 20} /></ScrollView> : <Text>Agenda not loaded</Text>}
+        {source ? <RenderHtml source={source} contentWidth={width - 20} /> : <Text>Agenda not loaded</Text>}
         </View>
+        </ScrollView>
         </SafeAreaView> 
       )
 }

@@ -10,6 +10,7 @@ const useClubMeetingStore = create((set) => ({
     meeting: 0,
     queryData: {},
     agenda: {},
+    message: '',
     setClubs: (newclubs) => {
       set((state) => ({
         clubs: newclubs
@@ -34,7 +35,12 @@ const useClubMeetingStore = create((set) => ({
       set((state) => ({
         meeting: newmeeting
       }))
-    }
+    },
+    setMessage: (msg) => {
+      set((state) => ({
+        message: msg
+      }))
+    },
 }))
 
 export default useClubMeetingStore;

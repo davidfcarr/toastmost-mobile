@@ -10,11 +10,9 @@ import useClubMeetingStore from '../store';
 
 export default function Timer (props) {
 
-  /*const {clubs, setClubs, queryData, setQueryData, toastmostData, message, setMessage, reset, setReset, timeNow, setTimeNow, lastUpdate, setLastUpdate, refreshTime, version, addClub, updateClub, updateRole, sendEmail, takeVoteCounter} = useAgenda();*/
   const {clubs, meeting, queryData,agenda} = useClubMeetingStore();
   const club = (clubs && clubs.length) ? clubs[0] : {};
   const members = queryData.members;
-  console.log('timer agenda',agenda);
   const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
   const [timing,setTiming] = useState(timerOptions[0]);
   const [start, setStart] = useState(0);
@@ -154,9 +152,6 @@ export default function Timer (props) {
     
     function timerColor( el ) {
         let color;
-        console.log('timing elapsed',Math.floor(el/1000));
-        console.log('timing max',Math.floor(timing.max/1000));
-        console.log('timing',timing);
         if(el > timing.max)
             color = 'red';
         else if(el > yellow)
@@ -167,8 +162,6 @@ export default function Timer (props) {
             color = 'black';
         else 
             color = 'white';
-        console.log('el '+el+' start '+start);
-        console.log(color);
         return color;
     }
 
@@ -191,7 +184,6 @@ export default function Timer (props) {
             let minmax = {};
             let mult = (role.display_time && role.display_time.includes('seconds')) ? 1 : 60;
             if('Speaker' == role.role) {
-                console.log(role);
                 if(role.ID > 0) {
                     if(role.display_time) {
                         minmax = getMinMax(role.display_time);
@@ -240,7 +232,6 @@ export default function Timer (props) {
     data={timerOptions}
     defaultValue={timerOptions[0]}
     onSelect={(selectedItem, index) => {
-    console.log('selected item',selectedItem);
     setTiming(selectedItem);
     }}
     renderButton={(selectedItem, isOpened) => {

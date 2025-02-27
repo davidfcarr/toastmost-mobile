@@ -11,20 +11,20 @@ export default function ProjectChooser(props) {
     const updateRole = props.updateRole;
     const setEdit = props.setEdit;
 
-    const [role, setRole] = useState(props);
+    const [role, setRole] = useState(props.item);
 
-    const [path, setPath] = useState((props.project) ? props.project.replace(/ Level.+/,'') : 'Path Not Set');
+    const [path, setPath] = useState((props.item.project) ? props.item.project.replace(/ Level.+/,'') : 'Path Not Set');
 
-    const [manual, setManual] = useState(props.manual);
+    const [manual, setManual] = useState(props.item.manual);
 
-    const [project, setProject] = useState((props.project) ? props.project : '');
+    const [project, setProject] = useState((props.item.project) ? props.item.project : '');
 
-    const [title, setTitle] = useState(props.title);
-    const [intro, setIntro] = useState(props.intro);
+    const [title, setTitle] = useState(props.item.title);
+    const [intro, setIntro] = useState(props.item.intro);
 
-    const [display_time, setDisplayTime] = useState(props.display_time);
+    const [display_time, setDisplayTime] = useState(props.item.display_time ? props.item.display_time : '5 to 7 minutes');
 
-    const [maxtime, setMaxTime] = useState(props.maxtime);
+    const [maxtime, setMaxTime] = useState(props.item.maxtime);
 
     //const editorRef = useRef(null);
 
@@ -40,14 +40,17 @@ export default function ProjectChooser(props) {
 
     }
 
+    console.log('projectChooser role',role);
+
     function updateSpeech(exit = false) {
-        const update = {...props};
+        const update = {...role};
         update.manual = manual;
         update.title = title;
         update.project = project;
         update.maxtime = maxtime;
         update.display_time = display_time;
         update.intro = intro;
+        console.log('updatedrole',update);
         updateRole(update);
         if(exit)
             setEdit('');

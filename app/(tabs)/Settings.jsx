@@ -15,16 +15,22 @@ import BrandHeader from '../BrandHeader';
 export default function Settings (props) {
     const [emailPrompt,setEmailPrompt] = useState(false);
     const { width, height } = useWindowDimensions();
-    const {setAgenda, toastmostData, message, setMessage, sendEmail, setReset} = useAgenda();
+    const {setAgenda, toastmostData, sendEmail, setReset} = useAgenda();
     const url = Linking.useURL();
-    const {queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting} = useClubMeetingStore();
+    const {queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
 
     function addFromUrl() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
         if(queryParams.code && queryParams.domain) {
+          if(clubs.length) {
+            const match = clubs.find((item) => item.domain == queryParams.domain);
+            if(match)
+              return;
+          }
           addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
+          resetClubData();
         }
         console.log(
           `Linked to app with hostname: ${hostname}, path: ${path} and data: ${JSON.stringify(
@@ -51,10 +57,7 @@ export default function Settings (props) {
       setAgenda({roles:[]});
       router.replace('/');
     }
-    
-    console.log('clubs',clubs);
-    console.log('club',clubs);
-    
+        
     function diffClubs () {
       if(!queryData || !queryData.userblogs || !clubs || !clubs.length) return [];
       let diff = [... queryData.userblogs];
@@ -93,7 +96,6 @@ export default function Settings (props) {
     }
     
       const different = diffClubs();
-      console.log('different',different);
 
       return (
         <SafeAreaView  style={styles.container}>
@@ -109,7 +111,6 @@ export default function Settings (props) {
             placeholderTextColor="gray"
             value={tempClub.domain}
             onChangeText={(input) => {
-              console.log('domain input',input);
               if(input.includes('|')) {
                 const parts = input.split('|');
                 setTempClub({domain:parts[0],code:parts[1],url:''});
@@ -133,7 +134,7 @@ export default function Settings (props) {
     />
     </View>
 <View>
-          <Pressable onPress={() => {console.log('add button clicked'); if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else {console.log('not email prompt'); const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; console.log('newclub for addClub',newclub); addClub(newclub);setTempClub({domain:'',code:''});resetClubData();} }} style={styles.addButton}>
+          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else { const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; addClub(newclub);setTempClub({domain:'',code:''});resetClubData();} }} style={styles.addButton}>
             <Text style={styles.addButtonText}>{emailPrompt ? <Text>Request by Email</Text> : <Text>Add</Text>}</Text>
           </Pressable>
           </View>
@@ -148,10 +149,10 @@ export default function Settings (props) {
           (clubChoice, index) => {
             return (
               <View style={{flexDirection: 'row'}} key={index}>
-                <Pressable key={'remove'+index} onPress={() => { setClubs(() => {let current = [...clubs]; current.splice(index, 1); return current;} ); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
+                <Pressable key={'remove'+index} onPress={() => { let current = [...clubs]; current.splice(index, 1); setClubs(current); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
-                <Pressable key={'choose'+index} onPress={() => {console.log('setClub',clubChoice); const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); console.log('setClub new list',newclubs); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}>Choose {clubChoice.domain}</Text>
                 </Pressable>
               </View>

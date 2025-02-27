@@ -9,7 +9,6 @@ export default function useAgenda() {
     //const [clubs, setClubs] = useState([]);
     const [toastmostData, setToastmostData] = useState({});
     const [reset, setReset] = useState(false);
-    const [message, setMessage] = useState('');
     const [lastUpdate, setLastUpdate] = useState(Date.now());
     const refreshTime = 60000;
     const version = '1.0.0';
@@ -17,17 +16,14 @@ export default function useAgenda() {
     const [members, setMembers] = useState([]);
     const [user_id, setUserId] = useState(0);
     const [pollingInterval, setPollingInterval] = useState(null);
-    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda} = useClubMeetingStore();
+    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage} = useClubMeetingStore();
 
   function setDefaultClub(index) 
   {
     const defaultClub = clubs[index];
-    console.log('setDefaultClub',defaultClub);
-    console.log('setDefaultClub clubs',clubs);
     const clubsCopy = [...clubs];
     clubsCopy.splice(index,1);
     clubsCopy.unshift(defaultClub);
-    console.log('setDefaultClub clubsCopy',clubsCopy);
     setClubs(clubsCopy);
   }
 
@@ -48,7 +44,6 @@ export default function useAgenda() {
         jsonValue = await AsyncStorage.getItem("clubslist")
         const storageClubs = jsonValue != null ? JSON.parse(jsonValue) : null
         if (!clubs.length && storageClubs && storageClubs.length) {
-          console.log('setting clubs from storage',storageClubs);
           setClubs(storageClubs)
         }
       } catch (e) {
@@ -81,9 +76,7 @@ export default function useAgenda() {
   useEffect(() => {
     if('' == message)
       return;
-    console.log('set message to expire',message);
     setTimeout(() => {
-      console.log('clearing message '+message);
       setMessage('');
     },30000);
   }, [message])
@@ -105,7 +98,6 @@ export default function useAgenda() {
   function getCurrentClub() { console.log('getCurrentClubs',clubs); return (clubs && clubs.length) ? clubs[0] : null; }
 
   function getToastData(currentClub) {
-    console.log('getToastData called',currentClub);
     if(!currentClub || !currentClub.url) {
       return;
     }
@@ -113,7 +105,6 @@ export default function useAgenda() {
       return;
     fetch(currentClub.url).then((res) => {
       if(res.ok) {
-        console.log('getToastData fetch connection ok');
         setMessage('');
         return res.json();
       }
@@ -143,7 +134,6 @@ export default function useAgenda() {
       return;
     fetch('https://toastmost.org/wp-json/toastmost/v1/mobileinfo?t='+timeNow+'&version='+version).then((res) => {
       if(res.ok) {
-        console.log('fetch connection ok');
         setMessage('');
         return res.json();
       }
@@ -166,11 +156,8 @@ export default function useAgenda() {
 
   function addClub (newclub) {
     newclub.url = 'https://'+newclub.domain+'/wp-json/rsvptm/v1/mobile/'+newclub.code;
-    console.log('addClub',newclub);
-    console.log('addClub clubs before',clubs);
     const newclubs = [newclub, ...clubs]
     setClubs(newclubs);
-    console.log('addClub newclubs',newclubs);
     setMessage('New club set to '+newclub.domain);
     router.replace('/');
   }
@@ -186,12 +173,11 @@ export default function useAgenda() {
   }
 
   function updateRole(roleData) {
+    console.log('updateRole roleData',roleData);
     const currentData = {...queryData};
     currentData.agendas[meeting].roles[roleData.index] = roleData;
-    setQueryData(currentData);
+    setAgenda(currentData.agendas[meeting]); /* optimistic update */
     setMessage('Updating ...');
-    console.log('Updating '+clubs[0].url);
-    console.log('roledata',roleData);
     fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
       setMessage('');
       setQueryData(data);

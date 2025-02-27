@@ -8,10 +8,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import useAgenda from '../useAgenda';
 import BrandHeader from "../BrandHeader";
 import useClubMeetingStore from "../store";
+import RenderHtml from 'react-native-render-html';
+import { useFocusEffect } from 'expo-router';
 
 export default function Voting(props) {
-  const {user_id, message, setMessage, reset} = useAgenda();
-  const {clubs, meeting, queryData, agenda} = useClubMeetingStore();
+  const {user_id, reset} = useAgenda();
+  const {clubs, meeting, queryData, agenda, message, setMessage} = useClubMeetingStore();
   const club = (clubs && clubs.length) ? clubs[0] : {};
   const [votingdata,setVotingdata] = useState({});
   const memberDefault = {'value':'','label':'Select Member'};
@@ -22,14 +24,11 @@ export default function Voting(props) {
   const [guest,setGuest] = useState('');
   const [newBallot,setNewBallot] = useState('');
   const [votesToAdd,setVotesToAdd] = useState(false);
-  const [copied,setCopied] = useState(false);
-  const [checkForVotes,setCheckForVotes] = useState(false);
+  const [pollingInterval,setPollingInterval] = useState(null);
   const { width } = useWindowDimensions();
   const [appIsReady, setAppIsReady] = React.useState(false);
 
   const identifier = club.code;
-
-  console.log('voting agenda',agenda);
 
   useEffect(
     () => {
@@ -60,8 +59,6 @@ export default function Voting(props) {
             setMessage('Problem connecting to server.');
             else
             setMessage('Problem connecting, status code: '+res.status);
-            if(pollingInterval)
-              clearInterval(pollingInterval);  
           }
         }).then((data) => {
           console.log('getBallots data',data);
@@ -74,6 +71,32 @@ export default function Voting(props) {
           }
         )
       }
+
+      useFocusEffect(
+        // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
+        useCallback(() => {
+          const pause = 90000;
+          // Invoked whenever the route is focused.
+          console.log('Hello, I am focused!');
+          if(!pollingInterval) {
+            console.log('set voting interval');
+            const interval = setInterval(() => {
+              console.log('voting timed get ballots every ');
+              setMessage('Checking for ballots every '+(pause/10000)+' seconds');
+              getBallots();
+            }, pause );
+            setPollingInterval(interval);
+          }
+    
+          // Return function is invoked whenever the route gets out of focus.
+          return () => {
+            if(pollingInterval) {
+              console.log('clear voting interval');
+              clearInterval(pollingInterval);
+              setPollingInterval(null);
+            }
+          }
+          }));
 
   function sendVotingUpdate(update) {
     const ts = new Date().getTime();
@@ -102,6 +125,7 @@ export default function Voting(props) {
   const contestlist = Object.keys(votingdata.ballot);
 
   if (votingdata.is_vote_counter && 'check' == controls) {
+    const source = (votingdata.votecount) ? {'html':'<html><body>'+votingdata.votecount+'</body></html>'} : {};
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
@@ -117,19 +141,11 @@ export default function Voting(props) {
               <Pressable style={{ marginLeft: 10 }} onPress={() => { setControls('results'); }}>
                 <MaterialCommunityIcons name="chart-bar" size={24} color="black" />
               </Pressable>
+              <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
+              <MaterialCommunityIcons name="refresh" size={24} color="black" />
+              </Pressable>
             </View>
-            {message ? (
-              <View>
-                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
-                  {message}
-                </Text>
-              </View>
-            ) : null}
-            {contestlist.map((contest, index) => (
-              <View key={index}>
-                <Text>{contest}</Text>
-              </View>
-            ))}
+<RenderHtml source={source} contentWidth={width - 20} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -153,7 +169,6 @@ export default function Voting(props) {
         <Pressable style={{ marginLeft: 10 }}
         onPress={() => {
           setControls('check');
-          setCheckForVotes(true);
           getBallots();
         }}
         >
@@ -161,13 +176,6 @@ export default function Voting(props) {
         <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
         <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
         </View>
-        {message ? (
-              <View>
-                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
-                  {message}
-                </Text>
-              </View>
-            ) : null}
         <Text>As the Vote Counter, you create ballots based on the speakers and evaluators on the agenda, editing them as necessary.</Text>
               <Text>You can also create ballots for Table Topics speakers and votes on club business.</Text>
               {contestlist.map(
@@ -264,8 +272,8 @@ export default function Voting(props) {
   let openBallots = false;
 
   return (
-    <SafeAreaView>
-      <View>
+    <SafeAreaView style={{flex:1}}>
+      <ScrollView>
       <BrandHeader {...queryData} {...agenda} />
       <Text style={styles.h1}>Voting</Text>
           {votingdata.is_vote_counter ? 
@@ -287,13 +295,6 @@ export default function Voting(props) {
            <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
            <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
            </View>}
-           {message ? (
-              <View>
-                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
-                  {message}
-                </Text>
-              </View>
-            ) : null}
                 {contestlist.map(
                 (c, cindex) => {
                     if('Template' == c)
@@ -322,7 +323,7 @@ export default function Voting(props) {
           </View> : null}
           {votingdata.is_vote_counter ? <View><Text style={styles.h2}>Back to Vote Counter Controls?</Text>
           <Pressable style={styles.button} onPress={() => {setControls('')} }><Text style={styles.buttonText}>Go Back</Text></Pressable></View> : null}
-      </View>
+          </ScrollView>
       </SafeAreaView>
   );
 

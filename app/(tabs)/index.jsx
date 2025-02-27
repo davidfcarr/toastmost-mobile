@@ -15,41 +15,34 @@ export default function Home (props) {
     const [edit,setEdit] = useState('');
     const [pollingInterval,setPollingInterval] = useState(null);
     const refreshTime = 60000;
-    const {queryData, message, setMessage, updateRole, getAgenda, getToastData} = useAgenda();
+    const {queryData, updateRole, getAgenda, getToastData} = useAgenda();
     const [lastUpdate, setLastUpdate] = useState(0);
     const timeNow = Date.now();
-    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda} = useClubMeetingStore();
+    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage} = useClubMeetingStore();
     const club = (clubs && clubs.length) ? clubs[0] : {};
     useFocusEffect(
       useCallback(() => {
-        console.log('focus Home');// Do something when the screen is focused
         getToastData(club);
         setLastUpdate(timeNow);
-        //polling();
           return () => {
           if(pollingInterval)
             clearInterval(pollingInterval);
-          console.log('unfocus Home');
         };
       }, [])
     );
     useEffect(() => {
         setLastUpdate(timeNow);
-        console.log('fetch fresh data getToastData',club);
         getToastData(club);  
     }
     ,[]);
     useEffect(() => {
       setLastUpdate(timeNow);
-      console.log('fetch fresh data getToastData',club);
       getToastData(club);
     }
     ,[clubs]);
 
     useEffect(() => {
       const newagenda = (queryData && queryData.agendas) ? queryData.agendas[meeting] : {};
-      console.log('meeting change '+meeting,newagenda);
-      //console.log('agendas',queryData.agendas.length);
       setAgenda(newagenda);
     }
     ,[meeting]);
@@ -69,6 +62,7 @@ export default function Home (props) {
 
     if(edit) {
       const item = agenda.roles.find((element) => {if(element.assignment_key == edit) return element;});
+      item.index = agenda.roles.findIndex((element) => (element.assignment_key == edit));
       return (<SafeAreaView><View><BrandHeader />
       <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} />
       <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setEdit('')}><Text style={styles.buttonText}>Done</Text></Pressable>
@@ -80,13 +74,6 @@ export default function Home (props) {
           <View style={{ width: '100%', flex: 1 }}>
             <BrandHeader {...queryData} />
 
-            {message ? (
-              <View>
-                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
-                  {message}
-                </Text>
-              </View>
-            ) : null}
             {club.url && (!agenda.roles || !agenda.roles.length) ? (
               <View>
                 <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
@@ -96,8 +83,18 @@ export default function Home (props) {
             ) : null}
 
             <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
-              {club.domain && agenda ? <Text>{agenda && agenda.title}</Text> : null}
-              {queryData && queryData.agendas && queryData.agendas.length ? (
+              {club.domain && agenda ? (<View style={{flexDirection: 'row'}}>
+                {meeting > 0 ? <Pressable
+                  onPress={() => {
+                    const prevMeeting = (meeting > 0) ? meeting - 1 : queryData.agendas.length - 1;
+                    setMeeting(prevMeeting);
+                  }}
+                  style={{ marginLeft: 10 }}
+                >
+                  <Octicons name="arrow-left" size={24} color="black" style={{ width: 24 }} />
+                </Pressable> : null}
+                <Text>{agenda && agenda.title}</Text>
+                {meeting < queryData.agendas.length -1 ?
                 <Pressable
                   onPress={() => {
                     const nextMeeting = meeting + 1;
@@ -108,34 +105,37 @@ export default function Home (props) {
                 >
                   <Octicons name="arrow-right" size={24} color="black" style={{ width: 24 }} />
                 </Pressable>
-              ) : null}
+                : null }
+              </View>)
+               : null}
             </View>
 
             {club.domain && agenda.roles.length > 0 ? (
               <View style={{ width: '100%', flex: 1 }}>
                 {edit ? null : (
                   <Text style={{ fontStyle: 'italic', padding: 5 }}>
-                    Click the + to take a role, - to withdraw
+                    Press + to take a role, - to withdraw, <Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /> to edit
+
                   </Text>
                 )}
                 <FlatList
                   data={agenda.roles}
-                  renderItem={({ item, itemIndex }) => {
+                  renderItem={({ item, index:itemIndex }) => {
                     const roleid = parseInt(item.ID);
                     const isMe = (roleid == queryData.user_id);
-                    console.log('item isMe '+item.role,isMe);
                     const name = (item.name) ? item.name : 'Open';
 
                       if(item.ID && item.ID != '0' && !isMe) {
-                        console.log('nobutton item',item);
                         return (
                           <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
                             <Pressable onPress={() => {setEdit(item.assignment_key);}}>
                             <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
                             </Pressable>
                             <View style={styles.nobutton}><Text style={styles.plusMinusText}>✓</Text></View>
-                            <Text style={styles.role}>{item.role}</Text>
-                            <Text style={styles.name}>{name}</Text>
+                            <View>
+                              <Text style={styles.role}>{item.role}</Text>
+                              <Text style={styles.name}>{name}</Text>
+                            </View>
                           </View>
                         )  
                       }
@@ -149,8 +149,10 @@ export default function Home (props) {
                           <Pressable style={styles.minusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); }}>
                             <Text style={styles.plusMinusText}>-</Text>
                           </Pressable>
+                          <View>
                           <Text style={styles.role}>{item.role}</Text>
                           <Text style={styles.name}>{name}</Text>
+                          </View>
                         </View>
                       )
                     return (
@@ -161,8 +163,10 @@ export default function Home (props) {
                         <Pressable style={styles.plusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
                           <Text style={styles.plusMinusText}>+</Text>
                         </Pressable>
+                        <View>
                         <Text style={styles.role}>{item.role}</Text>
                         <Text style={styles.name}>{name}</Text>
+                        </View>
                       </View>
                     )
 

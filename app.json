@@ -19,7 +19,9 @@
     "android": {
       "package": "com.toastmost.mobileagenda",
       "versionCode": 1,
-      "permissions": ["CAMERA"],
+      "permissions": [
+        "CAMERA"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -31,7 +33,9 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@logrocket/react-native",
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true

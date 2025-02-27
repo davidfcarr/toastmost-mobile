@@ -28,7 +28,7 @@ const defaultValue = (item.ID) ? {'ID':(isNaN(item.ID)) ? item.ID : parseInt(ite
             if(selectedItem.ID == 'guest') {
                 setGuestBlank(true);
             } else {
-            const newitem = {...item}; newitem.ID = selectedItem.ID; newitem.name = selectedItem.name; console.log('newitem',newitem); updateRole(newitem);
+            const newitem = {...item}; newitem.ID = selectedItem.ID; newitem.name = selectedItem.name; updateRole(newitem);
             }
         }}
         renderButton={(selectedItem, isOpened) => {
@@ -53,7 +53,7 @@ const defaultValue = (item.ID) ? {'ID':(isNaN(item.ID)) ? item.ID : parseInt(ite
       />
       </View>
    {guestBlank ? <View style={{flexDirection:'row'}}><TextInput style={styles.input} placeholder="Enter name" onChangeText={(text) => { setGuestName(text); }}/><Pressable onPress={() => {const newitem = {...item}; newitem.ID = guestName; newitem.name = guestName; console.log('newitem',newitem); updateRole(newitem); memberlist.push({'ID':newitem,'name':newitem+' (guest)'}); setGuestBlank(false);}} style={styles.addButton}><Text style={styles.addButtonText}>Add</Text></Pressable></View> : <Text></Text>}
-   {'Speaker' == item.role ? <ProjectChooser {...item} updateRole={updateRole} styles={styles} {...queryData} setEdit={setEdit} /> : null}
+   {'Speaker' == item.role ? <ProjectChooser item={item} updateRole={updateRole} styles={styles} {...queryData} setEdit={setEdit} /> : null}
     </View>
     )
 }
