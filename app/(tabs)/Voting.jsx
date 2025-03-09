@@ -10,6 +10,16 @@ import BrandHeader from "../BrandHeader";
 import useClubMeetingStore from "../store";
 import RenderHtml from 'react-native-render-html';
 import { useFocusEffect } from 'expo-router';
+import { ErrorBoundaryProps } from 'expo-router';
+
+export function ErrorBoundary({ error, retry }) {
+  return (
+    <View style={{ flex: 1, backgroundColor: "red" }}>
+      <Text>{error.message}</Text>
+      <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+    </View>
+  );
+}
 
 export default function Voting(props) {
   const {user_id, reset} = useAgenda();

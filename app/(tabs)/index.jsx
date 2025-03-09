@@ -9,6 +9,16 @@ import useAgenda from '../useAgenda';
 import Settings from './Settings';
 import { useFocusEffect } from 'expo-router';
 import useClubMeetingStore from '../store';
+import { ErrorBoundaryProps } from 'expo-router';
+
+export function ErrorBoundary({ error, retry }) {
+  return (
+    <View style={{ flex: 1, backgroundColor: "red" }}>
+      <Text>{error.message}</Text>
+      <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+    </View>
+  );
+}
 
 export default function Home (props) {
     const [edit,setEdit] = useState('');
@@ -80,7 +90,6 @@ export default function Home (props) {
                 </Text>
               </View>
             ) : null}
-
             <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
               {club.domain && agenda ? (<View style={{flexDirection: 'row'}}>
                 {meeting > 0 ? <Pressable

@@ -11,6 +11,16 @@ import useAgenda from '../useAgenda';
 import useClubMeetingStore from '../store';
 import { router } from 'expo-router';
 import BrandHeader from '../BrandHeader';
+import { ErrorBoundaryProps } from 'expo-router';
+
+export function ErrorBoundary({ error, retry }) {
+  return (
+    <View style={{ flex: 1, backgroundColor: "red" }}>
+      <Text>{error.message}</Text>
+      <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+    </View>
+  );
+}
 
 export default function Settings (props) {
     const [emailPrompt,setEmailPrompt] = useState(false);
