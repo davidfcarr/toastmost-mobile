@@ -1,9 +1,8 @@
 import { Text, View, Pressable, AppState, FlatList } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
 import EditRole from '../EditRole';
-/* import RenderRole from '../RenderRole'; */
 import styles from '../styles'
 import BrandHeader from '../BrandHeader';
 import useAgenda from '../useAgenda';

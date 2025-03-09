@@ -34,7 +34,6 @@
     },
     "plugins": [
       "expo-router",
-      "@logrocket/react-native",
       "expo-build-properties"
     ],
     "experiments": {
