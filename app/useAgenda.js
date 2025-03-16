@@ -1,8 +1,9 @@
 import {useState, useEffect} from 'react';
-import {AppState} from 'react-native';
+import {AppState,Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import useClubMeetingStore from './store';
+import * as Linking from 'expo-linking';
 
 export default function useAgenda() {
     //const [meeting, setMeeting] = useState(0);
@@ -15,8 +16,21 @@ export default function useAgenda() {
     const timeNow = Date.now();
     const [members, setMembers] = useState([]);
     const [user_id, setUserId] = useState(0);
+    const [sendPlatform, setSendPlatform] = useState(true);
     const [pollingInterval, setPollingInterval] = useState(null);
+    const [pageUrl, setPageUrl] = useState('');
     const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage} = useClubMeetingStore();
+    const url = Linking.useURL();
+    console.log('useAgenda url',url);
+    if(url != pageUrl) {
+      if(null !== url) {
+        setPageUrl(url);
+        console.log('useAgenda url changed',url);  
+      }
+      else {
+        console.log('useAgenda url not loaded');
+      }
+    }
 
   function setDefaultClub(index) 
   {
@@ -85,12 +99,15 @@ export default function useAgenda() {
     if(queryData && queryData.agendas && queryData.agendas.length) {
       return queryData.agendas[meeting];
     }
+    return [];
   }
 
   useEffect(() => {
-    if(queryData.agendas && queryData.agendas.length) {
+    if(queryData && queryData.agendas && queryData.agendas.length) {
       setAgenda(queryData.agendas[meeting]);
     }
+    else
+      return;
     setMembers(queryData.members);
     setUserId(queryData.user_id);
   }, [clubs, queryData])
@@ -103,7 +120,13 @@ export default function useAgenda() {
     }
     if(message && message.includes('Updating ...'))
       return;
-    fetch(currentClub.url).then((res) => {
+    let queryString = '';
+    if(sendPlatform)
+    {
+      queryString = '?mobileos='+Platform.OS;
+      setSendPlatform(false);
+    }
+    fetch(currentClub.url+queryString).then((res) => {
       if(res.ok) {
         setMessage('');
         return res.json();
@@ -119,8 +142,16 @@ export default function useAgenda() {
           clearInterval(pollingInterval);  
       }
     }).then((data) => {
+      if(!data || !data.agendas) {
+        setMessage('Error downloading data for '+currentClub.domain+' - check Settings screen');
+        return;
+      }
+      setLastUpdate(timeNow);
       setQueryData(data);
-      setAgenda(data.agendas[meeting]);
+      if(data.agendas.length)
+        setAgenda(data.agendas[meeting]);
+      else
+        setMessage('No agenda data found for '+currentClub.domain);
     }).catch(
       (error) => {
         console.log('fetch error',error);
@@ -214,6 +245,29 @@ export default function useAgenda() {
     }
   }
 
-   return {clubs, setClubs, setDefaultClub, queryData, setQueryData, toastmostData, message, setMessage, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version, 
-    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, pollingInterval, setPollingInterval, setAgenda};
+  function emailAgenda(request) {
+    setMessage('Emailing agenda ...');
+    fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(request)}).then((res) => res.json()).then((data) => {
+      setMessage('');
+      console.log('results of role update',data);
+    }).catch((e) => {
+      console.log('update error',e);
+      setMessage('email agenda error');
+    })
+  }
+
+  function absence(request) {
+    setMessage('Updating planned absence ...');
+    fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(request)}).then((res) => res.json()).then((data) => {
+      setMessage('');
+      console.log('results of absence',data);
+    }).catch((e) => {
+      console.log('update error',e);
+      setMessage('email agenda error');
+    })
+  }
+
+   return {clubs, setClubs, setDefaultClub, toastmostData, message, setMessage, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
+    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, pollingInterval, 
+    setPollingInterval, setAgenda, emailAgenda, absence};
 }

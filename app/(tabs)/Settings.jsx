@@ -11,14 +11,16 @@ import useAgenda from '../useAgenda';
 import useClubMeetingStore from '../store';
 import { router } from 'expo-router';
 import BrandHeader from '../BrandHeader';
-import { ErrorBoundaryProps } from 'expo-router';
+const app = require('../../app.json');
 
 export function ErrorBoundary({ error, retry }) {
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
-      <Text>{error.message}</Text>
-      <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
-    </View>
+    <SafeAreaView><BrandHeader {...queryData} />
+    <View>
+    <Text style={{color:'red'}}>{error.message}</Text>
+    <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+  </View>
+</SafeAreaView>
   );
 }
 
@@ -29,6 +31,9 @@ export default function Settings (props) {
     const url = Linking.useURL();
     const {queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
+    const config = app.expo;
+    const {version} = config;
+    console.log('Settings version',version);
 
     function addFromUrl() {
       if (url) {
@@ -188,6 +193,7 @@ export default function Settings (props) {
           }) : null
         }  
       {(toastmostData && toastmostData.infoScreen) ? <View style={{marginLeft: 5}}><RenderHtml source={{'html':'<html><body>'+toastmostData.infoScreen+'</body></html>'}} contentWidth={width - 20} /></View> : null}
+        <Text>Version {version}</Text>
         </ScrollView>
         </View>
         </View>

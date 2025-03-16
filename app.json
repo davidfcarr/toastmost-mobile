@@ -2,7 +2,7 @@
   "expo": {
     "name": "Toastmost",
     "slug": "toastmost",
-    "version": "1.0.1",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/ToastmostMobileLogo.png",
     "scheme": "toastmost",
@@ -13,17 +13,16 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.carrcommunications.toastmost"
     },
     "android": {
       "package": "com.toastmost.mobileagenda",
-      "versionCode": 1,
-      "permissions": [
-        "CAMERA"
-      ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/ToastmostMobileLogo.png",
         "backgroundColor": "#ffffff"
       }
     },

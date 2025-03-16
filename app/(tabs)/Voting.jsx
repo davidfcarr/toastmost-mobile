@@ -11,18 +11,21 @@ import useClubMeetingStore from "../store";
 import RenderHtml from 'react-native-render-html';
 import { useFocusEffect } from 'expo-router';
 import { ErrorBoundaryProps } from 'expo-router';
+import * as Linking from 'expo-linking';
 
 export function ErrorBoundary({ error, retry }) {
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
-      <Text>{error.message}</Text>
-      <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
-    </View>
+  <SafeAreaView><BrandHeader {...queryData} />
+    <View>
+    <Text style={{color:'red'}}>{error.message}</Text>
+    <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+  </View>
+</SafeAreaView>
   );
 }
 
 export default function Voting(props) {
-  const {user_id, reset} = useAgenda();
+  const {user_id, reset, pageUrl} = useAgenda();
   const {clubs, meeting, queryData, agenda, message, setMessage} = useClubMeetingStore();
   const club = (clubs && clubs.length) ? clubs[0] : {};
   const [votingdata,setVotingdata] = useState({});
@@ -37,19 +40,57 @@ export default function Voting(props) {
   const [pollingInterval,setPollingInterval] = useState(null);
   const { width } = useWindowDimensions();
   const [appIsReady, setAppIsReady] = React.useState(false);
-
   const identifier = club.code;
+
+  console.log('voting pageUrl',pageUrl);
 
   useEffect(
     () => {
       getBallots();
       console.log('voting useEffect, initial query');
-    }, []);
-    useEffect(
-      () => {
-        getBallots();
-        console.log('voting useEffect');
-    }, [queryData,agenda]);
+      const pause = 90000;
+        console.log('set voting interval, pageUrl '+pageUrl);
+        const interval = setInterval(() => {
+          console.log('pageUrl '+pageUrl);
+          if(pageUrl.includes('Voting')) {
+          console.log('voting timed get ballots every '+(pause/1000)+' seconds');
+          setMessage('Checking for ballots every '+(pause/1000)+' seconds');
+          getBallots();
+          }
+      }, pause );
+      setPollingInterval(interval);
+}, []);
+
+useEffect(
+  () => {
+    getBallots();
+}, [meeting]);
+
+useEffect(
+  () => {
+    if(pageUrl.includes('Voting')) { 
+      getBallots();
+      console.log('voting useEffect, page change');
+      if(!pollingInterval) {
+        const pause = 90000;
+        console.log('set voting interval, pageUrl '+pageUrl);
+        const interval = setInterval(() => {
+          console.log('pageUrl '+pageUrl);
+          if(pageUrl.includes('Voting')) {
+          console.log('voting timed get ballots every '+(pause/1000)+' seconds');
+          setMessage('Checking for ballots every '+(pause/1000)+' seconds');
+          getBallots();
+          }
+      }, pause );
+      setPollingInterval(interval);
+      }
+    }
+    else if(pollingInterval) {
+      clearInterval(pollingInterval);
+      setPollingInterval(0);
+    }
+}, [pageUrl]);
+
 
       function getBallots() {
         if(!agenda || !agenda.post_id)
@@ -82,32 +123,6 @@ export default function Voting(props) {
         )
       }
 
-      useFocusEffect(
-        // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
-        useCallback(() => {
-          const pause = 90000;
-          // Invoked whenever the route is focused.
-          console.log('Hello, I am focused!');
-          if(!pollingInterval) {
-            console.log('set voting interval');
-            const interval = setInterval(() => {
-              console.log('voting timed get ballots every ');
-              setMessage('Checking for ballots every '+(pause/10000)+' seconds');
-              getBallots();
-            }, pause );
-            setPollingInterval(interval);
-          }
-    
-          // Return function is invoked whenever the route gets out of focus.
-          return () => {
-            if(pollingInterval) {
-              console.log('clear voting interval');
-              clearInterval(pollingInterval);
-              setPollingInterval(null);
-            }
-          }
-          }));
-
   function sendVotingUpdate(update) {
     const ts = new Date().getTime();
     const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+agenda.post_id+'?mobile='+club.code+'&t='+ts;
@@ -135,6 +150,7 @@ export default function Voting(props) {
   const contestlist = Object.keys(votingdata.ballot);
 
   if (votingdata.is_vote_counter && 'check' == controls) {
+
     const source = (votingdata.votecount) ? {'html':'<html><body>'+votingdata.votecount+'</body></html>'} : {};
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -285,10 +301,10 @@ export default function Voting(props) {
     <SafeAreaView style={{flex:1}}>
       <ScrollView>
       <BrandHeader {...queryData} {...agenda} />
-      <Text style={styles.h1}>Voting</Text>
           {votingdata.is_vote_counter ? 
                       <View style={{flexDirection: 'row'}}>
-                      <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
+      <Text style={styles.h1}>Voting</Text>
+      <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
                     <MaterialCommunityIcons name="ballot-outline" size={24} color="black" />
                     </Pressable>
                       <Pressable style={{ marginLeft: 10 }}
@@ -302,7 +318,8 @@ export default function Voting(props) {
                       <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
                       </View>
            : <View style={{flexDirection: 'row'}}>
-           <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
+      <Text style={styles.h1}>Voting</Text>
+      <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
            <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
            </View>}
                 {contestlist.map(

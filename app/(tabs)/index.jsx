@@ -2,6 +2,7 @@ import { Text, View, Pressable, AppState, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import EditRole from '../EditRole';
 import styles from '../styles'
 import BrandHeader from '../BrandHeader';
@@ -24,31 +25,29 @@ export default function Home (props) {
     const [edit,setEdit] = useState('');
     const [pollingInterval,setPollingInterval] = useState(null);
     const refreshTime = 60000;
-    const {queryData, updateRole, getAgenda, getToastData} = useAgenda();
+    const {updateRole, getToastData, absence} = useAgenda();
     const [lastUpdate, setLastUpdate] = useState(0);
     const timeNow = Date.now();
-    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage} = useClubMeetingStore();
+    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage,queryData} = useClubMeetingStore();
     const club = (clubs && clubs.length) ? clubs[0] : {};
     useFocusEffect(
       useCallback(() => {
         getToastData(club);
         setLastUpdate(timeNow);
-          return () => {
-          if(pollingInterval)
-            clearInterval(pollingInterval);
-        };
       }, [])
     );
     useEffect(() => {
         setLastUpdate(timeNow);
-        getToastData(club);  
+        getToastData(club);
+        polling();
     }
     ,[]);
     useEffect(() => {
       setLastUpdate(timeNow);
       getToastData(club);
+      polling();//reset polling for new club
     }
-    ,[clubs]);
+    ,[clubs,meeting]);
 
     useEffect(() => {
       const newagenda = (queryData && queryData.agendas) ? queryData.agendas[meeting] : {};
@@ -57,7 +56,7 @@ export default function Home (props) {
     ,[meeting]);
 
     if(!club) {
-      return <SafeAreaView><View><BrandHeader /><Text>Loading clubs list ...</Text></View></SafeAreaView>;
+      return <SafeAreaView><View><BrandHeader  isHome={true} /><Text>Loading clubs list ...</Text></View></SafeAreaView>;
     }
     
     if(!club.code)  {
@@ -66,13 +65,13 @@ export default function Home (props) {
 
     console.log('home agenda',agenda)
     if(!agenda || !agenda.roles || !agenda.roles.length) {
-      return <SafeAreaView><View><BrandHeader /><Text>Loading ...</Text></View></SafeAreaView>;
+      return <SafeAreaView><View><BrandHeader  isHome={true} /><Text>Loading ...</Text></View></SafeAreaView>;
     }
 
     if(edit) {
       const item = agenda.roles.find((element) => {if(element.assignment_key == edit) return element;});
       item.index = agenda.roles.findIndex((element) => (element.assignment_key == edit));
-      return (<SafeAreaView><View><BrandHeader />
+      return (<SafeAreaView><View><BrandHeader isHome={true} />
       <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} />
       <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setEdit('')}><Text style={styles.buttonText}>Done</Text></Pressable>
       </View></SafeAreaView>);
@@ -81,7 +80,7 @@ export default function Home (props) {
       return (
         <SafeAreaView style={styles.container}>
           <View style={{ width: '100%', flex: 1 }}>
-            <BrandHeader {...queryData} />
+            <BrandHeader isHome={true} />
 
             {club.url && (!agenda.roles || !agenda.roles.length) ? (
               <View>
@@ -114,6 +113,16 @@ export default function Home (props) {
                   <Octicons name="arrow-right" size={24} color="black" style={{ width: 24 }} />
                 </Pressable>
                 : null }
+                <Pressable
+                  onPress={() => {
+                    setLastUpdate(timeNow);
+                    getToastData(club);
+                    setMessage('Checking server for updates ...'+club.domain);
+                  }}
+                  style={{ marginLeft: 10 }}
+                >
+<MaterialCommunityIcons name="refresh" size={24} color="black" />
+</Pressable>
               </View>)
                : null}
             </View>
@@ -187,6 +196,19 @@ export default function Home (props) {
       );
 
 
+function getToastUpdate() {
+    if(lastUpdate + refreshTime > timeNow) {
+      console.log('do not poll server for updates if last update was recent');
+      return;
+    }
+    if(!club || !club.domain) {
+      console.log('server update deferred, no club domain');
+      return;
+    }
+    setMessage('Checking server for updates ...'+club.domain);
+    getToastData(club);  
+}
+
   function polling() {
     if(pollingInterval) {
       console.log('cleared pollingInterval',pollingInterval);
@@ -194,8 +216,7 @@ export default function Home (props) {
     }
     const newInterval = setInterval(() => {
       if('active' == AppState.currentState) {
-        setMessage('Checking server for updates ...'+club.domain);
-        getToastData(club);  
+        getToastUpdate();
       }
       else {
         console.log('do not poll server for updates if not in foreground');

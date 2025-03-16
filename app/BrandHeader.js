@@ -2,8 +2,10 @@ import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, Switch, 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import * as Linking from 'expo-linking';
 import useClubMeetingStore from "./store";
+import { Link } from 'expo-router';
+
 export default function BrandHeader(props) {
-    const {message} = useClubMeetingStore();
+    const {message, queryData} = useClubMeetingStore();
     
 return (
     <View>
@@ -12,7 +14,10 @@ return (
     <MaterialIcons name="contact-support" size={24} color="white" />
     </Pressable>
     </View></View>
-    {(props.sitename) ? <View><Text style={{fontSize:20}}>{props.sitename}</Text></View> : null}
+    {(queryData.sitename) ? <View style={{flexDirection:'row'}}>
+    {props.isHome ? null : <Link href="/"><MaterialIcons name="home" size={24} color="black" /></Link>}
+      <Text style={{fontSize:20}}>{queryData.sitename}</Text>
+      </View> : null}
     {message ? (
               <View>
                 <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
@@ -21,8 +26,8 @@ return (
               </View>
             ) : 
             <View>
-            <Text style={{ padding: 10, margin: 5 }}>
-            {props.name ? props.name : ''}
+            <Text style={{ padding: 10, margin: 5}}>
+            {queryData.name ? queryData.name : ''}
             </Text>
           </View>
     }

@@ -145,5 +145,13 @@ function createStyles() {
         fontSize: 28,
         marginRight: 8,
       },
+      footer: {
+        backgroundColor: 'white',
+        marginLeft: 5,
+        marginRight: 5,
+        padding: 5,
+        borderWidth: 1,
+        borderColor: 'black',
+      },
     })
   }

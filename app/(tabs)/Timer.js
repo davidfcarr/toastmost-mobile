@@ -4,9 +4,19 @@ import { useState, useEffect} from "react";
 import { Octicons } from '@expo/vector-icons'
 //import Autocomplete from 'react-native-autocomplete-input';
 import SelectDropdown from 'react-native-select-dropdown'
-import useAgenda from '../useAgenda';
 import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from '../store';
+
+export function ErrorBoundary({ error, retry }) {
+  return (
+  <SafeAreaView><BrandHeader {...queryData} />
+    <View>
+    <Text style={{color:'red'}}>{error.message}</Text>
+    <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+  </View>
+</SafeAreaView>
+  );
+}
 
 export default function Timer (props) {
 
@@ -232,7 +242,10 @@ export default function Timer (props) {
     data={timerOptions}
     defaultValue={timerOptions[0]}
     onSelect={(selectedItem, index) => {
-    setTiming(selectedItem);
+      if(!selectedItem.display_time)
+        selectedItem.display_time = '5 to 7 minutes';
+      console.log('selectedItem timing', selectedItem);
+      setTiming(selectedItem);
     }}
     renderButton={(selectedItem, isOpened) => {
       return (
@@ -246,7 +259,7 @@ export default function Timer (props) {
     }}
     renderItem={(item, index, isSelected) => {
       return (
-        <View key={index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+        <View key={'timeropt'+index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
           <Text style={styles.dropdownItemTxtStyle}>{item.role+' '+item.name+' '+item.display_time}</Text>
         </View>
       );
