@@ -25,9 +25,6 @@ export default function useAgenda() {
       if(null !== url) {
         setPageUrl(url);
       }
-      else {
-        console.log('useAgenda url not loaded');
-      }
     }
 
   function setDefaultClub(index) 

@@ -14,7 +14,7 @@ export default function Promo (props) {
     const {version} = config;
 
       return (
-        <View style={{width: '100%', marginBottom: 150, paddingBottom: 150 }}>
+        <View style={{margin: 10, marginTop: 20, marginBottom: 150, padding: 10, paddingBottom: 150, borderWidth: 1, borderColor: 'gray' }}>
         <Text>Version {version} {toastmostData.version && toastmostData.latest && compareVersions(version,toastmostData.version) < 0 ? <Text><Text style={{color:'red'}}>A newer version is available.</Text> Latest updates: {toastmostData.latest}</Text> : <Text>You have the latest version.</Text>}</Text>        
         {(toastmostData && toastmostData.infoScreen) ? <View style={{marginLeft: 5}}><RenderHtml source={{'html':'<html><body>'+toastmostData.infoScreen+'</body></html>'}} contentWidth={width - 20} /></View> : null}
         </View>

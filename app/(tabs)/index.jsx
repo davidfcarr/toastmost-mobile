@@ -162,10 +162,8 @@ export default function Home (props) {
                       if(item.ID && item.ID != '0' && !isMe) {
                         return (
                           <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
-                          <Octicons name="check" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
-                          <Octicons name="check" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
                           {item.role.includes('Absence') ? <Octicons name="check" size={24} color="black" style={{ width: 24, marginRight: 15 }} /> : <Pressable onPress={() => {setEdit(item.assignment_key);}}>
-                            <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
+                            <Octicons name="pencil" size={24} color="black" style={{ marginLeft: 80, width: 24 }} />
                             </Pressable>}
                             <View>
                               <Text style={styles.role}>{item.role_display}</Text>
@@ -181,7 +179,7 @@ export default function Home (props) {
                           <Pressable onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); }}>
                           <Octicons name="x-circle" size={24} color="red" style={{ width: 24, marginRight: 15 }} />
                           </Pressable>
-                          {item.role.includes('Absence') ? null : <View><Pressable onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); setSuggest(item.assignment_key);}}>
+                          {item.role.includes('Absence') ? null : <View style={{flexDirection: 'row'}}><Pressable onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); setSuggest(item.assignment_key);}}>
                           <Octicons name="paper-airplane" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
                           </Pressable>
                           <Pressable onPress={() => {setEdit(item.assignment_key);}}>
@@ -189,7 +187,7 @@ export default function Home (props) {
                           </Pressable>
                           </View>}
                           <View>
-                          <Text style={styles.role}>{item.role_display}</Text>
+                          <Text style={styles.role}>{item.role_display ? item.role_display : item.role}</Text>
                           <Text style={styles.name}>{name}</Text>
                           </View>
                         </View>
@@ -199,7 +197,7 @@ export default function Home (props) {
                         <Pressable onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
                         <Octicons name="plus" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
                         </Pressable>
-                        {item.role.includes('Absence')  ? null:  <View>
+                        {item.role.includes('Absence')  ? null:  <View style={{flexDirection: 'row'}}>
                           <Pressable onPress={() => {setSuggest(item.assignment_key);}}>
                           <Octicons name="paper-airplane" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
                           </Pressable>
