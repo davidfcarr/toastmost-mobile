@@ -22,14 +22,24 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Agenda (props) {
     const { width, height } = useWindowDimensions();
-    const {meeting, queryData} = useClubMeetingStore();
-    const agenda = (queryData && queryData.agendas) ? queryData.agendas[meeting] : {};
+    const {clubs, meeting, queryData, agenda} = useClubMeetingStore();
     const [subject, setSubject] = useState((agenda && agenda.title) ? 'Sign up for '+agenda.title+', '+queryData.sitename : '');
     const [note, setNote] = useState('');
     const {emailAgenda} = useAgenda();
 
+  if (!clubs || !clubs.length) {
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <View>
+          <BrandHeader />
+          <Text>Once you connect to a Toastmost (or compatible) club website, you will be able to see meeting agendas here and share them via email.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
     if(!agenda || !agenda.html || !agenda.title)
-      return <SafeAreaView><BrandHeader /><Text>Loading ...</Text></SafeAreaView>;
+      return <SafeAreaView><BrandHeader /><Text>Loading ...</Text><Text>If this message does not appear after a few seconds, go back to the Home screen and ensure that the agenda is fully loaded. Check your club settings on the Settings screen and your network connection.</Text></SafeAreaView>;
   
     const source = (agenda.html) ? {'html':'<html><body>'+agenda.html+'</body></html>'} : {};
       

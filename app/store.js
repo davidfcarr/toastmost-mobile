@@ -11,6 +11,12 @@ const useClubMeetingStore = create((set) => ({
     queryData: {},
     agenda: {},
     message: '',
+    language: '',
+    setLanguage: (l) => {
+      set((state) => ({
+        language: l
+      }))
+    },
     setClubs: (newclubs) => {
       set((state) => ({
         clubs: newclubs

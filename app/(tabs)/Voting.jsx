@@ -42,8 +42,6 @@ export default function Voting(props) {
   const [appIsReady, setAppIsReady] = React.useState(false);
   const identifier = club.code;
 
-  console.log('voting pageUrl',pageUrl);
-
   useEffect(
     () => {
       getBallots();
@@ -60,6 +58,23 @@ export default function Voting(props) {
       }, pause );
       setPollingInterval(interval);
 }, []);
+
+useEffect(
+  () => {
+    getBallots();
+    console.log('voting useEffect, initial query');
+    const pause = 90000;
+      console.log('set voting interval, pageUrl '+pageUrl);
+      const interval = setInterval(() => {
+        console.log('pageUrl '+pageUrl);
+        if(pageUrl.includes('Voting')) {
+        console.log('voting timed get ballots every '+(pause/1000)+' seconds');
+        setMessage('Checking for ballots every '+(pause/1000)+' seconds');
+        getBallots();
+        }
+    }, pause );
+    setPollingInterval(interval);
+}, [agenda]);
 
 useEffect(
   () => {
@@ -136,11 +151,35 @@ useEffect(
     })    
   }
 
-  if (!appIsReady || !votingdata.ballot) {
+function sendBallotLink(toWho) {
+  console.log('sendBallotLink',toWho);
+    fetch(clubs[0].url, {method: 'POST', body: JSON.stringify({sendBallot:toWho,post_id:agenda.post_id})}).then((res) => res.json()).then((data) => {
+        setMessage('Sent ballot link to '+toWho+' by email');
+      }).catch((e) => {
+        console.log('update error',e);  
+        setMessage('Error sending message '+e.message);
+      })  
+}
+
+
+  if (!clubs || !clubs.length) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View>
-          <BrandHeader {...queryData} />
+          <BrandHeader />
+          <Text>The voting tool requires a connection to a Toastmost (or compatible) club website. See the Settings tab.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!appIsReady || !votingdata.ballot) {
+    console.log('not ready message appIsReady ',appIsReady);
+    console.log('not ready message votingdata',votingdata);
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <View>
+          <BrandHeader />
           <Text>Voting tool loading ...</Text>
         </View>
       </SafeAreaView>
@@ -286,6 +325,12 @@ useEffect(
                     </View>
                 }
             )}
+            <Text style={[styles.h2,{marginTop:100}]}>Send Web Voting Link</Text>
+            {message ? <Text>{message}</Text> : null}
+            <Text style={{textAlign: 'center'}} >Members can vote using the app or a web link.</Text>
+            <Pressable style={styles.button} onPress={() => {sendBallotLink('myself')}}><Text style={styles.buttonText}>Email the Link to Me</Text></Pressable>
+            <Text style={{textAlign: 'center'}}>or</Text>
+            <Pressable style={styles.button} onPress={() => {sendBallotLink('members')}}><Text style={styles.buttonText}>Email Link to Members</Text></Pressable>
             <Text style={[styles.h2,{marginTop:100}]}>Reset</Text>
             <View><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Reset Ballot</Text></Pressable></View>
             <Text style={{marginBottom: 50}}>Click to delete all ballots and vote records</Text>

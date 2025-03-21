@@ -1,9 +1,10 @@
-import { Text, View, Pressable, AppState, FlatList } from "react-native";
+import { Text, View, Pressable, AppState, FlatList, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import EditRole from '../EditRole';
+import SuggestRole from '../SuggestRole';
 import styles from '../styles'
 import BrandHeader from '../BrandHeader';
 import useAgenda from '../useAgenda';
@@ -11,6 +12,7 @@ import Settings from './Settings';
 import { useFocusEffect } from 'expo-router';
 import useClubMeetingStore from '../store';
 import { ErrorBoundaryProps } from 'expo-router';
+import Promo from '../Promo';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -23,12 +25,13 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Home (props) {
     const [edit,setEdit] = useState('');
+    const [suggest,setSuggest] = useState('');
     const [pollingInterval,setPollingInterval] = useState(null);
     const refreshTime = 60000;
     const {updateRole, getToastData, absence} = useAgenda();
     const [lastUpdate, setLastUpdate] = useState(0);
     const timeNow = Date.now();
-    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage,queryData} = useClubMeetingStore();
+    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage,queryData,language} = useClubMeetingStore();
     const club = (clubs && clubs.length) ? clubs[0] : {};
     useFocusEffect(
       useCallback(() => {
@@ -39,15 +42,14 @@ export default function Home (props) {
     useEffect(() => {
         setLastUpdate(timeNow);
         getToastData(club);
-        polling();
     }
     ,[]);
     useEffect(() => {
       setLastUpdate(timeNow);
       getToastData(club);
-      polling();//reset polling for new club
+      //reset polling for new club
     }
-    ,[clubs,meeting]);
+    ,[clubs,meeting,language]);
 
     useEffect(() => {
       const newagenda = (queryData && queryData.agendas) ? queryData.agendas[meeting] : {};
@@ -63,7 +65,6 @@ export default function Home (props) {
       return <Settings />;
     }
 
-    console.log('home agenda',agenda)
     if(!agenda || !agenda.roles || !agenda.roles.length) {
       return <SafeAreaView><View><BrandHeader  isHome={true} /><Text>Loading ...</Text></View></SafeAreaView>;
     }
@@ -71,10 +72,26 @@ export default function Home (props) {
     if(edit) {
       const item = agenda.roles.find((element) => {if(element.assignment_key == edit) return element;});
       item.index = agenda.roles.findIndex((element) => (element.assignment_key == edit));
-      return (<SafeAreaView><View><BrandHeader isHome={true} />
-      <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} />
+      return (<SafeAreaView><View><BrandHeader isHome={true} setEdit={setEdit} mode="edit" />
+      <ScrollView>
+      <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} mode="edit" />
       <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setEdit('')}><Text style={styles.buttonText}>Done</Text></Pressable>
-      </View></SafeAreaView>);
+      <Promo />
+      </ScrollView>
+      </View>
+      </SafeAreaView>);
+    }
+
+    if(suggest) {
+      const item = agenda.roles.find((element) => {if(element.assignment_key == suggest) return element;});
+      return (<SafeAreaView><View><BrandHeader isHome={true} setSuggest={setSuggest} mode="suggest" />
+      <ScrollView>
+      <SuggestRole item={item} members={queryData.members} queryData={queryData} setSuggest={setSuggest} mode="suggest" />
+      <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setSuggest('')}><Text style={styles.buttonText}>Done</Text></Pressable>
+      <Promo />
+      </ScrollView>
+      </View>
+      </SafeAreaView>);
     }
 
       return (
@@ -117,6 +134,8 @@ export default function Home (props) {
                   onPress={() => {
                     setLastUpdate(timeNow);
                     getToastData(club);
+                    polling();
+                    console.log('set polling '+language);
                     setMessage('Checking server for updates ...'+club.domain);
                   }}
                   style={{ marginLeft: 10 }}
@@ -129,14 +148,12 @@ export default function Home (props) {
 
             {club.domain && agenda.roles.length > 0 ? (
               <View style={{ width: '100%', flex: 1 }}>
-                {edit ? null : (
                   <Text style={{ fontStyle: 'italic', padding: 5 }}>
-                    Press + to take a role, - to withdraw, <Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /> to edit
-
+                    <Octicons name="plus" size={15} color="black" style={{ width: 15 }} /> take role <Octicons name="x-circle" size={15} color="red" style={{ width: 15 }} /> withdraw <Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /> edit <Octicons name="paper-airplane" size={15} color="black" style={{ width: 15 }} /> suggest
                   </Text>
-                )}
                 <FlatList
                   data={agenda.roles}
+                  ListFooterComponent={<Promo />}
                   renderItem={({ item, index:itemIndex }) => {
                     const roleid = parseInt(item.ID);
                     const isMe = (roleid == queryData.user_id);
@@ -145,12 +162,13 @@ export default function Home (props) {
                       if(item.ID && item.ID != '0' && !isMe) {
                         return (
                           <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
-                            <Pressable onPress={() => {setEdit(item.assignment_key);}}>
+                          <Octicons name="check" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
+                          <Octicons name="check" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
+                          {item.role.includes('Absence') ? <Octicons name="check" size={24} color="black" style={{ width: 24, marginRight: 15 }} /> : <Pressable onPress={() => {setEdit(item.assignment_key);}}>
                             <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
-                            </Pressable>
-                            <View style={styles.nobutton}><Text style={styles.plusMinusText}>✓</Text></View>
+                            </Pressable>}
                             <View>
-                              <Text style={styles.role}>{item.role}</Text>
+                              <Text style={styles.role}>{item.role_display}</Text>
                               <Text style={styles.name}>{name}</Text>
                             </View>
                           </View>
@@ -160,28 +178,37 @@ export default function Home (props) {
                       if(isMe)
                       return (
                         <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
+                          <Pressable onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); }}>
+                          <Octicons name="x-circle" size={24} color="red" style={{ width: 24, marginRight: 15 }} />
+                          </Pressable>
+                          {item.role.includes('Absence') ? null : <View><Pressable onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); setSuggest(item.assignment_key);}}>
+                          <Octicons name="paper-airplane" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
+                          </Pressable>
                           <Pressable onPress={() => {setEdit(item.assignment_key);}}>
                           <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
                           </Pressable>
-                          <Pressable style={styles.minusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:0,name:''}; console.log('updateRole',update); updateRole(update); }}>
-                            <Text style={styles.plusMinusText}>-</Text>
-                          </Pressable>
+                          </View>}
                           <View>
-                          <Text style={styles.role}>{item.role}</Text>
+                          <Text style={styles.role}>{item.role_display}</Text>
                           <Text style={styles.name}>{name}</Text>
                           </View>
                         </View>
                       )
                     return (
                       <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
+                        <Pressable onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
+                        <Octicons name="plus" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
+                        </Pressable>
+                        {item.role.includes('Absence')  ? null:  <View>
+                          <Pressable onPress={() => {setSuggest(item.assignment_key);}}>
+                          <Octicons name="paper-airplane" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
+                          </Pressable>
                           <Pressable onPress={() => {setEdit(item.assignment_key);}}>
                           <Octicons name="pencil" size={24} color="black" style={{ width: 24 }} />
                           </Pressable>
-                        <Pressable style={styles.plusbutton} onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
-                          <Text style={styles.plusMinusText}>+</Text>
-                        </Pressable>
+                        </View>}
                         <View>
-                        <Text style={styles.role}>{item.role}</Text>
+                        <Text style={styles.role}>{item.role_display ? item.role_display : item.role}</Text>
                         <Text style={styles.name}>{name}</Text>
                         </View>
                       </View>

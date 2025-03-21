@@ -40,8 +40,6 @@ export default function ProjectChooser(props) {
 
     }
 
-    console.log('projectChooser role',role);
-
     function updateSpeech(exit = false) {
         const update = {...role};
         update.manual = manual;
@@ -50,7 +48,6 @@ export default function ProjectChooser(props) {
         update.maxtime = maxtime;
         update.display_time = display_time;
         update.intro = intro;
-        console.log('updatedrole',update);
         updateRole(update);
         if(exit)
             setEdit('');

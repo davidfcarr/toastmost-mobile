@@ -16,6 +16,7 @@ return (
     </View></View>
     {(queryData.sitename) ? <View style={{flexDirection:'row'}}>
     {props.isHome ? null : <Link href="/"><MaterialIcons name="home" size={24} color="black" /></Link>}
+    {props.mode == 'edit' ? <Pressable onPress={() => props.setEdit('')}><MaterialIcons name="home" size={24} color="black" /></Pressable>: null}
       <Text style={{fontSize:20}}>{queryData.sitename}</Text>
       </View> : null}
     {message ? (

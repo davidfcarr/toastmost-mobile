@@ -20,9 +20,8 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Timer (props) {
 
-  const {clubs, meeting, queryData,agenda} = useClubMeetingStore();
-  const club = (clubs && clubs.length) ? clubs[0] : {};
-  const members = queryData.members;
+  const {queryData,agenda} = useClubMeetingStore();
+  const members = (queryData && queryData.members) ? queryData.members : [];
   const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
   const [timing,setTiming] = useState(timerOptions[0]);
   const [start, setStart] = useState(0);
@@ -38,7 +37,6 @@ export default function Timer (props) {
             clearInterval(tracker);
         const track = setInterval(() => {
             const elapsed = calcElapsed();
-            console.log('focus state',AppState.currentState);
             setElapsed(elapsed);
             let c = timerColor(elapsed);
             setColor(c);
@@ -52,13 +50,10 @@ export default function Timer (props) {
     }
 },[start]);
 
-  if(!agenda)
-  return <Text>Loading</Text>;
-
-  const {roles} = agenda;
-  if(!roles || !roles.length)
-    return <Text>Loading</Text>;
-
+  let roles = [];
+  if(agenda && !agenda.roles)
+    roles = agenda.roles;
+ 
     const styles = StyleSheet.create({
         dropdownButtonStyle: {
           width: '95%',
@@ -237,14 +232,15 @@ export default function Timer (props) {
     return (
         <SafeAreaView style={{'flex':1}}>
         <BrandHeader />
-        <View>
+        <View style={{flex:1}}>
+          <ScrollView>
         <SelectDropdown
     data={timerOptions}
     defaultValue={timerOptions[0]}
+    keyExtractor={(item, index) => item.role + index}
     onSelect={(selectedItem, index) => {
       if(!selectedItem.display_time)
         selectedItem.display_time = '5 to 7 minutes';
-      console.log('selectedItem timing', selectedItem);
       setTiming(selectedItem);
     }}
     renderButton={(selectedItem, isOpened) => {
@@ -276,25 +272,11 @@ export default function Timer (props) {
     <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setColor('white'); }}><Text style={styles.buttonText}>Stop</Text></Pressable>
     <Pressable style={styles.pauseButton} onPress={() => {setStart(0);setPause(elapsed);}}><Text style={styles.buttonText}>Pause</Text></Pressable>
     </View>
+    {!roles.length && !members.length ? <Text style={{fontStyle:'italic'}}>Stand-alone mode. This Timer works best when connected to a club's membership list and meeting agendas.</Text> : null}
     {!start && log.length ? log.map( (entry,entryindex) => { return (entryindex == log.length - 1) ? <Text style={{fontWeight: 'bold'}}>{entry}</Text> : <Text>{entry}</Text> } ) : null}    
-    <View style={{backgroundColor: color, width: '100%',height: 500 }}>{'black' == color && <Text style={{color:'white'}}>Timing <Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text>}{['green','yellow','red'].includes(color) ? <View><Text style={{color:'yellow' == (color ? 'black' : 'white'),fontSize: 100}}>{color.toUpperCase()}<Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text></View> : null}</View>
+    <View style={{backgroundColor: color, width: '100%',height: 1000 }}>{'black' == color && <Text style={{color:'white'}}>Timing <Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text>}{['green','yellow','red'].includes(color) ? <View><Text style={{color:'yellow' == (color ? 'black' : 'white'),fontSize: 100}}>{color.toUpperCase()}<Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text></View> : null}</View>
+    </ScrollView>
     </View>
         </SafeAreaView>
     );
 } 
-
-/* 
-     <View style={styles.autocompleteContainer}>
-   <Autocomplete data={members} value={timing.name} placeholder="Name" placeholderTextColor="gray" 
-    flatListProps={{
-        keyExtractor: (_, idx) => idx,
-        renderItem: ({ item }) => (<TouchableOpacity onPress={() => {let up = {...timing}; up.name = item; setTiming(up);}}>
-        <Text>{item}</Text>
-      </TouchableOpacity>),
-      }}
-
-
-style={{flex: 1, flexDirection: 'row', height: 40}}
-    <Pressable style={[styles.pauseButton,{backgroundColor: 'gray'}]} onPress={() => {setShowLog(!showLog)}}><Text style={styles.buttonText}>Show Log</Text></Pressable>
-   {!showLog && log.length ? <Text>{log[log.length -1]}</Text> : null}
- */

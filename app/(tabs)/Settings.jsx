@@ -4,14 +4,14 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 /* import QRScanner from "./QRScanner"; */
 import styles from '../styles'
-import RenderHtml from 'react-native-render-html';
 import * as Linking from 'expo-linking';
-import { useWindowDimensions } from 'react-native';
 import useAgenda from '../useAgenda';
 import useClubMeetingStore from '../store';
 import { router } from 'expo-router';
 import BrandHeader from '../BrandHeader';
-const app = require('../../app.json');
+import Promo from '../Promo';
+import SelectDropdown from 'react-native-select-dropdown'
+import { Octicons } from '@expo/vector-icons'
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -26,14 +26,12 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Settings (props) {
     const [emailPrompt,setEmailPrompt] = useState(false);
-    const { width, height } = useWindowDimensions();
-    const {setAgenda, toastmostData, sendEmail, setReset} = useAgenda();
+    const {toastmostData, sendEmail, setReset, saveLanguage} = useAgenda();
     const url = Linking.useURL();
-    const {queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage} = useClubMeetingStore();
+    const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
-    const config = app.expo;
-    const {version} = config;
-    console.log('Settings version',version);
+
+    const languageChoices = [{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'},{code:'es_ES',label:'Spanish'}];
 
     function addFromUrl() {
       if (url) {
@@ -153,13 +151,12 @@ export default function Settings (props) {
             <Text style={styles.addButtonText}>{emailPrompt ? <Text>Request by Email</Text> : <Text>Add</Text>}</Text>
           </Pressable>
           </View>
-          {message ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>{message}</Text></View> : null}
-          <Text style={styles.instructions}>If you have copied a domain|code string, paste it in the first field above. To get instructions emailed to you, enter your club website domain into the first blank and your email address in the second.</Text><Text style={styles.instructions}><Text style={{fontWeight: 'bold'}}>Demo Accounts:</Text> If you do not have a Toastmost account, enter demo.toastmost.org in the first blank and your email address in the second to have a demo account created for you.</Text>
           </View>
+          <View style={{flex:1}}>
+        <ScrollView>
+          <Text style={styles.instructions}>If you have copied a domain|code string, paste it in the first field above. To get instructions emailed to you, enter your club website domain into the first blank and your email address in the second.</Text><Text style={styles.instructions}><Text style={{fontWeight: 'bold'}}>Demo Accounts:</Text> If you do not have a Toastmost account, enter demo.toastmost.org in the first blank and your email address in the second to have a demo account created for you.</Text>
   
         {clubs.length && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
-        <View style={{flex:1}}>
-        <ScrollView>
         {(clubs.length > 0) ? clubs.map(
           (clubChoice, index) => {
             return (
@@ -192,8 +189,37 @@ export default function Settings (props) {
             )
           }) : null
         }  
-      {(toastmostData && toastmostData.infoScreen) ? <View style={{marginLeft: 5}}><RenderHtml source={{'html':'<html><body>'+toastmostData.infoScreen+'</body></html>'}} contentWidth={width - 20} /></View> : null}
-        <Text>Version {version}</Text>
+<Text style={styles.h2}>Language Preference (beta)</Text>
+<SelectDropdown
+        data={languageChoices}
+        defaultValue={languageChoices.find((item) => item.code == language)}
+        onSelect={(selectedItem, index) => {
+          saveLanguage(selectedItem.code);
+          console.log('attempting to set Language to '+selectedItem.code);
+          setMessage('Setting language to '+selectedItem.label);
+        }}
+        renderButton={(selectedItem, isOpened) => {
+          return (
+            <View style={styles.dropdownButtonStyle}>
+              <Octicons name="chevron-down" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
+              <Text style={styles.dropdownButtonTxtStyle}>
+                {selectedItem && selectedItem.label}
+              </Text>
+            </View>
+          );
+        }}
+        renderItem={(item, index, isSelected) => {
+          return (
+            <View key={index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+              <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
+            </View>
+          );
+        }}
+        showsVerticalScrollIndicator={false}
+        dropdownStyle={styles.dropdownMenuStyle}
+      />
+<Text>Initial support includes French translation of role names; planned support for button names.</Text>
+        <Promo />
         </ScrollView>
         </View>
         </View>

@@ -13,13 +13,14 @@ const targetMember = members.find(member => member.ID == item.ID);
 if(targetMember) {
     item.name = targetMember.name;
 }
-// key={item.assignment_key.replace('role','edit') }
 const memberlist = [{ID:'',name:'Choose member or "guest"'},{ID:'guest',name:'Guest (enter name)'},...members];
 if(item.name.includes('(guest)')) {
   memberlist.push({'ID':item.ID,'name':item.name});
 }
 const defaultValue = (item.ID) ? {'ID':(isNaN(item.ID)) ? item.ID : parseInt(item.ID),'name':item.name} : memberlist[0];
-  return (<View><Text>{item.role}</Text>
+
+return (<View>
+    <Text>{item.role}</Text>
   <View>
     <SelectDropdown
         data={memberlist}

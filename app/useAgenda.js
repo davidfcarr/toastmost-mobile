@@ -19,13 +19,11 @@ export default function useAgenda() {
     const [sendPlatform, setSendPlatform] = useState(true);
     const [pollingInterval, setPollingInterval] = useState(null);
     const [pageUrl, setPageUrl] = useState('');
-    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage} = useClubMeetingStore();
+    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage} = useClubMeetingStore();
     const url = Linking.useURL();
-    console.log('useAgenda url',url);
     if(url != pageUrl) {
       if(null !== url) {
         setPageUrl(url);
-        console.log('useAgenda url changed',url);  
       }
       else {
         console.log('useAgenda url not loaded');
@@ -63,6 +61,17 @@ export default function useAgenda() {
       } catch (e) {
         console.error(e)
       }
+
+      try {
+        const l = await AsyncStorage.getItem("language")
+        if (l) {
+          setLanguage(l);
+        }
+        else
+          setLanguage('en_EN');
+      } catch (e) {
+        console.error(e)
+      }
     }
     fetchData();
     getToastInfo();
@@ -76,6 +85,16 @@ export default function useAgenda() {
       console.error(e)
     }
   }
+
+async function saveLanguage(l) {
+  setLanguage(l);
+  try {
+    await AsyncStorage.setItem("language", l);
+    console.log('store language preference',l);
+  } catch (e) {
+    console.error(e)
+  }      
+}
 
   useEffect(() => {
     if(!clubs.length && !reset) {
@@ -112,7 +131,7 @@ export default function useAgenda() {
     setUserId(queryData.user_id);
   }, [clubs, queryData])
 
-  function getCurrentClub() { console.log('getCurrentClubs',clubs); return (clubs && clubs.length) ? clubs[0] : null; }
+  function getCurrentClub() { return (clubs && clubs.length) ? clubs[0] : null; }
 
   function getToastData(currentClub) {
     if(!currentClub || !currentClub.url) {
@@ -120,10 +139,10 @@ export default function useAgenda() {
     }
     if(message && message.includes('Updating ...'))
       return;
-    let queryString = '';
+    let queryString = '?language='+language;
     if(sendPlatform)
     {
-      queryString = '?mobileos='+Platform.OS;
+      queryString += '&mobileos='+Platform.OS;/*+'&language=fr_FR';*/
       setSendPlatform(false);
     }
     fetch(currentClub.url+queryString).then((res) => {
@@ -159,6 +178,18 @@ export default function useAgenda() {
       }
     )
   }
+
+/*
+https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&role=speaker
+
+        if(isset($data) && isset($data->suggest))
+        {
+            $response['content'] = wpt_suggest_role(array('suggest_note'=>$data->note,'post_id'=>$post_id,'user_id'=>$data->suggest,'role'=>$data->role));
+            return new WP_REST_Response($response,
+            200);
+        }
+*/
+
 
   function getToastInfo() {
     if(message && message.includes('Checking with Toastmost World Headquarters'))
@@ -209,7 +240,8 @@ export default function useAgenda() {
     currentData.agendas[meeting].roles[roleData.index] = roleData;
     setAgenda(currentData.agendas[meeting]); /* optimistic update */
     setMessage('Updating ...');
-    fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
+    let queryString = '?language='+language;
+    fetch(clubs[0].url+queryString, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
       setMessage('');
       setQueryData(data);
       console.log('results of role update',data);
@@ -267,7 +299,7 @@ export default function useAgenda() {
     })
   }
 
-   return {clubs, setClubs, setDefaultClub, toastmostData, message, setMessage, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
+   return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
     addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, pollingInterval, 
-    setPollingInterval, setAgenda, emailAgenda, absence};
+    setPollingInterval, emailAgenda, absence, language, saveLanguage};
 }
