@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, useWindowDimensions } from "react-native";
+import { Text, View, ScrollView, TextInput, Pressable, Image, AppState, useWindowDimensions, Switch } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
@@ -12,6 +12,7 @@ import RenderHtml from 'react-native-render-html';
 import { useFocusEffect } from 'expo-router';
 import { ErrorBoundaryProps } from 'expo-router';
 import * as Linking from 'expo-linking';
+import TranslatedText, {translateTerm} from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -36,6 +37,8 @@ export default function Voting(props) {
   const [controls,setControls] = useState('');
   const [guest,setGuest] = useState('');
   const [newBallot,setNewBallot] = useState('');
+  const [everyMeeting,setEveryMeeting] = useState(false);
+  const [signatureRequired,setSignatureRequired] = useState(false);
   const [votesToAdd,setVotesToAdd] = useState(false);
   const [pollingInterval,setPollingInterval] = useState(null);
   const { width } = useWindowDimensions();
@@ -174,8 +177,6 @@ function sendBallotLink(toWho) {
   }
 
   if (!appIsReady || !votingdata.ballot) {
-    console.log('not ready message appIsReady ',appIsReady);
-    console.log('not ready message votingdata',votingdata);
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View>
@@ -219,11 +220,11 @@ function sendBallotLink(toWho) {
 
   if(votingdata.is_vote_counter && 'vote' != controls) {
       return (
-        <SafeAreaView style={{flex:1}} >
+        <SafeAreaView style={{flex:1, paddingLeft: 10, paddingRight: 10}} >
           <ScrollView>
           <View>
           <BrandHeader {...queryData} {...agenda} />
-              <Text style={styles.h1}>Vote Counter's Tool</Text>
+              <Text style={styles.h1}><TranslatedText term="Vote Counter's Tool" /></Text>
               <View style={{flexDirection: 'row'}}>
         <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
       <MaterialCommunityIcons name="ballot-outline" size={24} color="black" />
@@ -248,6 +249,10 @@ function sendBallotLink(toWho) {
                     if(('Template' == c) || ('C' == c) || ('c' == c))
                         return;
                     const currentBallot = votingdata.ballot[c];
+                    console.log('currentBallot key',c);
+                    console.log('currentBallot',currentBallot);
+                    if(!currentBallot || !currentBallot.contestants)
+                      return;
                     return <View key={'contest'+cindex}>
                         <Text style={styles.h2}>{c}</Text>
                         {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice}  key={'contestant'+index}>
@@ -292,7 +297,7 @@ function sendBallotLink(toWho) {
         showsVerticalScrollIndicator={false}
         dropdownStyle={styles.dropdownMenuStyle}
       />
-      <Text>Or Type Choice</Text>      
+      <TranslatedText term="Or Type Choice" />    
         <View style={{display: 'flex',flexDirection:'row',alignContent:'left'}}><View style={{width: '90%'}}><TextInput style={styles.input} label="Type Choice to Add" value={guest} onChangeText={ (value) => { console.log('text entry value',value); setGuest(value); } } /></View>
         <View ><Pressable style={styles.plusbutton} onPress={() => {currentBallot.contestants.push(guest); setGuest(''); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy});
       sendVotingUpdate({ballot:ballotCopy,post_id:agenda.post_id,identifier:identifier});
@@ -303,8 +308,28 @@ function sendBallotLink(toWho) {
                     </View>
                 }
             )}
-            <Text style={styles.h2}>New Ballot</Text>
-            <View style={{display: 'flex',flex:1,flexDirection:'row'}}><View style={{width:'90%'}}><TextInput style={styles.input} label="Contest or Question" value={newBallot} onChangeText={ (value) => { setNewBallot(value); } } /></View><View><Pressable style={styles.plusbutton} onPress={() => {const newBallotEntry = {...votingdata.ballot}; newBallotEntry[newBallot] = {...votingdata.ballot.Template}; setVotingdata({...votingdata,ballot:newBallotEntry}); setNewBallot('');}}><Text style={styles.buttonText}>+</Text></Pressable></View></View>
+            <Text style={styles.h2}><TranslatedText term='New Ballot' /></Text>
+            <View style={{width:'90%'}}><TextInput style={styles.input} label="Contest or Question" value={newBallot} onChangeText={ (value) => { setNewBallot(value); } } /></View><View></View>
+            <View style={{flexDirection: 'row'}}><Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={everyMeeting ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => {setEveryMeeting(previousState => !previousState)}}
+        value={everyMeeting}
+      /><TranslatedText term='Include for every meeting' /></View>
+            <View style={{flexDirection: 'row'}}><Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={signatureRequired ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => {setSignatureRequired(previousState => !previousState)}}
+        value={signatureRequired}
+      /><Text>Signature required (example: voting in a new member).</Text></View>
+      <Pressable style={styles.button} onPress={
+        () => {const newBallotEntry = {...votingdata.ballot}; newBallotEntry[newBallot] = {...votingdata.ballot.Template,everyMeeting:everyMeeting,signature_required:signatureRequired}; 
+        setVotingdata({...votingdata,ballot:newBallotEntry}); 
+        sendVotingUpdate({ballot:newBallotEntry,post_id:agenda.post_id,identifier:identifier});
+        setNewBallot(''); setSignatureRequired(false); setEveryMeeting(false);}}>
+          <Text style={styles.buttonText}>Add Ballot</Text></Pressable>
             {contestlist.map(
                 (c, cindex) => {
                     if(('Template' == c) || ('C' == c) || ('c' == c))
@@ -325,14 +350,14 @@ function sendBallotLink(toWho) {
                     </View>
                 }
             )}
-            <Text style={[styles.h2,{marginTop:100}]}>Send Web Voting Link</Text>
+            <Text style={[styles.h2,{marginTop:100}]}><TranslatedText term='Send Web Voting Link' /></Text>
             {message ? <Text>{message}</Text> : null}
-            <Text style={{textAlign: 'center'}} >Members can vote using the app or a web link.</Text>
-            <Pressable style={styles.button} onPress={() => {sendBallotLink('myself')}}><Text style={styles.buttonText}>Email the Link to Me</Text></Pressable>
+            <Text style={{textAlign: 'center'}} ><TranslatedText term="Members can vote using the app or a web link." /></Text>
+            <Pressable style={styles.button} onPress={() => {sendBallotLink('myself')}}><Text style={styles.buttonText}><TranslatedText term="Email the link to me" /></Text></Pressable>
             <Text style={{textAlign: 'center'}}>or</Text>
-            <Pressable style={styles.button} onPress={() => {sendBallotLink('members')}}><Text style={styles.buttonText}>Email Link to Members</Text></Pressable>
-            <Text style={[styles.h2,{marginTop:100}]}>Reset</Text>
-            <View><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Reset Ballot</Text></Pressable></View>
+            <Pressable style={styles.button} onPress={() => {sendBallotLink('members')}}><Text style={styles.buttonText}><TranslatedText term="Email the link to members" /></Text></Pressable>
+            <Text style={[styles.h2,{marginTop:100}]}><TranslatedText term="Reset Ballot" /></Text>
+            <View><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}><TranslatedText term="Reset Ballot" /></Text></Pressable></View>
             <Text style={{marginBottom: 50}}>Click to delete all ballots and vote records</Text>
           </View>
           </ScrollView>
@@ -348,7 +373,7 @@ function sendBallotLink(toWho) {
       <BrandHeader {...queryData} {...agenda} />
           {votingdata.is_vote_counter ? 
                       <View style={{flexDirection: 'row'}}>
-      <Text style={styles.h1}>Voting</Text>
+      <Text style={styles.h1}><TranslatedText term="Voting" /></Text>
       <Pressable onPress={() => { setControls('setup'); }} style={{ marginLeft: 10 }}>
                     <MaterialCommunityIcons name="ballot-outline" size={24} color="black" />
                     </Pressable>
@@ -363,7 +388,7 @@ function sendBallotLink(toWho) {
                       <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
                       </View>
            : <View style={{flexDirection: 'row'}}>
-      <Text style={styles.h1}>Voting</Text>
+      <Text style={styles.h1}><TranslatedText term="Voting" /></Text>
       <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
            <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
            </View>}
@@ -376,25 +401,25 @@ function sendBallotLink(toWho) {
                         return null;
                     if(votingdata.myvotes.includes(c))
                         return (<View key={'contest'+cindex}>
-                    <Text style={styles.h2}>{c}</Text>
-                    <Text>Voted</Text>
+                    <Text style={styles.h2}><TranslatedText term={c} /></Text>
+                    <TranslatedText term="Voted" />
                     </View>)
                     openBallots = true;
                     return (<View key={'contest'+cindex}>
-                        <Text style={styles.h2}>{c}</Text>
-                        {currentBallot.contestants.length ? <Text>Vote for:</Text> : null}
+                        <Text style={styles.h2}><TranslatedText term={c} /></Text>
+                        {currentBallot.contestants.length ? <TranslatedText term="Vote for:" /> : null}
                         {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Text><Pressable style={styles.button} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id}; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>{contestant}</Text></Pressable></Text></View>})}
                     </View>)
                 }
             )}
           {!votingdata.is_vote_counter && (!openBallots) ? 
           <View><Text>The current vote counter is "{(votingdata.vote_counter_name) ? votingdata.vote_counter_name : '(none assigned)'}" but no ballots have been created yet.</Text>
-          <Text style={styles.h2}>Assume the role of Vote Counter?</Text>
+          <Text style={styles.h2}><TranslatedText term='Take over as Vote Counter?' /></Text>
           <Text>If no Vote Counter is available, any member can assume the role.</Text>
-          {votingdata.authorized_user ? <View><Pressable style={styles.button} onPress={() => {sendVotingUpdate({post_id:agenda.post_id,identifier:identifier,take_vote_counter:true}) }}><Text style={styles.buttonText}>Take Vote Counter Role</Text></Pressable></View> : null}
+          {votingdata.authorized_user ? <View><Pressable style={styles.button} onPress={() => {sendVotingUpdate({post_id:agenda.post_id,identifier:identifier,take_vote_counter:true}) }}><Text style={styles.buttonText}><TranslatedText term='Take Role' /></Text></Pressable></View> : null}
           </View> : null}
-          {votingdata.is_vote_counter ? <View><Text style={styles.h2}>Back to Vote Counter Controls?</Text>
-          <Pressable style={styles.button} onPress={() => {setControls('')} }><Text style={styles.buttonText}>Go Back</Text></Pressable></View> : null}
+          {votingdata.is_vote_counter ? <View><Text style={styles.h2}><TranslatedText term='Back to Vote Counter Controls?' /></Text>
+          <Pressable style={styles.button} onPress={() => {setControls('')} }><Text style={styles.buttonText}><TranslatedText term='Go Back' /></Text></Pressable></View> : null}
           </ScrollView>
       </SafeAreaView>
   );

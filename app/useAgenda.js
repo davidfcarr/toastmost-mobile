@@ -64,8 +64,6 @@ export default function useAgenda() {
         if (l) {
           setLanguage(l);
         }
-        else
-          setLanguage('en_EN');
       } catch (e) {
         console.error(e)
       }

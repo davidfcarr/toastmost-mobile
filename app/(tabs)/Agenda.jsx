@@ -8,6 +8,7 @@ import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from "../store";
 import { ErrorBoundaryProps } from 'expo-router';
 import { useState } from "react";
+import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -51,7 +52,7 @@ export default function Agenda (props) {
         <View style={{width: '100%', marginBottom: 50, paddingBottom: 50 }}>
         <TextInput style={{width: '100%', height: 40, borderColor: 'gray', borderWidth: 1}} placeholder="Subject" value={subject}  onChangeText={(input) => setSubject(input)} />
         <TextInput style={{width: '100%', height: 40, borderColor: 'gray', borderWidth: 1}} placeholder="Note (optional)" value={note} onChangeText={(input) => setNote(input)}/>
-        <Pressable style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}} onPress={()=>{ emailAgenda({post_id: agenda.post_id,agendaemail: 'members',emailagenda: 'members',subject:subject,note:note}) }}><Text style={{color:'white'}}>Email to Members</Text></Pressable>
+        <Pressable style={styles.button} onPress={()=>{ emailAgenda({post_id: agenda.post_id,agendaemail: 'members',emailagenda: 'members',subject:subject,note:note}) }}><Text style={styles.buttonText}><TranslatedText term="Send Email" /></Text></Pressable>
         <Text>Email version includes one-click signup links</Text>
         {source ? <RenderHtml source={source} contentWidth={width - 20} /> : <Text>Agenda not loaded</Text>}
         </View>

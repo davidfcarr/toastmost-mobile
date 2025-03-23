@@ -6,6 +6,7 @@ import { Octicons } from '@expo/vector-icons'
 import SelectDropdown from 'react-native-select-dropdown'
 import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from '../store';
+import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -51,7 +52,7 @@ export default function Timer (props) {
 },[start]);
 
   let roles = [];
-  if(agenda && !agenda.roles)
+  if(agenda && agenda.roles)
     roles = agenda.roles;
  
     const styles = StyleSheet.create({
@@ -127,7 +128,7 @@ export default function Timer (props) {
             width: 110,
           },
           buttonText: {
-            fontSize: 18,
+            fontSize: 12,
             color: 'white',
             margin: 5,
             textAlign: 'center',
@@ -184,6 +185,9 @@ export default function Timer (props) {
     }
 
     let match, min, max, display_time;
+    const speakerLabel = (queryData.translations && queryData.translations['Speaker']) ? queryData.translations['Speaker'] : 'Speaker';
+    const evaluatorLabel = (queryData.translations && queryData.translations['Evaluator']) ? queryData.translations['Evaluator'] : 'Evaluator';
+    const topicsLabel = (queryData.translations && queryData.translations['Table Topics']) ? queryData.translations['Table Topics'] : 'Table Topics';
     roles.forEach(
         (role) => {
             let minmax = {};
@@ -199,33 +203,33 @@ export default function Timer (props) {
                         minmax.min = 5 * mult * 1000;
                         minmax.max = 7 * mult * 1000;
                     }
-                    timerOptions.push({'role':'Speaker','name':role.name,'display_time':role.display_time,'min':minmax.min,'max':minmax.max});
+                    timerOptions.push({'role':speakerLabel,'name':role.name,'display_time':role.display_time,'min':minmax.min,'max':minmax.max});
                 }
             }
             if('Evaluator' == role.role) {
                 if(role.ID > 0) {
                     minmax.min = 2 * mult * 1000;
                     minmax.max = 3 * mult * 1000;
-                    timerOptions.push({'role':'Evaluator','name':role.name,'display_time':'2 to 3 minutes','min':min * 60 *1000,'max':max * 60 * 1000});    
+                    timerOptions.push({'role':evaluatorLabel,'name':role.name,'display_time':'2 to 3 minutes','min':min * 60 *1000,'max':max * 60 * 1000});    
                 }
             }
         }        
     );
-    timerOptions.push({'role':'Evaluator','name':'','display_time':'2 to 3 minutes','min':2 * 60 *1000,'max':3 * 60 * 1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'5 to 15 seconds','min':5000,"max":15000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'30 to 60 seconds','min':30 * 1000,"max":60 * 1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'2 to 3 minutes','min':2*60*1000,"max":3*60*1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'3 to 5 minutes','min':3*60*1000,"max":5*60*1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'4 to 6 minutes','min':4*60*1000,"max":6*60*1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'6 to 8 minutes','min':6*60*1000,"max":8*60*1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'8 to 10 minutes','min':8*60*1000,"max":10*60*1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'10 to 12 minutes','min':10*60*1000,"max":12*60*1000});
-    timerOptions.push({'role':'Speaker','name':'','display_time':'12 to 15 minutes','min':12*60*1000,"max":15*60*1000});
-    timerOptions.push({'role':'Table Topics','name':'','display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
+    timerOptions.push({'role':evaluatorLabel,'name':'','display_time':'2 to 3 minutes','min':2 * 60 *1000,'max':3 * 60 * 1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'5 to 15 seconds','min':5000,"max":15000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'30 to 60 seconds','min':30 * 1000,"max":60 * 1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'2 to 3 minutes','min':2*60*1000,"max":3*60*1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'3 to 5 minutes','min':3*60*1000,"max":5*60*1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'4 to 6 minutes','min':4*60*1000,"max":6*60*1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'6 to 8 minutes','min':6*60*1000,"max":8*60*1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'8 to 10 minutes','min':8*60*1000,"max":10*60*1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'10 to 12 minutes','min':10*60*1000,"max":12*60*1000});
+    timerOptions.push({'role':speakerLabel,'name':'','display_time':'12 to 15 minutes','min':12*60*1000,"max":15*60*1000});
+    timerOptions.push({'role':topicsLabel,'name':'','display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
     if(members)
     members.forEach(
         (member) => {
-            timerOptions.push({'role':'Table Topics','name':member.name,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
+            timerOptions.push({'role':topicsLabel,'name':member.name,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
         }
     );
 
@@ -268,9 +272,9 @@ export default function Timer (props) {
     <TextInput style={styles.input} value={timing.display_time} placeholder="Timing" placeholderTextColor="gray" 
     onChangeText={(value) => { let up = {...timing}; up.display_time = value; const minmax = getMinMax(value); console.log('minmax',minmax); up.min = minmax.min; up.max = minmax.max; setTiming(up); }} />
     <View style={styles.buttonRow}>
-    <Pressable style={styles.startButton} onPress={() => {setStart(new Date().getTime()); setElapsed(0);}}><Text style={styles.buttonText}>Start</Text></Pressable>
-    <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setColor('white'); }}><Text style={styles.buttonText}>Stop</Text></Pressable>
-    <Pressable style={styles.pauseButton} onPress={() => {setStart(0);setPause(elapsed);}}><Text style={styles.buttonText}>Pause</Text></Pressable>
+    <Pressable style={styles.startButton} onPress={() => {setStart(new Date().getTime()); setElapsed(0);}}><Text style={styles.buttonText}><TranslatedText term="Start" /></Text></Pressable>
+    <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setColor('white'); }}><Text style={styles.buttonText}><TranslatedText term="Stop" /></Text></Pressable>
+    <Pressable style={styles.pauseButton} onPress={() => {setStart(0);setPause(elapsed);}}><Text style={styles.buttonText}><TranslatedText term="Pause" /></Text></Pressable>
     </View>
     {!roles.length && !members.length ? <Text style={{fontStyle:'italic'}}>Stand-alone mode. This Timer works best when connected to a club's membership list and meeting agendas.</Text> : null}
     {!start && log.length ? log.map( (entry,entryindex) => { return (entryindex == log.length - 1) ? <Text style={{fontWeight: 'bold'}}>{entry}</Text> : <Text>{entry}</Text> } ) : null}    

@@ -2,8 +2,22 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Tabs } from 'expo-router';
 import { ClubProvider } from '../ClubContext';
+import useClubMeetingStore from '../store';
 
 export default function TabLayout() {
+  const {queryData, language} = useClubMeetingStore();
+  function translate(term) {
+    if(('en_EN' == language))
+        ;//console.log('do not mess with English');
+    else if(queryData && queryData.translations && queryData.translations[term])
+    {
+        term = queryData.translations[term];
+    }
+    else 
+      console.log('translation not found',term);
+    return term;  
+  } 
+
   return (
     <ClubProvider>
     <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
@@ -18,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Agenda"
         options={{
-          title: 'Agenda',
+          title: translate('Agenda'),
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="list" color={color} />,
           headerShown: false
         }}
@@ -26,7 +40,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Timer"
         options={{
-          title: 'Timer',
+          title: translate('Timer'),
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="clock-o" color={color} />,
           headerShown: false
         }}
@@ -34,7 +48,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Voting"
         options={{
-          title: 'Voting',
+          title: translate('Voting'),
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="ballot" size={24} color="black" />,
           headerShown: false
         }}
@@ -42,7 +56,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Settings"
         options={{
-          title: 'Settings',
+          title: translate('Settings'),
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
           headerShown: false
         }}

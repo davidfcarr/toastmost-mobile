@@ -4,6 +4,7 @@ import ProjectChooser from './ProjectChooser';
 import SelectDropdown from 'react-native-select-dropdown'
 import styles from './styles'
 import { Octicons } from '@expo/vector-icons'
+import TranslatedText from './TranslatedText'; /* <TranslatedText term="" /> */
 
 export default function EditRole ({ item, updateRole, members, queryData, setEdit }) {
 
@@ -20,7 +21,7 @@ if(item.name.includes('(guest)')) {
 const defaultValue = (item.ID) ? {'ID':(isNaN(item.ID)) ? item.ID : parseInt(item.ID),'name':item.name} : memberlist[0];
 
 return (<View>
-    <Text>{item.role}</Text>
+    <TranslatedText term={item.role} />
   <View>
     <SelectDropdown
         data={memberlist}

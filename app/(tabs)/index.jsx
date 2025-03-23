@@ -13,6 +13,7 @@ import { useFocusEffect } from 'expo-router';
 import useClubMeetingStore from '../store';
 import { ErrorBoundaryProps } from 'expo-router';
 import Promo from '../Promo';
+import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -75,7 +76,7 @@ export default function Home (props) {
       return (<SafeAreaView><View><BrandHeader isHome={true} setEdit={setEdit} mode="edit" />
       <ScrollView>
       <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} mode="edit" />
-      <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setEdit('')}><Text style={styles.buttonText}>Done</Text></Pressable>
+      <Pressable style={[styles.addButton,{marginTop:50}]} onPress={() => setEdit('')}><Text style={styles.buttonText}><TranslatedText term="Done" /></Text></Pressable>
       <Promo />
       </ScrollView>
       </View>
@@ -149,7 +150,7 @@ export default function Home (props) {
             {club.domain && agenda.roles.length > 0 ? (
               <View style={{ width: '100%', flex: 1 }}>
                   <Text style={{ fontStyle: 'italic', padding: 5 }}>
-                    <Octicons name="plus" size={15} color="black" style={{ width: 15 }} /> take role <Octicons name="x-circle" size={15} color="red" style={{ width: 15 }} /> withdraw <Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /> edit <Octicons name="paper-airplane" size={15} color="black" style={{ width: 15 }} /> suggest
+                    <Octicons name="plus" size={15} color="black" style={{ width: 15 }} /> <TranslatedText term="Take Role" /> <Octicons name="x-circle" size={15} color="red" style={{ width: 15 }} /> <TranslatedText term="Cancel" /> <Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /> <TranslatedText term="Edit" /> <Octicons name="paper-airplane" size={15} color="black" style={{ width: 15 }} /> <TranslatedText term="Suggest" />
                   </Text>
                 <FlatList
                   data={agenda.roles}
@@ -166,7 +167,7 @@ export default function Home (props) {
                             <Octicons name="pencil" size={24} color="black" style={{ marginLeft: 80, width: 24 }} />
                             </Pressable>}
                             <View>
-                              <Text style={styles.role}>{item.role_display}</Text>
+                              <Text style={styles.role}><TranslatedText term={item.role} /></Text>
                               <Text style={styles.name}>{name}</Text>
                             </View>
                           </View>
@@ -187,7 +188,7 @@ export default function Home (props) {
                           </Pressable>
                           </View>}
                           <View>
-                          <Text style={styles.role}>{item.role_display ? item.role_display : item.role}</Text>
+                          <Text style={styles.role}><TranslatedText term={item.role} /></Text>
                           <Text style={styles.name}>{name}</Text>
                           </View>
                         </View>
@@ -206,7 +207,7 @@ export default function Home (props) {
                           </Pressable>
                         </View>}
                         <View>
-                        <Text style={styles.role}>{item.role_display ? item.role_display : item.role}</Text>
+                        <Text style={styles.role}><TranslatedText term={item.role} /></Text>
                         <Text style={styles.name}>{name}</Text>
                         </View>
                       </View>

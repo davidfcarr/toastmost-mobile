@@ -3,6 +3,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import * as Linking from 'expo-linking';
 import useClubMeetingStore from "./store";
 import { Link } from 'expo-router';
+import TranslatedText from "./TranslatedText";
 
 export default function BrandHeader(props) {
     const {message, queryData} = useClubMeetingStore();
@@ -19,13 +20,11 @@ return (
     {props.mode == 'edit' ? <Pressable onPress={() => props.setEdit('')}><MaterialIcons name="home" size={24} color="black" /></Pressable>: null}
       <Text style={{fontSize:20}}>{queryData.sitename}</Text>
       </View> : null}
-    {message ? (
+    {message ?
               <View>
-                <Text style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }}>
-                  {message}
-                </Text>
-              </View>
-            ) : 
+                <TranslatedText style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }} term={message} />
+            </View>
+            : 
             <View>
             <Text style={{ padding: 10, margin: 5}}>
             {queryData.name ? queryData.name : ''}

@@ -6,6 +6,7 @@ import styles from './styles'
 import { Octicons } from '@expo/vector-icons'
 import useAgenda from "./useAgenda";
 import useClubMeetingStore from "./store";
+import TranslatedText, {translateTerm} from './TranslatedText'; /* <TranslatedText term="" /> */
 
 export default function SuggestRole ({ item, members, queryData, setSuggest }) {
 const {askForData} = useAgenda();
@@ -60,7 +61,7 @@ function sendSuggestion(payload) {
 }
 
 return (<View>
-    <Text>Suggest Role: {item.role}</Text>
+    <Text><TranslatedText term="Suggest Role" />: <TranslatedText term={item.role} /></Text>
   <View>
     <SelectDropdown
         data={memberlist}
@@ -97,8 +98,8 @@ return (<View>
         height: 100,
         textAlignVertical: 'top',
         padding: 10
-    }} placeholder="Note" onChangeText={(text) => { setNote(text); }}/>
+    }} placeholder={translateTerm("Note",queryData.translations)} onChangeText={(text) => { setNote(text); }}/>
     <Pressable onPress={() => {const payload = {...member}; payload.suggest_note = note; payload.suggest = payload.ID; delete payload.ID; console.log('suggest payload',payload); sendSuggestion(payload); }} style={styles.addButton}><Text style={styles.addButtonText}>Send</Text></Pressable>
-    <Text>Use this function to recommend that another member take the selected role.</Text>
+    <TranslatedText term="Use this function to recommend that another member take the selected role" />
     </View>);
 }

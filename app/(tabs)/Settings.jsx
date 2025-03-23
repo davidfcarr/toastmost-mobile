@@ -12,6 +12,7 @@ import BrandHeader from '../BrandHeader';
 import Promo from '../Promo';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Octicons } from '@expo/vector-icons'
+import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -31,7 +32,7 @@ export default function Settings (props) {
     const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
 
-    const languageChoices = [{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'},{code:'es_ES',label:'Spanish'}];
+    const languageChoices = [{code:'',label:'Not set'},{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'},{code:'es_ES',label:'Spanish'}];
 
     function addFromUrl() {
       if (url) {
@@ -120,7 +121,7 @@ export default function Settings (props) {
             style={styles.input}
             autoCapitalize="none"
             autoCorrect={false}
-            placeholder="Domain or domain|code"
+            placeholder={queryData.translations && queryData.translations["Domain or domain|code"] ? queryData.translations["Domain or domain|code"] : "Domain or domain|code"}
             placeholderTextColor="gray"
             value={tempClub.domain}
             onChangeText={(input) => {
@@ -140,7 +141,7 @@ export default function Settings (props) {
       autoCapitalize="none"
       autoCorrect={false}
       maxLength={30}
-      placeholder="Code or email"
+      placeholder={queryData.translations && queryData.translations["Code or email"] ? queryData.translations["Code or email"] : "Code or email"}
       placeholderTextColor="gray"
       value={tempClub.code}
       onChangeText={(input) => {if(input.includes('@')) {setEmailPrompt(true); setTempClub({...tempClub,code:input})} else setTempClub({...tempClub,code:input})}  }
@@ -148,13 +149,13 @@ export default function Settings (props) {
     </View>
 <View>
           <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else { const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; addClub(newclub);setTempClub({domain:'',code:''});resetClubData();} }} style={styles.addButton}>
-            <Text style={styles.addButtonText}>{emailPrompt ? <Text>Request by Email</Text> : <Text>Add</Text>}</Text>
+            <Text style={styles.addButtonText}>{emailPrompt ? <TranslatedText term="Request by Email" /> : <TranslatedText term="Add" />}</Text>
           </Pressable>
           </View>
           </View>
           <View style={{flex:1}}>
         <ScrollView>
-          <Text style={styles.instructions}>If you have copied a domain|code string, paste it in the first field above. To get instructions emailed to you, enter your club website domain into the first blank and your email address in the second.</Text><Text style={styles.instructions}><Text style={{fontWeight: 'bold'}}>Demo Accounts:</Text> If you do not have a Toastmost account, enter demo.toastmost.org in the first blank and your email address in the second to have a demo account created for you.</Text>
+          <TranslatedText style={styles.instructions} term="If you have copied a domain|code string, paste it in the first field above. To get instructions emailed to you, enter your club website domain into the first blank and your email address in the second." /><Text style={styles.instructions} ><TranslatedText style={{fontWeight: 'bold'}} term="Demo Accounts:" /><TranslatedText term="If you do not have a Toastmost account, enter demo.toastmost.org in the first blank and your email address in the second to have a demo account created for you." /></Text>
   
         {clubs.length && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
         {(clubs.length > 0) ? clubs.map(
@@ -165,7 +166,7 @@ export default function Settings (props) {
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
                 <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
-                  <Text style={styles.addButtonText}>Choose {clubChoice.domain}</Text>
+                  <Text style={styles.addButtonText}><TranslatedText term="Choose" /> {clubChoice.domain}</Text>
                 </Pressable>
               </View>
             )
@@ -174,7 +175,7 @@ export default function Settings (props) {
         : null}
         {(clubs.length > 0) ?
         <Pressable onPress={() => {setReset(true); setClubs([]); resetClubData(); setQueryData({}); } } style={styles.chooseButton}>
-        <Text style={styles.addButtonText}>Reset Clubs List</Text>
+        <TranslatedText style={styles.addButtonText} term="Reset Clubs List" />
         </Pressable>
          : null}
   
@@ -183,7 +184,7 @@ export default function Settings (props) {
             return (
               <View style={{flexDirection: 'row'}} key={'different'+index}>
                 <Pressable key={'choose'+index} onPress={() => {addDomainSame(domain); resetClubData()} } style={styles.chooseButton}>
-                  <Text style={styles.addButtonText}>Add {domain}</Text>
+                  <Text style={styles.addButtonText}><TranslatedText props="Add" /> {domain}</Text>
                 </Pressable>
               </View>
             )
@@ -218,7 +219,7 @@ export default function Settings (props) {
         showsVerticalScrollIndicator={false}
         dropdownStyle={styles.dropdownMenuStyle}
       />
-<Text>Initial support includes French translation of role names; planned support for button names.</Text>
+<TranslatedText term="Initial support includes French translation of role names; planned support for button names." />
         <Promo />
         </ScrollView>
         </View>
