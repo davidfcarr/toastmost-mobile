@@ -1,4 +1,4 @@
-import { Text, View, Pressable, AppState, FlatList, ScrollView } from "react-native";
+import { Text, View, Pressable, FlatList, ScrollView, Switch } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
@@ -14,25 +14,29 @@ import useClubMeetingStore from '../store';
 import { ErrorBoundaryProps } from 'expo-router';
 import Promo from '../Promo';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
+import { Link } from 'expo-router';
 
 export function ErrorBoundary({ error, retry }) {
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
+    <SafeAreaView>
+    <View style={{ flex: 1}}>
       <Text>{error.message}</Text>
       <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
-    </View>
+      <Text>Try navigating to the <Link href="/Settings"  style={{textDecorationLine: 'underline'}}>Settings</Link> screen.</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
 export default function Home (props) {
     const [edit,setEdit] = useState('');
     const [suggest,setSuggest] = useState('');
-    const [pollingInterval,setPollingInterval] = useState(null);
+    const [assign,setAssign] = useState(false);
     const refreshTime = 60000;
-    const {updateRole, getToastData, absence} = useAgenda();
+    const {updateRole, getToastData, absence, initAgendaPolling} = useAgenda();
     const [lastUpdate, setLastUpdate] = useState(0);
     const timeNow = Date.now();
-    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage,queryData,language} = useClubMeetingStore();
+    const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage,queryData,language,agendaPollingInterval,setAgendaPollingInterval} = useClubMeetingStore();
     const club = (clubs && clubs.length) ? clubs[0] : {};
     useFocusEffect(
       useCallback(() => {
@@ -134,8 +138,7 @@ export default function Home (props) {
                 <Pressable
                   onPress={() => {
                     setLastUpdate(timeNow);
-                    getToastData(club);
-                    polling();
+                    initAgendaPolling(clubs[0]);
                     console.log('set polling '+language);
                     setMessage('Checking server for updates ...'+club.domain);
                   }}
@@ -149,16 +152,36 @@ export default function Home (props) {
 
             {club.domain && agenda.roles.length > 0 ? (
               <View style={{ width: '100%', flex: 1 }}>
-                  <Text style={{ fontStyle: 'italic', padding: 5 }}>
-                    <Octicons name="plus" size={15} color="black" style={{ width: 15 }} /> <TranslatedText term="Take Role" /> <Octicons name="x-circle" size={15} color="red" style={{ width: 15 }} /> <TranslatedText term="Cancel" /> <Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /> <TranslatedText term="Edit" /> <Octicons name="paper-airplane" size={15} color="black" style={{ width: 15 }} /> <TranslatedText term="Suggest" />
-                  </Text>
+
                 <FlatList
                   data={agenda.roles}
+                  ListHeaderComponent={<View>
+                                      <View style={{ flexDirection: 'row',padding: 5, justifyContent: 'space-between' }}>
+                    <Octicons name="plus" size={15} color="black" style={{ width: 15 }} /><TranslatedText term="Take Role" /><Octicons name="x-circle" size={15} color="red" style={{ width: 15 }} /><TranslatedText term="Cancel" /><Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /><TranslatedText term="Edit" /><Octicons name="paper-airplane" size={15} color="black" style={{ width: 15 }} /><TranslatedText term="Suggest" />                
+                  </View>
+                  <View style={{flexDirection:'row'}}>
+                  <Switch
+          trackColor={{false: '#767577', true: '#81b0ff'}}
+          thumbColor={assign ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={() => {
+            const newassign = !assign;
+            setAssign(newassign);
+          }}
+          value={assign}
+        /><TranslatedText term="Assign" style={{marginLeft: 10}} />
+                  </View>
+                    </View>}
                   ListFooterComponent={<Promo />}
                   renderItem={({ item, index:itemIndex }) => {
                     const roleid = parseInt(item.ID);
                     const isMe = (roleid == queryData.user_id);
                     const name = (item.name) ? item.name : 'Open';
+
+                    if(assign)
+                      return (
+                        <EditRole item={item} members={queryData.members} updateRole={updateRole} queryData={queryData} setEdit={setEdit} mode="assign" />
+                      )
 
                       if(item.ID && item.ID != '0' && !isMe) {
                         return (
@@ -234,22 +257,5 @@ function getToastUpdate() {
     setMessage('Checking server for updates ...'+club.domain);
     getToastData(club);  
 }
-
-  function polling() {
-    if(pollingInterval) {
-      console.log('cleared pollingInterval',pollingInterval);
-      clearInterval(pollingInterval);
-    }
-    const newInterval = setInterval(() => {
-      if('active' == AppState.currentState) {
-        getToastUpdate();
-      }
-      else {
-        console.log('do not poll server for updates if not in foreground');
-      }
-    }, refreshTime);
-    console.log('set pollingInterval',newInterval);
-    setPollingInterval(newInterval);
-  }
 
 }

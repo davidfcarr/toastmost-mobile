@@ -16,7 +16,8 @@ const [note,setNote] = useState('I am nominating you for '+item.role+'!');
 const {clubs,setMessage} = useClubMeetingStore();
 
 useEffect(() => {
-
+        if(!item || !item.role)
+          return;
         let queryString = '?ask=role_status&role='+item.role;
         fetch(clubs[0].url+queryString).then((res) => {
           if(res.ok) {
@@ -29,9 +30,6 @@ useEffect(() => {
             setMessage('Problem connecting to server. Check access code.');
             else
             setMessage('Problem connecting, status code: '+res.status);
-    
-            if(pollingInterval)
-              clearInterval(pollingInterval);  
           }
         }).then((data) => {
           //ask data returned
@@ -42,8 +40,7 @@ useEffect(() => {
             console.log('fetch error',error);
             setMessage('Unable to connect. Possibly a network error or typo in domain name '+clubs[0].domain+'.');
           }
-        )
-    
+        )    
     }
 ,[]);
 
@@ -54,11 +51,14 @@ function sendSuggestion(payload) {
     fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(payload)}).then((res) => res.json()).then((data) => {
         setMessage('Successfully sent message');
         console.log('results of role update',data);
+        setSuggest('');
       }).catch((e) => {
         console.log('update error',e);
         setMessage('Data update error');
       })  
 }
+if(!item || !item.role)
+  return <Text>Error loading item to edit</Text>
 
 return (<View>
     <Text><TranslatedText term="Suggest Role" />: <TranslatedText term={item.role} /></Text>

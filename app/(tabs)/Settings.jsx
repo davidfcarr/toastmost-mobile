@@ -16,10 +16,11 @@ import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
-    <SafeAreaView><BrandHeader {...queryData} />
+    <SafeAreaView>
     <View>
     <Text style={{color:'red'}}>{error.message}</Text>
     <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
+      <Text>Try navigating to the <Link href="/" style={{textDecorationLine: 'underline'}}>Home</Link> screen.</Text>
   </View>
 </SafeAreaView>
   );
@@ -27,12 +28,12 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Settings (props) {
     const [emailPrompt,setEmailPrompt] = useState(false);
-    const {toastmostData, sendEmail, setReset, saveLanguage} = useAgenda();
+    const {toastmostData, sendEmail, setReset, saveLanguage, initAgendaPolling} = useAgenda();
     const url = Linking.useURL();
     const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
 
-    const languageChoices = [{code:'',label:'Not set'},{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'},{code:'es_ES',label:'Spanish'}];
+    const languageChoices = [{code:'',label:'Not set'},{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'}];
 
     function addFromUrl() {
       if (url) {
@@ -44,7 +45,7 @@ export default function Settings (props) {
               return;
           }
           addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
-          resetClubData();
+          resetClubData({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
         }
         console.log(
           `Linked to app with hostname: ${hostname}, path: ${path} and data: ${JSON.stringify(
@@ -64,12 +65,16 @@ export default function Settings (props) {
     },
     [url])
 
-    function resetClubData() {
+    function resetClubData(newclub = null) {
+      /*
       setQueryData({});
       setMeeting(0);
       setQueryData({...queryData,agendas:[]});
       setAgenda({roles:[]});
-      router.replace('/');
+      */
+      initAgendaPolling(newclub);      
+      if(clubs.length)
+        router.replace('/');
     }
         
     function diffClubs () {
@@ -97,18 +102,7 @@ export default function Settings (props) {
       //setScreen('home');
       setQueryData({});
     }
-  
-    function addAllClubs() {
-      const newclubs = [...clubs];
-      const diffclubs = diffClubs();
-      diffclubs.forEach(
-        (domain) => {
-          newclubs.push({'domain':domain,'code':queryData.code,'url':'https://'+domain+'/wp-json/rsvptm/v1/mobile/'+queryData.code});
-        }
-      );
-      setClubs(newclubs);
-    }
-    
+      
       const different = diffClubs();
 
       return (
@@ -148,7 +142,7 @@ export default function Settings (props) {
     />
     </View>
 <View>
-          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else { const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; addClub(newclub);setTempClub({domain:'',code:''});resetClubData();} }} style={styles.addButton}>
+          <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else { const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; addClub(newclub);setTempClub({domain:'',code:''});resetClubData(newclub);} }} style={styles.addButton}>
             <Text style={styles.addButtonText}>{emailPrompt ? <TranslatedText term="Request by Email" /> : <TranslatedText term="Add" />}</Text>
           </Pressable>
           </View>
@@ -165,7 +159,7 @@ export default function Settings (props) {
                 <Pressable key={'remove'+index} onPress={() => { let current = [...clubs]; current.splice(index, 1); setClubs(current); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
-                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(); } } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(newclubs[0]); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}><TranslatedText term="Choose" /> {clubChoice.domain}</Text>
                 </Pressable>
               </View>
@@ -183,7 +177,7 @@ export default function Settings (props) {
           (domain, index) => {
             return (
               <View style={{flexDirection: 'row'}} key={'different'+index}>
-                <Pressable key={'choose'+index} onPress={() => {addDomainSame(domain); resetClubData()} } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {addDomainSame(domain); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}><TranslatedText props="Add" /> {domain}</Text>
                 </Pressable>
               </View>

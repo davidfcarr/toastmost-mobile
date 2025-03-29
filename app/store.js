@@ -12,6 +12,12 @@ const useClubMeetingStore = create((set) => ({
     agenda: {},
     message: '',
     language: '',
+    agendaPollingInterval: null,
+    setAgendaPollingInterval: (i) => {
+      set((state) => ({
+        agendaPollingInterval: i
+      }))
+    },
     setLanguage: (l) => {
       set((state) => ({
         language: l

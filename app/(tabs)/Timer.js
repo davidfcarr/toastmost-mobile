@@ -10,11 +10,12 @@ import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 
 export function ErrorBoundary({ error, retry }) {
   return (
-  <SafeAreaView><BrandHeader {...queryData} />
+  <SafeAreaView>
     <View>
     <Text style={{color:'red'}}>{error.message}</Text>
     <Pressable onPress={retry} style={{backgroundColor:'black',padding: 10, borderRadius: 5, margin: 10}}><Text style={{color:'white'}}>Try Again?</Text></Pressable>
-  </View>
+    <Text>Try navigating to the <Link href="/Settings"  style={{textDecorationLine: 'underline'}}>Settings</Link> screen.</Text>
+    </View>
 </SafeAreaView>
   );
 }

@@ -17,9 +17,8 @@ export default function useAgenda() {
     const [members, setMembers] = useState([]);
     const [user_id, setUserId] = useState(0);
     const [sendPlatform, setSendPlatform] = useState(true);
-    const [pollingInterval, setPollingInterval] = useState(null);
     const [pageUrl, setPageUrl] = useState('');
-    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage} = useClubMeetingStore();
+    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage, agendaPollingInterval, setAgendaPollingInterval} = useClubMeetingStore();
     const url = Linking.useURL();
     if(url != pageUrl) {
       if(null !== url) {
@@ -294,7 +293,29 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
     })
   }
 
+  function initAgendaPolling(currentClub) {
+    console.log('current agendaPollingInterval',agendaPollingInterval);
+    if(agendaPollingInterval) {
+      const result = clearInterval(agendaPollingInterval);
+      console.log('polling cleared',result);
+    }
+    if(!currentClub)
+      return;
+    console.log('initAgendaPolling for ',currentClub);
+    getToastData(currentClub);
+    const newInterval = setInterval(() => {
+      if('active' == AppState.currentState) {
+        getToastData(currentClub);
+      }
+      else {
+        console.log('do not poll server for updates if not in foreground');
+      }
+    }, refreshTime);
+    console.log('set pollingInterval',newInterval);
+    setAgendaPollingInterval(newInterval);
+  }
+
    return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
-    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, pollingInterval, 
-    setPollingInterval, emailAgenda, absence, language, saveLanguage};
+    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, 
+    emailAgenda, absence, saveLanguage, initAgendaPolling};
 }
