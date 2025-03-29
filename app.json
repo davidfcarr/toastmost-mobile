@@ -16,6 +16,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
+      "enableHermes": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.carrcommunications.toastmost"
     },
