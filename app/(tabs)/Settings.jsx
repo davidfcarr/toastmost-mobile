@@ -33,8 +33,6 @@ export default function Settings (props) {
     const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
 
-    const languageChoices = [{code:'',label:'Not set'},{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'}];
-
     function addFromUrl() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
@@ -184,36 +182,6 @@ export default function Settings (props) {
             )
           }) : null
         }  
-<Text style={styles.h2}>Language Preference (beta)</Text>
-<SelectDropdown
-        data={languageChoices}
-        defaultValue={languageChoices.find((item) => item.code == language)}
-        onSelect={(selectedItem, index) => {
-          saveLanguage(selectedItem.code);
-          console.log('attempting to set Language to '+selectedItem.code);
-          setMessage('Setting language to '+selectedItem.label);
-        }}
-        renderButton={(selectedItem, isOpened) => {
-          return (
-            <View style={styles.dropdownButtonStyle}>
-              <Octicons name="chevron-down" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
-              <Text style={styles.dropdownButtonTxtStyle}>
-                {selectedItem && selectedItem.label}
-              </Text>
-            </View>
-          );
-        }}
-        renderItem={(item, index, isSelected) => {
-          return (
-            <View key={index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
-              <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
-            </View>
-          );
-        }}
-        showsVerticalScrollIndicator={false}
-        dropdownStyle={styles.dropdownMenuStyle}
-      />
-<TranslatedText term="Initial support includes French translation of role names; planned support for button names." />
         <Promo />
         </ScrollView>
         </View>

@@ -13,6 +13,18 @@ const useClubMeetingStore = create((set) => ({
     message: '',
     language: '',
     agendaPollingInterval: null,
+    missedTranslation: [],
+    progress: '',
+    setProgress: (l) => {
+      set((state) => ({
+        progress: l
+      }))
+    },
+    setMissedTranslation: (i) => {
+      set((state) => ({
+        missedTranslation: (i !== null) ? [...state.missedTranslation, i] : []
+      }))
+    },
     setAgendaPollingInterval: (i) => {
       set((state) => ({
         agendaPollingInterval: i

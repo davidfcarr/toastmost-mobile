@@ -54,11 +54,39 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="More"
+        options={{
+          title: translate('More'),
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
         name="Settings"
         options={{
-          title: translate('Settings'),
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
-          headerShown: false
+          headerShown: false,
+          href: null
+        }}
+      />
+      <Tabs.Screen
+        name="Translation"
+        options={{
+          headerShown: false,
+          href: null
+        }}
+      />
+      <Tabs.Screen
+        name="Evaluation"
+        options={{
+          headerShown: false,
+          href: null
+        }}
+      />
+      <Tabs.Screen
+        name="Progress"
+        options={{
+          headerShown: false,
+          href: null
         }}
       />
     </Tabs>

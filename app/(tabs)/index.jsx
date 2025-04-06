@@ -45,7 +45,6 @@ export default function Home (props) {
       }, [])
     );
     useEffect(() => {
-        setLastUpdate(timeNow);
         getToastData(club);
     }
     ,[]);

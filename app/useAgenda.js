@@ -69,6 +69,7 @@ export default function useAgenda() {
     }
     fetchData();
     getToastInfo();
+    setInterval(() => {getToastInfo()},86400000);/* check once a day */
   }, [])
 
   const storeData = async () => {
@@ -245,6 +246,19 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
     })
   }
 
+  function suggestTranslations(suggestions) {
+    setMessage('Submitting suggested translations ...');
+    let queryString = '?language='+language;
+    fetch(clubs[0].url+queryString, {method: 'POST', body: JSON.stringify({suggestTranslations:suggestions})}).then((res) => res.json()).then((data) => {
+      setMessage('');
+      setQueryData(data);
+      console.log('results of update',data);
+    }).catch((e) => {
+      console.log('update error',e);
+      setMessage('Data update error');
+    })
+  }
+
   async function sendEmail(eclub) {
     setMessage('Requesting code ...');
     try {
@@ -293,6 +307,16 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
     })
   }
 
+  function getProgress(request) {
+    fetch(clubs[0].url+'?language='+language+'&getprogress=1').then((res) => res.json()).then((data) => {
+      setQueryData(data);
+      setMessage('');
+      console.log('results',data);
+    }).catch((e) => {
+      console.log('update error',e);
+    })
+  }
+
   function initAgendaPolling(currentClub) {
     console.log('current agendaPollingInterval',agendaPollingInterval);
     if(agendaPollingInterval) {
@@ -317,5 +341,5 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
 
    return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
     addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, 
-    emailAgenda, absence, saveLanguage, initAgendaPolling};
+    emailAgenda, absence, saveLanguage, initAgendaPolling, suggestTranslations, getProgress};
 }

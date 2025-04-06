@@ -4,6 +4,7 @@ import * as Linking from 'expo-linking';
 import useClubMeetingStore from "./store";
 import { Link } from 'expo-router';
 import TranslatedText from "./TranslatedText";
+import styles from './styles';
 
 export default function BrandHeader(props) {
     const {message, queryData} = useClubMeetingStore();
@@ -20,6 +21,7 @@ return (
     {props.mode == 'edit' ? <Pressable onPress={() => props.setEdit('')}><MaterialIcons name="home" size={24} color="black" /></Pressable>: null}
       <Text style={{fontSize:20}}>{queryData.sitename}</Text>
       </View> : null}
+      {props.page ? <TranslatedText style={styles.h1} term={props.page} /> : null}
     {message ?
               <View>
                 <TranslatedText style={{ backgroundColor: 'black', color: 'white', padding: 10, margin: 5 }} term={message} />
