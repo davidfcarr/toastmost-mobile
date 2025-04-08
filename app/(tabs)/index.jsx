@@ -5,13 +5,12 @@ import { Octicons } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import EditRole from '../EditRole';
 import SuggestRole from '../SuggestRole';
-import styles from '../styles'
+import styles from '../styles';
 import BrandHeader from '../BrandHeader';
 import useAgenda from '../useAgenda';
 import Settings from './Settings';
 import { useFocusEffect } from 'expo-router';
 import useClubMeetingStore from '../store';
-import { ErrorBoundaryProps } from 'expo-router';
 import Promo from '../Promo';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 import { Link } from 'expo-router';

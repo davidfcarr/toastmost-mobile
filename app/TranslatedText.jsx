@@ -16,7 +16,8 @@ export default function TranslatedText(props) {
 }
 
 export function translateTerm(term, translations = null) {
-    if(!translations)
+    if(!translations || !translations[term]) {
         return term;
-    return (translations[term]) ? translations[term] : term;
+    }
+    return translations[term];
 }

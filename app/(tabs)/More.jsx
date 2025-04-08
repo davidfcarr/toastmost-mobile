@@ -47,13 +47,13 @@ export default function More (props) {
           return (
             <SafeAreaView  style={styles.container}>    
               <BrandHeader />
-              <Pressable style={styles.blueButton} onPress={() => {router.navigate('./Progress')}}>
+              <Pressable style={styles.blueButton} onPress={() => {router.navigate('/Progress')}}>
                 <TranslatedText term={'Progress Report'} style={styles.yellowText} />
             </Pressable>
-            <Pressable style={styles.yellowButton} onPress={() => {router.navigate('./Translation')}}>
+            <Pressable style={styles.yellowButton} onPress={() => {router.navigate('/Translation')}}>
                 <TranslatedText term={'Translation'} style={styles.blueText} />
             </Pressable>
-            <Pressable style={styles.button} onPress={() => {router.navigate('./Settings')}}>
+            <Pressable style={styles.button} onPress={() => {router.navigate('/Settings')}}>
                 <TranslatedText term={'Settings'} style={styles.buttonText} />
             </Pressable>
         </SafeAreaView>

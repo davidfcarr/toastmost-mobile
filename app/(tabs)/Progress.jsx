@@ -27,13 +27,13 @@ export default function Progress (props) {
     const { width, height } = useWindowDimensions();
     const {clubs, meeting, queryData, agenda} = useClubMeetingStore();
     const [progress, setProgress] = useState('');
-    const {getProgress, fetchToastData} = useAgenda();
+    const {getProgress, fetchToastData,initToastmost} = useAgenda();
 
     useEffect(() => {
         if(clubs.length)
         getProgress();
         else
-        fetchToastData();
+        initToastmost();
       },[]);
 
       useEffect(() => {
@@ -64,7 +64,7 @@ export default function Progress (props) {
         <SafeAreaView  style={styles.container}>
         <ScrollView>
 
-          <BrandHeader page="Progress Reportw" />
+          <BrandHeader page="Progress Report" />
         <View style={{width: '100%', marginBottom: 50, paddingBottom: 50 }}>
         {source ? <RenderHtml source={source} contentWidth={width - 20} /> : null}
         </View>

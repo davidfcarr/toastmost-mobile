@@ -27,7 +27,7 @@ export function ErrorBoundary({ error, retry }) {
 }
 
 export default function Voting(props) {
-  const {user_id, reset, pageUrl} = useAgenda();
+  const {user_id, reset, pageUrl, initToastmost} = useAgenda();
   const {clubs, meeting, queryData, agenda, message, setMessage} = useClubMeetingStore();
   const club = (clubs && clubs.length) ? clubs[0] : {};
   const [votingdata,setVotingdata] = useState({});
@@ -48,6 +48,11 @@ export default function Voting(props) {
 
   useEffect(
     () => {
+      if(!clubs || !clubs.length) {
+        console.log('trying to initialize');
+        initToastmost();
+        return;
+      }
       getBallots();
       console.log('voting useEffect, initial query');
       const pause = 90000;
@@ -65,6 +70,9 @@ export default function Voting(props) {
 
 useEffect(
   () => {
+    console.log('voting changes');
+    console.log(clubs);
+    console.log(meeting);
     getBallots();
     console.log('voting useEffect, agenda');
     const pause = 90000;
@@ -78,12 +86,7 @@ useEffect(
         }
     }, pause );
     setPollingInterval(interval);
-}, [agenda]);
-
-useEffect(
-  () => {
-    getBallots();
-}, [meeting]);
+}, [agenda,queryData.agendas,clubs,meeting]);
 
 useEffect(
   () => {
@@ -112,6 +115,7 @@ useEffect(
 
 
       function getBallots() {
+        console.log('get ballots called for agenda',queryData.agendas);
         if(!agenda || !agenda.post_id)
           return null;
         const ts = new Date().getTime();
@@ -177,6 +181,9 @@ function sendBallotLink(toWho) {
     );
   }
 
+  console.log('voting appIsReady',appIsReady);
+  console.log('voting data',votingdata);
+  
   if (!appIsReady || !votingdata.ballot) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -409,7 +416,7 @@ function sendBallotLink(toWho) {
                     return (<View key={'contest'+cindex}>
                         <Text style={styles.h2}><TranslatedText term={c} /></Text>
                         {currentBallot.contestants.length ? <TranslatedText term="Vote for:" /> : null}
-                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Text><Pressable style={styles.button} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id}; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>{contestant}</Text></Pressable></Text></View>})}
+                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id}; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 20}}>{contestant}</Text></View>})}
                     </View>)
                 }
             )}

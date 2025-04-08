@@ -86,7 +86,7 @@ export default function Translation (props) {
 
               {language && language != 'en_EN' && Array.isArray(missedTranslation) ? missedTranslation.map(
                 (miss) => {
-                    if(!isNaN(miss))
+                    if(!miss || !isNaN(miss))
                         return null;
                     return (
                         <View>

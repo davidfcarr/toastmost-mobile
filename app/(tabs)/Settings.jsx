@@ -117,6 +117,8 @@ export default function Settings (props) {
             placeholderTextColor="gray"
             value={tempClub.domain}
             onChangeText={(input) => {
+              if(input.includes('://'))
+                input = input.replace(/http[s]{0,1}:\/\//,'');
               if(input.includes('|')) {
                 const parts = input.split('|');
                 setTempClub({domain:parts[0],code:parts[1],url:''});
@@ -147,7 +149,14 @@ export default function Settings (props) {
           </View>
           <View style={{flex:1}}>
         <ScrollView>
-          <TranslatedText style={styles.instructions} term="If you have copied a domain|code string, paste it in the first field above. To get instructions emailed to you, enter your club website domain into the first blank and your email address in the second." /><Text style={styles.instructions} ><TranslatedText style={{fontWeight: 'bold'}} term="Demo Accounts:" /><TranslatedText term="If you do not have a Toastmost account, enter demo.toastmost.org in the first blank and your email address in the second to have a demo account created for you." /></Text>
+          {!clubs || !clubs.length ? 
+          <View>
+         <TranslatedText style={styles.instructions} term="To you have an account on a Toastmost club website (or one that uses the compatible WordPress software), enter the web domain in the first blank. Or you may use demo.toastmost.org for testing. The app does not work with Free Toast Host (toastmastersclubs.org) websites." />
+          <TranslatedText style={styles.instructions} term="Enter your email address into the second field and click Request by Email. You will be emailed instructions with a link you can click to authorize the app to access the club agenda." />
+          <TranslatedText style={styles.instructions} term="Alternate process: If you have a domain|code string, paste it in the first field above. Then click Add." />
+          <TranslatedText style={styles.instructions} term="You can add multiple clubs and switch between them." />
+          </View>
+          : null}
   
         {clubs.length && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
         {(clubs.length > 0) ? clubs.map(

@@ -35,8 +35,9 @@ export default function useAgenda() {
     setClubs(clubsCopy);
   }
 
-  useEffect(() => {
+  function initToastmost() {
     let jsonValue;
+
     const fetchData = async () => {
       try {
         jsonValue = await AsyncStorage.getItem("infoScreen")
@@ -51,6 +52,7 @@ export default function useAgenda() {
       try {
         jsonValue = await AsyncStorage.getItem("clubslist")
         const storageClubs = jsonValue != null ? JSON.parse(jsonValue) : null
+        console.log('init storageClubs',storageClubs);
         if (!clubs.length && storageClubs && storageClubs.length) {
           setClubs(storageClubs)
         }
@@ -70,6 +72,10 @@ export default function useAgenda() {
     fetchData();
     getToastInfo();
     setInterval(() => {getToastInfo()},86400000);/* check once a day */
+  }
+
+  useEffect(() => {
+    initToastmost();
   }, [])
 
   const storeData = async () => {
@@ -99,6 +105,7 @@ async function saveLanguage(l) {
     if(reset) {
       setReset(false);
     }
+    initAgendaPolling(clubs[0]);
   }, [clubs])
 
   useEffect(() => {
@@ -341,5 +348,5 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
 
    return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
     addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, 
-    emailAgenda, absence, saveLanguage, initAgendaPolling, suggestTranslations, getProgress};
+    emailAgenda, absence, saveLanguage, initAgendaPolling, suggestTranslations, getProgress, initToastmost};
 }

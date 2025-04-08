@@ -8,13 +8,11 @@ export default function TabLayout() {
   const {queryData, language} = useClubMeetingStore();
   function translate(term) {
     if(('en_EN' == language))
-        ;//console.log('do not mess with English');
+        return term;//console.log('do not mess with English');
     else if(queryData && queryData.translations && queryData.translations[term])
     {
         term = queryData.translations[term];
     }
-    else 
-      console.log('translation not found',term);
     return term;  
   } 
 

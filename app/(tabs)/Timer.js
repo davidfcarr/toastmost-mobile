@@ -128,6 +128,13 @@ export default function Timer (props) {
             marginRight: 5,
             width: 110,
           },
+          clearButton: {
+            backgroundColor: 'black',
+            borderRadius: 5,
+            padding: 5,
+            margin: 5,
+            width: 110,
+          },
           buttonText: {
             fontSize: 12,
             color: 'white',
@@ -274,11 +281,12 @@ export default function Timer (props) {
     onChangeText={(value) => { let up = {...timing}; up.display_time = value; const minmax = getMinMax(value); console.log('minmax',minmax); up.min = minmax.min; up.max = minmax.max; setTiming(up); }} />
     <View style={styles.buttonRow}>
     <Pressable style={styles.startButton} onPress={() => {setStart(new Date().getTime()); setElapsed(0);}}><Text style={styles.buttonText}><TranslatedText term="Start" /></Text></Pressable>
-    <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setColor('white'); }}><Text style={styles.buttonText}><TranslatedText term="Stop" /></Text></Pressable>
+    <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setLog(log); setColor('white'); }}><Text style={styles.buttonText}><TranslatedText term="Stop" /></Text></Pressable>
     <Pressable style={styles.pauseButton} onPress={() => {setStart(0);setPause(elapsed);}}><Text style={styles.buttonText}><TranslatedText term="Pause" /></Text></Pressable>
     </View>
     {!roles.length && !members.length ? <Text style={{fontStyle:'italic'}}>Stand-alone mode. This Timer works best when connected to a club's membership list and meeting agendas.</Text> : null}
     {!start && log.length ? log.map( (entry,entryindex) => { return (entryindex == log.length - 1) ? <Text style={{fontWeight: 'bold'}}>{entry}</Text> : <Text>{entry}</Text> } ) : null}    
+    {!start && log.length ? <Pressable onPress={() => {setLog([])}} style={styles.clearButton}><TranslatedText style={styles.buttonText} term="Clear Log" /></Pressable> : null}    
     <View style={{backgroundColor: color, width: '100%',height: 1000 }}>{'black' == color && <Text style={{color:'white'}}>Timing <Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text>}{['green','yellow','red'].includes(color) ? <View><Text style={{color:'yellow' == (color ? 'black' : 'white'),fontSize: 100}}>{color.toUpperCase()}<Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text></View> : null}</View>
     </ScrollView>
     </View>
