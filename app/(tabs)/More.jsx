@@ -10,6 +10,8 @@ import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 import styles from '../styles'
 import { useWindowDimensions } from 'react-native';
 import { useRouter } from "expo-router";
+import useAgenda from '../useAgenda';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -25,7 +27,8 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function More (props) {
     const { width, height } = useWindowDimensions();
-    const {clubs} = useClubMeetingStore();
+    const {clubs, setClubs, setMessage} = useClubMeetingStore();
+    const {resetClubData} = useAgenda();
     const router = useRouter();
 
     if (!clubs || !clubs.length) {
@@ -56,6 +59,20 @@ export default function More (props) {
             <Pressable style={styles.button} onPress={() => {router.navigate('/Settings')}}>
                 <TranslatedText term={'Settings'} style={styles.buttonText} />
             </Pressable>
+            {(clubs.length > 1) ? clubs.map(
+          (clubChoice, index) => {
+            if(index)
+            return (
+              <View style={{flexDirection: 'row'}} key={index}>
+                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(newclubs[0]); } } style={styles.button}>
+                  <Text style={styles.buttonText}>{clubChoice.domain}</Text>
+                </Pressable>
+              </View>
+            )
+          }
+        )
+        : null}
+
         </SafeAreaView>
     )
 } 

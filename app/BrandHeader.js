@@ -4,22 +4,34 @@ import * as Linking from 'expo-linking';
 import useClubMeetingStore from "./store";
 import { Link } from 'expo-router';
 import TranslatedText from "./TranslatedText";
+import useAgenda from "./useAgenda";
 import styles from './styles';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function BrandHeader(props) {
-    const {message, queryData} = useClubMeetingStore();
-    
+    const {message, queryData, setMessage, clubs} = useClubMeetingStore();
+    const {getToastData} = useAgenda(); 
 return (
     <View>
     <View style={{flexDirection: 'row',backgroundColor:'black',width:'100%'}}><Image style={{width:100,height:100}} source={require('../assets/images/ToastmostMobileLogo.png')} /><View style={{paddingLeft:10,alignContent:'center',justifyContent:'center'}}><Text style={{fontSize:30,color:'white',fontWeight:'bold'}}>Toastmost.org</Text><Text style={{fontSize:12,fontStyle:'italic',color:'white',fontWeight:'bold'}}>Digital tools for speakers and leaders</Text>
+    <View style={{marginRight: 10, flexDirection: 'row'}} >
     <Pressable onPress={() => Linking.openURL('https://toastmost.org/mobile-support/')}>
     <MaterialIcons name="contact-support" size={24} color="white" />
     </Pressable>
+    <Pressable
+                  onPress={() => {
+                    getToastData(clubs[0],'button in brandheader');
+                    setMessage('Checking server for updates ...'+clubs[0].domain);
+                  }}
+                >
+<MaterialCommunityIcons name="refresh" size={24} color="white" />
+</Pressable></View>
+
     </View></View>
     {(queryData.sitename) ? <View style={{flexDirection:'row'}}>
     {props.isHome ? null : <Link href="/"><MaterialIcons name="home" size={24} color="black" /></Link>}
     {props.mode == 'edit' ? <Pressable onPress={() => props.setEdit('')}><MaterialIcons name="home" size={24} color="black" /></Pressable>: null}
-      <Text style={{fontSize:20}}>{queryData.sitename}</Text>
+      {(queryData && clubs.length && (!queryData.domain || queryData.domain == clubs[0].domain)) ? <Text style={{fontSize:20}}>{queryData.sitename}</Text> : null}
       </View> : null}
       {props.page ? <TranslatedText style={styles.h1} term={props.page} /> : null}
     {message ?
@@ -29,7 +41,7 @@ return (
             : 
             <View>
             <Text style={{ padding: 10, margin: 5}}>
-            {queryData.name ? queryData.name : ''}
+            {queryData && queryData.name ? queryData.name : ''}
             </Text>
           </View>
     }

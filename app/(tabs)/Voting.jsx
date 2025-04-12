@@ -27,7 +27,7 @@ export function ErrorBoundary({ error, retry }) {
 }
 
 export default function Voting(props) {
-  const {user_id, reset, pageUrl, initToastmost} = useAgenda();
+  const {user_id, reset, pageUrl, initToastmost, appActive} = useAgenda();
   const {clubs, meeting, queryData, agenda, message, setMessage} = useClubMeetingStore();
   const club = (clubs && clubs.length) ? clubs[0] : {};
   const [votingdata,setVotingdata] = useState({});
@@ -45,6 +45,7 @@ export default function Voting(props) {
   const { width } = useWindowDimensions();
   const [appIsReady, setAppIsReady] = React.useState(false);
   const identifier = club.code;
+  const [nextCheck, setNextCheck] = useState(0);
 
   useEffect(
     () => {
@@ -53,66 +54,16 @@ export default function Voting(props) {
         initToastmost();
         return;
       }
-      getBallots();
-      console.log('voting useEffect, initial query');
-      const pause = 90000;
-        console.log('set voting interval, pageUrl '+pageUrl);
-        const interval = setInterval(() => {
-          console.log('pageUrl '+pageUrl);
-          if(pageUrl.includes('Voting')) {
-          console.log('voting timed get ballots every '+(pause/1000)+' seconds');
-          setMessage('Checking for ballots every '+(pause/1000)+' seconds');
-          getBallots();
-          }
-      }, pause );
-      setPollingInterval(interval);
+      if(Date.now() > nextCheck){
+        setNextCheck(Date.now() + 60000);
+        getBallots();  
+      }
 }, []);
 
-useEffect(
-  () => {
-    console.log('voting changes');
-    console.log(clubs);
-    console.log(meeting);
+  if(Date.now() > nextCheck && pageUrl.includes('Voting') && appActive) {
+    setNextCheck(Date.now() + 60000);
     getBallots();
-    console.log('voting useEffect, agenda');
-    const pause = 90000;
-      console.log('set voting interval, pageUrl '+pageUrl);
-      const interval = setInterval(() => {
-        console.log('pageUrl '+pageUrl);
-        if(pageUrl.includes('Voting')) {
-        console.log('voting timed get ballots every '+(pause/1000)+' seconds');
-        setMessage('Checking for ballots every '+(pause/1000)+' seconds');
-        getBallots();
-        }
-    }, pause );
-    setPollingInterval(interval);
-}, [agenda,queryData.agendas,clubs,meeting]);
-
-useEffect(
-  () => {
-    if(pageUrl.includes('Voting')) { 
-      getBallots();
-      console.log('voting useEffect, page change');
-      if(!pollingInterval) {
-        const pause = 90000;
-        console.log('set voting interval, pageUrl '+pageUrl);
-        const interval = setInterval(() => {
-          console.log('pageUrl '+pageUrl);
-          if(pageUrl.includes('Voting')) {
-          console.log('voting timed get ballots every '+(pause/1000)+' seconds');
-          setMessage('Checking for ballots every '+(pause/1000)+' seconds');
-          getBallots();
-          }
-      }, pause );
-      setPollingInterval(interval);
-      }
-    }
-    else if(pollingInterval) {
-      clearInterval(pollingInterval);
-      setPollingInterval(0);
-    }
-}, [pageUrl]);
-
+  }
 
       function getBallots() {
         console.log('get ballots called for agenda',queryData.agendas);

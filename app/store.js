@@ -12,22 +12,28 @@ const useClubMeetingStore = create((set) => ({
     agenda: {},
     message: '',
     language: '',
-    agendaPollingInterval: null,
-    missedTranslation: [],
+    nextUpdate: 0,
+    logMissedTranslation: false,
     progress: '',
+    newsite: '',
+    setNewsite: (l) => {
+      set((state) => ({
+        progress: l
+      }))
+    },
     setProgress: (l) => {
       set((state) => ({
         progress: l
       }))
     },
-    setMissedTranslation: (i) => {
+    setLogMissedTranslation: (i) => {
       set((state) => ({
-        missedTranslation: (i !== null) ? [...state.missedTranslation, i] : []
+        logMissedTranslation: i
       }))
     },
-    setAgendaPollingInterval: (i) => {
+    setNextUpdate: (i) => {
       set((state) => ({
-        agendaPollingInterval: i
+        nextUpdate: i
       }))
     },
     setLanguage: (l) => {

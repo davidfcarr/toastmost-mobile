@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, TextInput, Pressable, Dimensions, StyleSheet, AppState } from "react-native";
+import { Text, View, ScrollView, TextInput, Pressable, Switch } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect} from "react";
 import { Octicons } from '@expo/vector-icons'
@@ -25,7 +25,7 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Translation (props) {
     const { width, height } = useWindowDimensions();
-    const {clubs, language, setLanguage, missedTranslation, setMissedTranslation, setMessage} = useClubMeetingStore();
+    const {clubs, language, setLanguage, logMissedTranslation, setLogMissedTranslation, setMessage, queryData} = useClubMeetingStore();
     const languageChoices = [{code:'',label:'Not set'},{code:'en_EN',label:'English'},{code:'fr_FR',label:'French'},{code:'es_ES',label:'Spanish'}];
     const [suggestions, setSuggestions] = useState({});
     const {saveLanguage, suggestTranslations} = useAgenda();
@@ -53,7 +53,6 @@ export default function Translation (props) {
                         saveLanguage(selectedItem.code);
                         console.log('attempting to set Language to '+selectedItem.code);
                         setMessage('Setting language to '+selectedItem.label);
-                        setMissedTranslation(null);
                       }}
                       renderButton={(selectedItem, isOpened) => {
                         return (
@@ -76,15 +75,12 @@ export default function Translation (props) {
                       dropdownStyle={styles.dropdownMenuStyle}
                     />
                 <View style={{marginBottom: 15}}>
-              <TranslatedText term="Status: French translation started." />
-              <TranslatedText term="Status: Spanish planned." />
               
-              {missedTranslation.length && missedTranslation.length < 20 ? <TranslatedText term="Return to this screen after using the app to see more terms awaiting translation." /> : null}
               </View>
-              {missedTranslation.length ? <Text><TranslatedText style={styles.h2} term="Words and Phrases Not Translated" />: {missedTranslation.length}</Text> : null}
+              {queryData.missedTranslation && queryData.missedTranslation.length ? <Text><TranslatedText style={styles.h2} term="Words and Phrases Not Translated" />: {queryData.missedTranslation.length}</Text> : null}
         <ScrollView style={{margin:10}}>
 
-              {language && language != 'en_EN' && Array.isArray(missedTranslation) ? missedTranslation.map(
+              {language && language != 'en_EN' && queryData.missedTranslation && Array.isArray(queryData.missedTranslation) ? queryData.missedTranslation.map(
                 (miss) => {
                     if(!miss || !isNaN(miss))
                         return null;
@@ -92,12 +88,26 @@ export default function Translation (props) {
                         <View>
                             <Text>{miss}</Text>
                             <TextInput style={styles.input} value={suggestions[miss] ? suggestions[miss] : ''} onChangeText={(input) => { const up = {...suggestions}; up[miss] = input; setSuggestions(up); }} />
-                        </View>
+                            </View>
                     )
                 })
             : null}
-            <Pressable style={styles.blueButton} onPress={() => {suggestTranslations(suggestions)}}><TranslatedText style={styles.yellowText} term="Save" /></Pressable>
               </ScrollView>
+              {queryData.missedTranslation && queryData.missedTranslation.length ? 
+              <View style={{margin:10, flexDirection: 'row'}} >
+              <Pressable style={[styles.blueButton,{width: 100}]} onPress={() => {suggestTranslations(suggestions)}}><TranslatedText style={styles.yellowText} term="Save" /></Pressable>
+              <Switch
+                        trackColor={{false: '#767577', true: '#81b0ff'}}
+                        thumbColor={logMissedTranslation ? '#f5dd4b' : '#f4f3f4'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={() => {
+                          const newlog = !logMissedTranslation;
+                          setLogMissedTranslation(newlog);
+                        }}
+                        value={logMissedTranslation}
+                      /><TranslatedText term="Log missed translations" style={{marginLeft: 10}} />
+              </View> : null}
+              
         </SafeAreaView>
     )
 } 

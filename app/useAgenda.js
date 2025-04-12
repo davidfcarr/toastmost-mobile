@@ -18,8 +18,10 @@ export default function useAgenda() {
     const [user_id, setUserId] = useState(0);
     const [sendPlatform, setSendPlatform] = useState(true);
     const [pageUrl, setPageUrl] = useState('');
-    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage, agendaPollingInterval, setAgendaPollingInterval} = useClubMeetingStore();
+    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage, nextUpdate, setNextUpdate, setNewsite} = useClubMeetingStore();
     const url = Linking.useURL();
+    const appActive = AppState.currentState == 'active';
+
     if(url != pageUrl) {
       if(null !== url) {
         setPageUrl(url);
@@ -96,7 +98,7 @@ async function saveLanguage(l) {
     console.error(e)
   }      
 }
-
+  
   useEffect(() => {
     if(!clubs.length && !reset) {
       return;
@@ -105,7 +107,7 @@ async function saveLanguage(l) {
     if(reset) {
       setReset(false);
     }
-    initAgendaPolling(clubs[0]);
+    getToastData(clubs[0],'useEffect clubs list changed');
   }, [clubs])
 
   useEffect(() => {
@@ -126,6 +128,7 @@ async function saveLanguage(l) {
   useEffect(() => {
     if(queryData && queryData.agendas && queryData.agendas.length) {
       setAgenda(queryData.agendas[meeting]);
+      console.log('set agenda for '+meeting+'of '+queryData.agendas.length);
     }
     else
       return;
@@ -135,19 +138,25 @@ async function saveLanguage(l) {
 
   function getCurrentClub() { return (clubs && clubs.length) ? clubs[0] : null; }
 
-  function getToastData(currentClub) {
+  function getToastData(currentClub, context = '') {
+    console.log('getToastData called from '+context+' for ',currentClub);
     if(!currentClub || !currentClub.url) {
       return;
     }
+    if(currentClub.domain != clubs[0].domain)
+      return getToastData(clubs[0],'inside getToastData, domain not matching');
+    console.log('getToastData currentClub domain',currentClub.domain);
+    console.log('getToastData clubs[0] domain',clubs[0].domain);
     if(message && message.includes('Updating ...'))
       return;
-    let queryString = '?language='+language;
+    let queryString = currentClub.url+'?language='+language;
     if(sendPlatform)
     {
       queryString += '&mobileos='+Platform.OS;/*+'&language=fr_FR';*/
       setSendPlatform(false);
     }
-    fetch(currentClub.url+queryString).then((res) => {
+    console.log('getToastData query',queryString);
+    fetch(queryString).then((res) => {
       if(res.ok) {
         setMessage('');
         return res.json();
@@ -167,8 +176,13 @@ async function saveLanguage(l) {
         setMessage('Error downloading data for '+currentClub.domain+' - check Settings screen');
         return;
       }
+      if(data.domain != clubs[0].domain) {
+        return getToastData(clubs[0],'returned data domain not matching');
+      }
       setLastUpdate(timeNow);
       setQueryData(data);
+      console.log('clear newsite after successful update');
+      setNewsite('');
       if(data.agendas.length)
         setAgenda(data.agendas[meeting]);
       else
@@ -324,29 +338,19 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
     })
   }
 
-  function initAgendaPolling(currentClub) {
-    console.log('current agendaPollingInterval',agendaPollingInterval);
-    if(agendaPollingInterval) {
-      const result = clearInterval(agendaPollingInterval);
-      console.log('polling cleared',result);
+  function resetClubData(newclub = null) {
+    console.log('reset newsite',newclub);
+    if(newclub.domain) {
+      setNewsite(newclub.domain);
+      setQueryData({siteName:newclub.domain});  
     }
-    if(!currentClub)
-      return;
-    console.log('initAgendaPolling for ',currentClub);
-    getToastData(currentClub);
-    const newInterval = setInterval(() => {
-      if('active' == AppState.currentState) {
-        getToastData(currentClub);
-      }
-      else {
-        console.log('do not poll server for updates if not in foreground');
-      }
-    }, refreshTime);
-    console.log('set pollingInterval',newInterval);
-    setAgendaPollingInterval(newInterval);
+    if(newclub && newclub.domain) {
+      setMessage('Downloading data for '+newclub.domain);
+      router.replace('/');
+    }
   }
-
+      
    return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
-    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, setMeeting, meeting, agenda, members, user_id, 
-    emailAgenda, absence, saveLanguage, initAgendaPolling, suggestTranslations, getProgress, initToastmost};
+    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, agenda, members, user_id, 
+    emailAgenda, absence, saveLanguage, suggestTranslations, getProgress, initToastmost, appActive, resetClubData};
 }

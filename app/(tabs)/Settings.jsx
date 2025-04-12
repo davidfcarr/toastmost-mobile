@@ -28,21 +28,22 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Settings (props) {
     const [emailPrompt,setEmailPrompt] = useState(false);
-    const {toastmostData, sendEmail, setReset, saveLanguage, initAgendaPolling} = useAgenda();
+    const {toastmostData, sendEmail, setReset, saveLanguage, resetClubData} = useAgenda();
     const url = Linking.useURL();
     const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
-
+    
     function addFromUrl() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
         if(queryParams.code && queryParams.domain) {
           if(clubs.length) {
             const match = clubs.find((item) => item.domain == queryParams.domain);
-            if(match)
-              return;
+            if(!match)
+              addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
           }
-          addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
+          else
+            addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
           resetClubData({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
         }
         console.log(
@@ -63,18 +64,6 @@ export default function Settings (props) {
     },
     [url])
 
-    function resetClubData(newclub = null) {
-      /*
-      setQueryData({});
-      setMeeting(0);
-      setQueryData({...queryData,agendas:[]});
-      setAgenda({roles:[]});
-      */
-      initAgendaPolling(newclub);      
-      if(clubs.length)
-        router.replace('/');
-    }
-        
     function diffClubs () {
       if(!queryData || !queryData.userblogs || !clubs || !clubs.length) return [];
       let diff = [... queryData.userblogs];
@@ -98,7 +87,7 @@ export default function Settings (props) {
       newclubs.unshift(newclub);
       setClubs(newclubs);
       //setScreen('home');
-      setQueryData({});
+      resetClubData(newclub);
     }
       
       const different = diffClubs();
@@ -128,37 +117,36 @@ export default function Settings (props) {
               }}
             }
           />
+          <TranslatedText term="Enter your club's web domain (or demo.toastmost.org for testing)."  style={{fontStyle:'italic',margin: 10}} />
           </View>
 <View>
     <TextInput
       style={styles.input}
       autoCapitalize="none"
       autoCorrect={false}
-      maxLength={30}
-      placeholder={queryData.translations && queryData.translations["Code or email"] ? queryData.translations["Code or email"] : "Code or email"}
+      placeholder={queryData.translations && queryData.translations["Email or code"] ? queryData.translations["Email or code"] : "Email or code"}
       placeholderTextColor="gray"
       value={tempClub.code}
       onChangeText={(input) => {if(input.includes('@')) {setEmailPrompt(true); setTempClub({...tempClub,code:input})} else setTempClub({...tempClub,code:input})}  }
     />
     </View>
-<View>
+    <TranslatedText term="Enter the email you use with your club website (or any email for demo.toastmost.org)." style={{fontStyle:'italic',margin: 10}} />
+          <View>
           <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else { const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; addClub(newclub);setTempClub({domain:'',code:''});resetClubData(newclub);} }} style={styles.addButton}>
             <Text style={styles.addButtonText}>{emailPrompt ? <TranslatedText term="Request by Email" /> : <TranslatedText term="Add" />}</Text>
           </Pressable>
           </View>
+          <TranslatedText term="Alternative: Open the camera on your phone and scan the QR code on the WordPress dashboard." style={{fontStyle:'italic',margin: 10}} />          
           </View>
           <View style={{flex:1}}>
         <ScrollView>
           {!clubs || !clubs.length ? 
           <View>
-         <TranslatedText style={styles.instructions} term="To you have an account on a Toastmost club website (or one that uses the compatible WordPress software), enter the web domain in the first blank. Or you may use demo.toastmost.org for testing. The app does not work with Free Toast Host (toastmastersclubs.org) websites." />
-          <TranslatedText style={styles.instructions} term="Enter your email address into the second field and click Request by Email. You will be emailed instructions with a link you can click to authorize the app to access the club agenda." />
-          <TranslatedText style={styles.instructions} term="Alternate process: If you have a domain|code string, paste it in the first field above. Then click Add." />
-          <TranslatedText style={styles.instructions} term="You can add multiple clubs and switch between them." />
+         <TranslatedText style={styles.instructions} term="If you have an account on a Toastmost club website (or one that uses the compatible WordPress software), you can authorize access for the app using the same email as the one for your account on the club website." />
+         <TranslatedText style={styles.instructions} term="The app does not work with Free Toast Host (toastmastersclubs.org) websites. However, you can use demo.toastmost.org for testing, and a temporary account will be created for you." />
           </View>
           : null}
   
-        {clubs.length && (!queryData || !queryData.agendas || !queryData.agendas.length) ? <View ><Text style={{'backgroundColor':'black','color':'white',padding: 10, margin:5}}>Loading agenda. If this takes more than a few seconds, check the club access code.</Text></View> : null}
         {(clubs.length > 0) ? clubs.map(
           (clubChoice, index) => {
             return (
@@ -166,7 +154,7 @@ export default function Settings (props) {
                 <Pressable key={'remove'+index} onPress={() => { let current = [...clubs]; current.splice(index, 1); setClubs(current); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
-                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); setMessage('Reloading ...'); resetClubData(newclubs[0]); } } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); resetClubData(newclubs[0]); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}><TranslatedText term="Choose" /> {clubChoice.domain}</Text>
                 </Pressable>
               </View>
@@ -175,7 +163,7 @@ export default function Settings (props) {
         )
         : null}
         {(clubs.length > 0) ?
-        <Pressable onPress={() => {setReset(true); setClubs([]); resetClubData(); setQueryData({}); } } style={styles.chooseButton}>
+        <Pressable onPress={() => {setReset(true); setClubs([]); } } style={styles.chooseButton}>
         <TranslatedText style={styles.addButtonText} term="Reset Clubs List" />
         </Pressable>
          : null}
