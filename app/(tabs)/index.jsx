@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Octicons } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import EditRole from '../EditRole';
+import EditableNote from '../EditableNote';
 import SuggestRole from '../SuggestRole';
 import styles from '../styles';
 import BrandHeader from '../BrandHeader';
@@ -14,6 +15,7 @@ import useClubMeetingStore from '../store';
 import Promo from '../Promo';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 import { Link } from 'expo-router';
+import RenderHtml from "react-native-render-html";
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -31,6 +33,7 @@ export default function Home (props) {
     const [edit,setEdit] = useState('');
     const [suggest,setSuggest] = useState('');
     const [assign,setAssign] = useState(false);
+    const [editNotes,setEditNotes] = useState(false);
     const {updateRole, getToastData, absence} = useAgenda();
     const timeNow = Date.now();
     const {clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage,queryData,language,nextUpdate,setNextUpdate,newsite} = useClubMeetingStore();
@@ -159,14 +162,13 @@ export default function Home (props) {
 
             {club.domain && agenda.roles.length > 0 ? (
               <View style={{ width: '100%', flex: 1 }}>
-
                 <FlatList
                   data={agenda.roles}
                   ListHeaderComponent={<View>
                                       <View style={{ flexDirection: 'row',padding: 5, justifyContent: 'space-between' }}>
                     <Octicons name="plus" size={15} color="black" style={{ width: 15 }} /><TranslatedText term="Take Role" /><Octicons name="x-circle" size={15} color="red" style={{ width: 15 }} /><TranslatedText term="Cancel" /><Octicons name="pencil" size={15} color="black" style={{ width: 15 }} /><TranslatedText term="Edit" /><Octicons name="paper-airplane" size={15} color="black" style={{ width: 15 }} /><TranslatedText term="Suggest" />                
                   </View>
-                  <View style={{flexDirection:'row'}}>
+                  <View style={{flexDirection: 'row'}}>
                   <Switch
           trackColor={{false: '#767577', true: '#81b0ff'}}
           thumbColor={assign ? '#f5dd4b' : '#f4f3f4'}
@@ -176,8 +178,19 @@ export default function Home (props) {
             setAssign(newassign);
           }}
           value={assign}
-        /><TranslatedText term="Assign" style={{marginLeft: 10}} />
+        /><TranslatedText term="Assign" style={{marginLeft: 10, marginRight: 10}} />
+<Switch
+          trackColor={{false: '#767577', true: '#81b0ff'}}
+          thumbColor={editNotes ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={() => {
+            const neweditn = !editNotes;
+            setEditNotes(neweditn);
+          }}
+          value={editNotes}
+        /><TranslatedText term="Notes" style={{marginLeft: 10}} /><Text> ({(agenda.editable && agenda.editable.length) ? agenda.editable.length : 0})</Text>
                   </View>
+                  {editNotes && agenda.editable.length ? agenda.editable.map((item) => <EditableNote key={item.key} item={item} post_id={agenda.post_id} />) : null}
                     </View>}
                   ListFooterComponent={<Promo />}
                   renderItem={({ item, index:itemIndex }) => {
@@ -225,7 +238,7 @@ export default function Home (props) {
                       )
                     return (
                       <View style={{ flexDirection: 'row', justifyContent: 'start', padding: 10 }}>
-                        <Pressable onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
+                        <Pressable onPress={() => {const update = {...item,index:itemIndex,ID:queryData.user_id,name:queryData.name,wasopen:true}; console.log('updateRole',update); updateRole(update); if('Speaker' == item.role) setEdit(item.assignment_key); }}>
                         <Octicons name="plus" size={24} color="black" style={{ width: 24, marginRight: 15 }} />
                         </Pressable>
                         {item.role.includes('Absence')  ? null:  <View style={{flexDirection: 'row'}}>

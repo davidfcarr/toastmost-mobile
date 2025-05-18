@@ -42,8 +42,8 @@ export default function More (props) {
         );
       }
 /*
-            <Pressable style={styles.maroonButton} onPress={() => {router.navigate('./Evaluation')}}>
-                <TranslatedText term={'Evaluation'} style={styles.yellowText} />
+            <Pressable style={styles.maroonButton} onPress={() => {router.navigate('/EvaluationTool')}}>
+                <TranslatedText term={'Evaluation'} style={styles.buttonText} />
             </Pressable>
 
 */                
@@ -52,6 +52,9 @@ export default function More (props) {
               <BrandHeader />
               <Pressable style={styles.blueButton} onPress={() => {router.navigate('/Progress')}}>
                 <TranslatedText term={'Progress Report'} style={styles.yellowText} />
+            </Pressable>
+            <Pressable style={styles.maroonButton} onPress={() => {router.navigate('/EvaluationTool')}}>
+                <TranslatedText term={'Evaluation'} style={styles.buttonText} />
             </Pressable>
             <Pressable style={styles.yellowButton} onPress={() => {router.navigate('/Translation')}}>
                 <TranslatedText term={'Translation'} style={styles.blueText} />

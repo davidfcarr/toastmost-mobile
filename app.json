@@ -2,7 +2,7 @@
   "expo": {
     "name": "Toastmost",
     "slug": "toastmost",
-    "version": "1.0.20",
+    "version": "1.0.25",
     "orientation": "portrait",
     "icon": "./assets/images/ToastmostMobileLogo.png",
     "scheme": "toastmost",

@@ -22,6 +22,7 @@ function createStyles() {
       maroonButton: {backgroundColor: '#772432',borderRadius:4, height: 50, padding: 10,justifyContent:'center',alignContentContent:'center',margin: 10, width: 250},
       yellowButton: {backgroundColor: '#F2DF74',borderRadius:4, height: 50, padding: 10,justifyContent:'center',alignContentContent:'center',margin: 10, width: 250},
       grayButton: {backgroundColor: '#A9B2B1',borderRadius:4, height: 50, padding: 10,justifyContent:'center',alignContentContent:'center',margin: 10, width: 250},
+      choiceButton: {backgroundColor: '#A9B2B1',borderRadius:10, height: 50, padding: 10,justifyContent:'center',alignContentContent:'center',margin: 10},
       blueText: {color: '#004165',fontSize: 15},
       maroonText: {color: '#772432',fontSize: 15},
       yellowText: {color: '#F2DF74',fontSize: 15},
@@ -30,6 +31,7 @@ function createStyles() {
       nobutton: {backgroundColor: 'gray',borderRadius:4,marginRight: 10, marginLeft: 10, justifyContent:'center',alignContentContent:'center', padding:10},
       plusMinusText: {color: 'white', fontSize: 20, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' },
       buttonText: {color: 'white', fontSize:15},
+      choiceText: {color: '#222222', fontSize: 15},
       role: {marginLeft: 10},
       name: {marginLeft: 10},
       container: {

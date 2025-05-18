@@ -74,14 +74,14 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Evaluation"
+        name="Progress"
         options={{
           headerShown: false,
           href: null
         }}
       />
       <Tabs.Screen
-        name="Progress"
+        name="EvaluationTool"
         options={{
           headerShown: false,
           href: null
@@ -91,3 +91,6 @@ export default function TabLayout() {
 </ClubProvider>
   );
 }
+
+/*
+*/

@@ -40,6 +40,7 @@ export default function Voting(props) {
   const [newBallot,setNewBallot] = useState('');
   const [everyMeeting,setEveryMeeting] = useState(false);
   const [signatureRequired,setSignatureRequired] = useState(false);
+  const [yesNo,setYesNo] = useState(false);
   const [votesToAdd,setVotesToAdd] = useState(false);
   const [pollingInterval,setPollingInterval] = useState(null);
   const { width } = useWindowDimensions();
@@ -141,6 +142,9 @@ function sendBallotLink(toWho) {
         <View>
           <BrandHeader />
           <Text>Voting tool loading ...</Text>
+          <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
+              <MaterialCommunityIcons name="refresh" size={24} color="black" />
+              </Pressable>
         </View>
       </SafeAreaView>
     );
@@ -261,10 +265,19 @@ function sendBallotLink(toWho) {
         <View ><Pressable style={styles.plusbutton} onPress={() => {currentBallot.contestants.push(guest); setGuest(''); const ballotCopy = {...votingdata.ballot,c:currentBallot}; ballotCopy[c].status = 'draft'; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy});
       sendVotingUpdate({ballot:ballotCopy,post_id:agenda.post_id,identifier:identifier});
       }}><Text style={styles.buttonText}>+</Text></Pressable></View></View>
+        <View style={{flexDirection: 'row'}}><Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={currentBallot.signature_required ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => { const ballotCopy = {...votingdata.ballot}; ballotCopy[c].signature_required = !currentBallot.signature_required; console.log('altered ballot',ballotCopy[c]);  setVotingdata({...votingdata,ballot:ballotCopy});
+        sendVotingUpdate({ballot:ballotCopy,post_id:agenda.post_id,identifier:identifier}); }}
+        value={currentBallot.signature_required}
+      /><TranslatedText term="Signature required (example: voting in a new member)." /></View>
       </View>                    
                         {currentBallot.status == 'publish' ? <View><Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'draft'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Unpublish</Text></Pressable></Text></View> 
                         : <Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'publish'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Publish</Text></Pressable></Text>}
-                    </View>
+                <Pressable style={[styles.button,{backgroundColor:'red'}]} onPress={() => { const bigUpdate = {...votingdata.ballot}; delete bigUpdate[c]; console.log('ballot update for '+c,bigUpdate); setMessage('Delete: '+c); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier}); }}><TranslatedText term="Delete" style={styles.buttonText} /></Pressable>
+                </View>
                 }
             )}
             <Text style={styles.h2}><TranslatedText term='New Ballot' /></Text>
@@ -282,13 +295,20 @@ function sendBallotLink(toWho) {
         ios_backgroundColor="#3e3e3e"
         onValueChange={() => {setSignatureRequired(previousState => !previousState)}}
         value={signatureRequired}
-      /><Text>Signature required (example: voting in a new member).</Text></View>
+      /><TranslatedText term="Signature required (example: voting in a new member)." /></View>
+        <View style={{flexDirection: 'row'}}><Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={yesNo ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => {setYesNo(previousState => !previousState)}}
+        value={yesNo}
+      /><TranslatedText term="Make choices Yes/No/Abstain" /></View>
       <Pressable style={styles.button} onPress={
-        () => {const newBallotEntry = {...votingdata.ballot}; newBallotEntry[newBallot] = {...votingdata.ballot.Template,everyMeeting:everyMeeting,signature_required:signatureRequired}; 
+        () => {const newBallotEntry = {...votingdata.ballot}; newBallotEntry[newBallot] = {...votingdata.ballot.Template,everyMeeting:everyMeeting,signature_required:signatureRequired,contestants: (yesNo) ? ['Yes','No','Abstain'] : []}; 
         setVotingdata({...votingdata,ballot:newBallotEntry}); 
         sendVotingUpdate({ballot:newBallotEntry,post_id:agenda.post_id,identifier:identifier});
         setNewBallot(''); setSignatureRequired(false); setEveryMeeting(false);}}>
-          <Text style={styles.buttonText}>Add Ballot</Text></Pressable>
+          <TranslatedText style={styles.buttonText} term="Add Ballot" /></Pressable>
             {contestlist.map(
                 (c, cindex) => {
                     if(('Template' == c) || ('C' == c) || ('c' == c))
@@ -296,6 +316,9 @@ function sendBallotLink(toWho) {
                     const currentBallot = votingdata.ballot[c];
                     if(currentBallot.status != 'publish')
                         return;
+                    if(currentBallot.signature_required) {
+                      return <Text style={styles.h2}><TranslatedText term="Signature Required" />: {c}</Text>
+                    }
                     const added_votes = [...votingdata.added_votes];
                     return <View key={'contestadd'+cindex}>
                         <Text style={styles.h2}>Add Votes: {c}</Text>
@@ -318,6 +341,17 @@ function sendBallotLink(toWho) {
             <Text style={[styles.h2,{marginTop:100}]}><TranslatedText term="Reset Ballot" /></Text>
             <View><Pressable style={styles.button} onPress={() => { sendVotingUpdate({reset:true,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}><TranslatedText term="Reset Ballot" /></Text></Pressable></View>
             <Text style={{marginBottom: 50}}>Click to delete all ballots and vote records</Text>
+          {votingdata.everyWeek.length ?
+          <View>
+            <TranslatedText term="Recurring ballot prompts" />
+            {votingdata.everyWeek.map(
+              (item,index) => {
+                return <View key={'recur'+index} style={{flexDirection: 'row'}}><Pressable style={[styles.button,{backgroundColor:'red'}]} onPress={() => { sendVotingUpdate({deleteRecurring:item,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}><TranslatedText term="Delete" /><Text> {item}</Text></Text></Pressable></View>
+              }
+            )}
+          </View>
+          : null}
+          
           </View>
           </ScrollView>
           </SafeAreaView>          
@@ -367,7 +401,8 @@ function sendBallotLink(toWho) {
                     return (<View key={'contest'+cindex}>
                         <Text style={styles.h2}><TranslatedText term={c} /></Text>
                         {currentBallot.contestants.length ? <TranslatedText term="Vote for:" /> : null}
-                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id}; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 20}}>{contestant}</Text></View>})}
+                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id,signature: (currentBallot.signature_required) ? queryData.name : '' }; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 20}}>{contestant}</Text></View>})}
+                        {currentBallot.signature_required ? <Text><TranslatedText term={'Vote will be signed by:'} /> {queryData.name}</Text> : null}
                     </View>)
                 }
             )}

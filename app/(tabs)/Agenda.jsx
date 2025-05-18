@@ -28,7 +28,9 @@ export default function Agenda (props) {
     const {clubs, meeting, queryData, agenda} = useClubMeetingStore();
     const [subject, setSubject] = useState((agenda && agenda.title) ? 'Sign up for '+agenda.title+', '+queryData.sitename : '');
     const [note, setNote] = useState('');
+    const [emailControls, setEmailControls] = useState(false);
     const {emailAgenda} = useAgenda();
+    const [showIntros,setShowIntros] = useState(false);
 
   if (!clubs || !clubs.length) {
     return (
@@ -43,8 +45,8 @@ export default function Agenda (props) {
 
     if(!agenda || !agenda.html || !agenda.title)
       return <SafeAreaView><BrandHeader /><Text>Loading ...</Text><Text>If this message does not appear after a few seconds, go back to the Home screen and ensure that the agenda is fully loaded. Check your club settings on the Settings screen and your network connection.</Text></SafeAreaView>;
-  
-    const source = (agenda.html) ? {'html':'<html><body>'+agenda.html+'</body></html>'} : {};
+    console.log('agenda object',agenda);
+    const source = (agenda.html) ? {'html':'<html><body>'+(emailControls? agenda.html: agenda.html.replaceAll(/\- <a[^>]+[^<]+<\/a>/g,''))+'</body></html>'} : {};
       
       return (
         <SafeAreaView  style={styles.container}>
@@ -52,11 +54,44 @@ export default function Agenda (props) {
 
           <BrandHeader />
         <View style={{width: '100%', marginBottom: 50, paddingBottom: 50 }}>
+          {agenda.intros ? (
+            <View style={{flexDirection: 'row', alignItems: 'center',marginBottom:10}}>
+              <Switch
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={showIntros ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={() => {
+                  const newshow = !showIntros;
+                  setShowIntros(newshow);
+                }}
+                value={showIntros}
+              />
+              <TranslatedText term="Show Speech Introductions" style={{marginLeft: 10}} />
+            </View>
+          ) : null}
+        {showIntros ?  <RenderHtml source={{html:agenda.intros}} /> : null}
+
+        {emailControls ? 
+        <View>
         <TranslatedText term="Email Subject Line" />
-        <TextInput style={{width: '100%', height: 50, borderColor: 'gray', borderWidth: 1, textAlign: 'left'}} placeholder="Subject" value={subject}  onChangeText={(input) => setSubject(input)} />
-        <TextInput style={{width: '100%', height: 50, borderColor: 'gray', borderWidth: 1}} placeholder="Note (optional)" value={note} onChangeText={(input) => setNote(input)}/>
+        <TextInput multiline={true} style={{width: '100%', height: 50, borderColor: 'gray', borderWidth: 1, textAlign: 'left'}} placeholder="Subject" value={subject}  onChangeText={(input) => setSubject(input)} />
+        <TextInput multiline={true} style={{width: '100%', height: 50, borderColor: 'gray', borderWidth: 1}} placeholder="Note (optional)" value={note} onChangeText={(input) => setNote(input)}/>
         <Pressable style={styles.button} onPress={()=>{ emailAgenda({post_id: agenda.post_id,agendaemail: 'members',emailagenda: 'members',subject:subject,note:note}) }}><Text style={styles.buttonText}><TranslatedText term="Send Email" /></Text></Pressable>
         <Text>Email version includes one-click signup links</Text>
+        </View>
+        : null}
+        <View style={{flexDirection:'row'}}>
+        <Switch
+        trackColor={{false: '#767577', true: '#81b0ff'}}
+        thumbColor={emailControls ? '#f5dd4b' : '#f4f3f4'}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => {
+          const newc = !emailControls;
+          setEmailControls(newc);
+        }}
+        value={emailControls}
+      /><TranslatedText term="Show Email Controls" style={{marginLeft: 10}} />
+        </View>
         {source ? <RenderHtml source={source} contentWidth={width - 20} /> : <Text>Agenda not loaded</Text>}
         </View>
         </ScrollView>

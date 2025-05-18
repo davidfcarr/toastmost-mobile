@@ -36,6 +36,7 @@ export default function Settings (props) {
     function addFromUrl() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
+        console.log('queryParams',queryParams);
         if(queryParams.code && queryParams.domain) {
           if(clubs.length) {
             const match = clubs.find((item) => item.domain == queryParams.domain);
@@ -182,6 +183,7 @@ export default function Settings (props) {
         <Promo />
         </ScrollView>
         </View>
+        <Text>{url}</Text>
         </View>
         </SafeAreaView> 
       )

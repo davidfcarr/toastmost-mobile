@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import useClubMeetingStore from './store';
 import * as Linking from 'expo-linking';
+import { translateTerm } from './TranslatedText';
 
 export default function useAgenda() {
     //const [meeting, setMeeting] = useState(0);
@@ -258,7 +259,10 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
     setMessage('Updating ...');
     let queryString = '?language='+language;
     fetch(clubs[0].url+queryString, {method: 'POST', body: JSON.stringify(roleData)}).then((res) => res.json()).then((data) => {
-      setMessage('');
+      if(data.taken) /* if someone else got there first */
+        setMessage(translateTerm('Role already taken') + ': '+ data.taken);
+      else
+        setMessage('');
       setQueryData(data);
       console.log('results of role update',data);
     }).catch((e) => {
