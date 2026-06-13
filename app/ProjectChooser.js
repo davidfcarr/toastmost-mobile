@@ -20,7 +20,7 @@ export default function ProjectChooser(props) {
     const [project, setProject] = useState((props.item.project) ? props.item.project : '');
 
     const [title, setTitle] = useState(props.item.title);
-    const [intro, setIntro] = useState(props.item.intro);
+    const [intro, setIntro] = useState(props.item.intro ? props.item.intro.replace(/<\/p>/g,'\n\n').replace(/<p>/g,'').replace(/\n{3,}/,'\n\n').trim() : '');
 
     const [display_time, setDisplayTime] = useState(props.item.display_time ? props.item.display_time : '5 to 7 minutes');
 
@@ -48,6 +48,7 @@ export default function ProjectChooser(props) {
         update.maxtime = maxtime;
         update.display_time = display_time;
         update.intro = intro;
+        console.log(update);
         updateRole(update);
         if(exit)
             setEdit('');

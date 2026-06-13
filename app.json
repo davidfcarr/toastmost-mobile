@@ -2,7 +2,7 @@
   "expo": {
     "name": "Toastmost",
     "slug": "toastmost",
-    "version": "1.0.25",
+    "version": "1.0.27",
     "orientation": "portrait",
     "icon": "./assets/images/ToastmostMobileLogo.png",
     "scheme": "toastmost",
@@ -16,7 +16,6 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "enableHermes": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.carrcommunications.toastmost"
     },
@@ -34,7 +33,18 @@
     },
     "plugins": [
       "expo-router",
-      "expo-build-properties"
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.0.21",
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36
+          }
+        }
+      ],
+      "expo-asset",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
