@@ -8,6 +8,7 @@ import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from '../store';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 import { useKeepAwake } from 'expo-keep-awake';
+import { useIsFocused } from 'expo-router';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -22,7 +23,12 @@ export function ErrorBoundary({ error, retry }) {
 }
 
 export default function Timer (props) {
-  useKeepAwake();
+  const isFocused = useIsFocused();
+
+  // The hook will only prevent sleeping if the tag is actively focused
+  if (isFocused) {
+    useKeepAwake();
+  }
 
   const {queryData,agenda} = useClubMeetingStore();
   const members = (queryData && queryData.members) ? queryData.members : [];
