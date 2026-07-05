@@ -33,19 +33,33 @@ export default function Settings (props) {
     const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
     
-    function addFromUrl() {
+function addFromUrl() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
         console.log('queryParams',queryParams);
         if(queryParams.code && queryParams.domain) {
+          const newClub = {
+            domain: queryParams.domain,
+            code: queryParams.code,
+            url: makeUrl(queryParams.domain, queryParams.code)
+          };
+          setAgenda({});
+          // 1. Set a helpful loading message in the store
+          setMessage(`Loading club data for ${queryParams.domain}. If it gets stuck, please click the refresh button at the top.`);
+
+          // 2. Update local state / store
           if(clubs.length) {
             const match = clubs.find((item) => item.domain == queryParams.domain);
-            if(!match)
-              addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
+            if(!match) addClub(newClub);
+          } else {
+            addClub(newClub);
           }
-          else
-            addClub({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
-          resetClubData({domain:queryParams.domain,code:queryParams.code,url:makeUrl(queryParams.domain,queryParams.code)});
+          
+          // 3. Re-initialize data sync
+          resetClubData(newClub);
+
+          // 4. Redirect immediately to the root screen (Agenda)
+          router.replace('/');
         }
         console.log(
           `Linked to app with hostname: ${hostname}, path: ${path} and data: ${JSON.stringify(
@@ -155,7 +169,7 @@ export default function Settings (props) {
                 <Pressable key={'remove'+index} onPress={() => { let current = [...clubs]; current.splice(index, 1); setClubs(current); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
-                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); resetClubData(newclubs[0]); } } style={styles.chooseButton}>
+                <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); resetClubData(newclubs[0]); setAgenda({}); } } style={styles.chooseButton}>
                   <Text style={styles.addButtonText}><TranslatedText term="Choose" /> {clubChoice.domain}</Text>
                 </Pressable>
               </View>

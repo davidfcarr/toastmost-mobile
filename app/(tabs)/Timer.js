@@ -7,6 +7,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from '../store';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
+import { useKeepAwake } from 'expo-keep-awake';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -21,6 +22,7 @@ export function ErrorBoundary({ error, retry }) {
 }
 
 export default function Timer (props) {
+  useKeepAwake();
 
   const {queryData,agenda} = useClubMeetingStore();
   const members = (queryData && queryData.members) ? queryData.members : [];

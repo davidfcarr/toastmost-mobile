@@ -43,9 +43,22 @@ export default function Agenda (props) {
     );
   }
 
-    if(!agenda || !agenda.html || !agenda.title)
-      return <SafeAreaView><BrandHeader /><Text>Loading ...</Text><Text>If this message does not appear after a few seconds, go back to the Home screen and ensure that the agenda is fully loaded. Check your club settings on the Settings screen and your network connection.</Text></SafeAreaView>;
-    console.log('agenda object',agenda);
+if (!agenda || !agenda.html || !agenda.title) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <BrandHeader />
+      <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+        <TranslatedText style={[styles.h1, { marginBottom: 15 }]} term="Reloading Club Data..." />
+        <Text style={{ textAlign: 'center', fontSize: 16, marginBottom: 10 }}>
+          We are currently loading your agenda. 
+        </Text>
+        <Text style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}>
+          💡 If this takes more than a few seconds, tap the circular **Refresh (🔄)** icon in the black header above to force a data update.
+        </Text>
+      </View>
+    </SafeAreaView>
+  );
+}
     const source = (agenda.html) ? {'html':'<html><body>'+(emailControls? agenda.html: agenda.html.replaceAll(/\- <a[^>]+[^<]+<\/a>/g,''))+'</body></html>'} : {};
       
       return (
