@@ -13,6 +13,7 @@ import { useFocusEffect } from 'expo-router';
 import { ErrorBoundaryProps } from 'expo-router';
 import * as Linking from 'expo-linking';
 import TranslatedText, {translateTerm} from '../TranslatedText'; /* <TranslatedText term="" /> */
+import * as Clipboard from 'expo-clipboard';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -65,6 +66,14 @@ export default function Voting(props) {
     setNextCheck(Date.now() + 60000);
     getBallots();
   }
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(votingdata.winners);
+  };
+
+  const copyWebLinkToClipboard = async () => {
+    await Clipboard.setStringAsync(votingdata.weblink);
+  };
 
       function getBallots() {
         console.log('get ballots called for agenda',queryData.agendas);
@@ -121,7 +130,6 @@ function sendBallotLink(toWho) {
       })  
 }
 
-
   if (!clubs || !clubs.length) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -174,6 +182,11 @@ function sendBallotLink(toWho) {
               <MaterialCommunityIcons name="refresh" size={24} color="black" />
               </Pressable>
             </View>
+
+              {votingdata.winners != '' ? <Pressable onPress={() => { copyToClipboard(); }} style={{ marginTop: 10, flexDirection: 'row' }}>
+              <MaterialCommunityIcons name="content-copy" size={24} color="black" /><Text>Copy Winners to Clipboard</Text>
+              </Pressable> : null}
+
 <RenderHtml source={source} contentWidth={width - 20} />
           </View>
         </ScrollView>
@@ -205,6 +218,11 @@ function sendBallotLink(toWho) {
         <Pressable onPress={() => { getBallots(); setMessage('Checking for updates ...'); }} style={{ marginLeft: 10 }}>
         <MaterialCommunityIcons name="refresh" size={24} color="black" /></Pressable>
         </View>
+
+        {votingdata.weblink ? <Pressable onPress={() => { copyWebLinkToClipboard(); }} style={{ margin: 10, flexDirection: 'row' }}>
+          <MaterialCommunityIcons name="content-copy" size={24} color="black" /><Text>Copy Web Voting Link to Clipboard</Text>
+        </Pressable> : null}
+
         <Text>As the Vote Counter, you create ballots based on the speakers and evaluators on the agenda, editing them as necessary.</Text>
               <Text>You can also create ballots for Table Topics speakers and votes on club business.</Text>
               {contestlist.map(
@@ -401,7 +419,7 @@ function sendBallotLink(toWho) {
                     return (<View key={'contest'+cindex}>
                         <Text style={styles.h2}><TranslatedText term={c} /></Text>
                         {currentBallot.contestants.length ? <TranslatedText term="Vote for:" /> : null}
-                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id,signature: (currentBallot.signature_required) ? queryData.name : '' }; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 20}}>{contestant}</Text></View>})}
+                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5, fontSize: 60}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id,signature: (currentBallot.signature_required) ? queryData.name : '' }; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 30}}>{contestant}</Text></View>})}
                         {currentBallot.signature_required ? <Text><TranslatedText term={'Vote will be signed by:'} /> {queryData.name}</Text> : null}
                     </View>)
                 }

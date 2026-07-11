@@ -30,7 +30,7 @@ function createStyles() {
       minusbutton: {backgroundColor: 'red',borderRadius:4,marginRight: 10, marginLeft: 10, justifyContent:'center',alignContentContent:'center', padding:10},
       nobutton: {backgroundColor: 'gray',borderRadius:4,marginRight: 10, marginLeft: 10, justifyContent:'center',alignContentContent:'center', padding:10},
       plusMinusText: {color: 'white', fontSize: 20, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' },
-      buttonText: {color: 'white', fontSize:15},
+      buttonText: {color: 'white', fontSize:15, alignItems: 'center', textAlign: 'center', justifyContent: 'center', alignContent: 'center'},
       choiceText: {color: '#222222', fontSize: 15},
       role: {marginLeft: 10},
       name: {marginLeft: 10},
@@ -43,7 +43,7 @@ function createStyles() {
         marginRight: 'auto',
         padding: 5,
       },
-      choice: {flexDirection:'row', alignItems: 'left',padding: 5, alignContent: 'center'},
+      choice: {flexDirection:'row', alignItems: 'left',padding: 5, marginBottom: 25,alignContent: 'center'},
       choiceText: {fontSize:30},
       inputContainer: {
         flexDirection: 'row',

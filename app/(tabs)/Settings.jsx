@@ -110,9 +110,12 @@ function addFromUrl() {
       return (
         <SafeAreaView  style={styles.container}>
         <View style={{width: '100%', flex: 1 }}>
+        <ScrollView>
         {!props.hideHeader ? <BrandHeader /> : null}
         <View>
           <View>
+          <TranslatedText term="To enable the app, look for the Enable Mobile App option in your club's WordPress dashboard. Follow that link for a QR code you can scan with the camera on your phone."  style={{fontStyle:'italic',margin: 10}} />
+          <TranslatedText term="Or use the form below to request access by email." style={{fontStyle:'italic',margin: 10}} />
           <TextInput
             style={styles.input}
             autoCapitalize="none"
@@ -148,13 +151,11 @@ function addFromUrl() {
     <TranslatedText term="Enter the email you use with your club website (or any email for demo.toastmost.org)." style={{fontStyle:'italic',margin: 10}} />
           <View>
           <Pressable onPress={() => {if(emailPrompt) {sendEmail({...tempClub,email:tempClub.code}); setTempClub({domain:'',code:''}); setEmailPrompt(false); } else { const newclub = {...tempClub,url:makeUrl(tempClub.domain,tempClub.code)}; addClub(newclub);setTempClub({domain:'',code:''});resetClubData(newclub);} }} style={styles.addButton}>
-            <Text style={styles.addButtonText}>{emailPrompt ? <TranslatedText term="Request by Email" /> : <TranslatedText term="Add" />}</Text>
+            <Text style={styles.addButtonText}>{emailPrompt ? <TranslatedText term="Request by Email" /> : <TranslatedText term="Add by Email" />}</Text>
           </Pressable>
           </View>
-          <TranslatedText term="Alternative: Open the camera on your phone and scan the QR code on the WordPress dashboard." style={{fontStyle:'italic',margin: 10}} />          
           </View>
           <View style={{flex:1}}>
-        <ScrollView>
           {!clubs || !clubs.length ? 
           <View>
          <TranslatedText style={styles.instructions} term="If you have an account on a Toastmost club website (or one that uses the compatible WordPress software), you can authorize access for the app using the same email as the one for your account on the club website." />
@@ -183,7 +184,7 @@ function addFromUrl() {
         </Pressable>
          : null}
   
-        {(queryData && different.length) ? different.map(
+        {(queryData && different.length) ? <View><Text>Click to Add Any of These:</Text>{different.map(
           (domain, index) => {
             return (
               <View style={{flexDirection: 'row'}} key={'different'+index}>
@@ -192,12 +193,12 @@ function addFromUrl() {
                 </Pressable>
               </View>
             )
-          }) : null
+          })}</View> : null
         }  
         <Promo />
-        </ScrollView>
         </View>
         <Text>{url}</Text>
+        </ScrollView>
         </View>
         </SafeAreaView> 
       )

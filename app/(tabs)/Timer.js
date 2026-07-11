@@ -8,7 +8,8 @@ import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from '../store';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, Link } from 'expo-router';
+import * as Clipboard from 'expo-clipboard';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -34,7 +35,10 @@ export default function Timer (props) {
 
   const {queryData,agenda} = useClubMeetingStore();
   const members = (queryData && queryData.members) ? queryData.members : [];
-  const timerOptions = [{'name':'','role':'Speaker','display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000}];
+  const speakerLabel = (queryData.translations && queryData.translations['Speaker']) ? queryData.translations['Speaker'] : 'Speaker';
+  const evaluatorLabel = (queryData.translations && queryData.translations['Evaluator']) ? queryData.translations['Evaluator'] : 'Evaluator';
+  const topicsLabel = (queryData.translations && queryData.translations['Table Topics']) ? queryData.translations['Table Topics'] : 'Table Topics';
+  const timerOptions = [{'name':'','role':speakerLabel,'display_time':'5 to 7 minutes','min':5*60*1000,'max':7*60*1000},{'role':topicsLabel,'name':'','display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000},{'role':evaluatorLabel,'name':'','display_time':'2 to 3 minutes','min':2 * 60 *1000,'max':3 * 60 * 1000}];
   const [timing,setTiming] = useState(timerOptions[0]);
   const [start, setStart] = useState(0);
   const [elapsed, setElapsed] = useState(0);
@@ -203,10 +207,10 @@ export default function Timer (props) {
         return derived;
     }
 
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(log.join('\n'));
+  };
     let match, min, max, display_time;
-    const speakerLabel = (queryData.translations && queryData.translations['Speaker']) ? queryData.translations['Speaker'] : 'Speaker';
-    const evaluatorLabel = (queryData.translations && queryData.translations['Evaluator']) ? queryData.translations['Evaluator'] : 'Evaluator';
-    const topicsLabel = (queryData.translations && queryData.translations['Table Topics']) ? queryData.translations['Table Topics'] : 'Table Topics';
     roles.forEach(
         (role) => {
             let minmax = {};
@@ -234,9 +238,13 @@ export default function Timer (props) {
             }
         }        
     );
-    timerOptions.push({'role':evaluatorLabel,'name':'','display_time':'2 to 3 minutes','min':2 * 60 *1000,'max':3 * 60 * 1000});
-    timerOptions.push({'role':speakerLabel,'name':'','display_time':'5 to 15 seconds','min':5000,"max":15000});
-    timerOptions.push({'role':speakerLabel,'name':'','display_time':'30 to 60 seconds','min':30 * 1000,"max":60 * 1000});
+    if(members)
+    members.forEach(
+        (member) => {
+          if(member.ID > 0 || typeof member.ID == 'string')
+            timerOptions.push({'role':topicsLabel,'name':member.name,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
+        }
+    );
     timerOptions.push({'role':speakerLabel,'name':'','display_time':'2 to 3 minutes','min':2*60*1000,"max":3*60*1000});
     timerOptions.push({'role':speakerLabel,'name':'','display_time':'3 to 5 minutes','min':3*60*1000,"max":5*60*1000});
     timerOptions.push({'role':speakerLabel,'name':'','display_time':'4 to 6 minutes','min':4*60*1000,"max":6*60*1000});
@@ -244,13 +252,8 @@ export default function Timer (props) {
     timerOptions.push({'role':speakerLabel,'name':'','display_time':'8 to 10 minutes','min':8*60*1000,"max":10*60*1000});
     timerOptions.push({'role':speakerLabel,'name':'','display_time':'10 to 12 minutes','min':10*60*1000,"max":12*60*1000});
     timerOptions.push({'role':speakerLabel,'name':'','display_time':'12 to 15 minutes','min':12*60*1000,"max":15*60*1000});
-    timerOptions.push({'role':topicsLabel,'name':'','display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
-    if(members)
-    members.forEach(
-        (member) => {
-            timerOptions.push({'role':topicsLabel,'name':member.name,'display_time':'1 to 2 minutes','min':60 * 1000,"max":120 * 1000});
-        }
-    );
+    timerOptions.push({'role':'1 Minute','name':'','display_time':'30 to 60 seconds','min':30 * 1000,"max":60 * 1000});
+    timerOptions.push({'role':'Test','name':'Test','display_time':'5 to 15 seconds','min':5000,"max":15000});
 
     return (
         <SafeAreaView style={{'flex':1}}>
@@ -292,7 +295,7 @@ export default function Timer (props) {
     onChangeText={(value) => { let up = {...timing}; up.display_time = value; const minmax = getMinMax(value); console.log('minmax',minmax); up.min = minmax.min; up.max = minmax.max; setTiming(up); }} />
     <View style={styles.buttonRow}>
     <Pressable style={styles.startButton} onPress={() => {setStart(new Date().getTime()); setElapsed(0);}}><Text style={styles.buttonText}><TranslatedText term="Start" /></Text></Pressable>
-    <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setLog(log); setColor('white'); }}><Text style={styles.buttonText}><TranslatedText term="Stop" /></Text></Pressable>
+    <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setLog(log); setColor('white'); copyToClipboard(); }}><Text style={styles.buttonText}><TranslatedText term="Stop" /></Text></Pressable>
     <Pressable style={styles.pauseButton} onPress={() => {setStart(0);setPause(elapsed);}}><Text style={styles.buttonText}><TranslatedText term="Pause" /></Text></Pressable>
     </View>
     <View style={styles.buttonRow}>
@@ -306,12 +309,12 @@ export default function Timer (props) {
             setShowDigits(newshow);
           }}
     /><TranslatedText term="Show elapsed time" />      
+        {showDigits && start && elapsed ? <Text style={{marginLeft: 20,fontSize: 20, textAlign: 'center'}}>{new Date(elapsed).toTimeString().match(/[0-9]{2}\:([^\s]+)/)[1]}</Text> : null}
     </View>
     {!roles.length && !members.length ? <Text style={{fontStyle:'italic'}}>Stand-alone mode. This Timer works best when connected to a club's membership list and meeting agendas.</Text> : null}
     {!start && log.length ? log.map( (entry,entryindex) => { return (entryindex == log.length - 1) ? <Text key={'log'+entryindex} style={{fontWeight: 'bold'}}>{entry}</Text> : <Text key={'log'+entryindex}>{entry}</Text> } ) : null}    
-    {!start && log.length ? <Pressable onPress={() => {setLog([])}} style={styles.clearButton}><TranslatedText style={styles.buttonText} term="Clear Log" /></Pressable> : null}    
+    {!start && log.length ? <View><Text style={{fontStyle:'italic'}}>Timing Log Copied to Clipboard</Text><Pressable onPress={() => {setLog([])}} style={styles.clearButton}><TranslatedText style={styles.buttonText} term="Clear Log" /></Pressable></View> : null}    
     <View style={{backgroundColor: color, width: '100%',height: 1000 }}>{'black' == color && <Text style={{color:'white'}}>Timing <Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text>}{['green','yellow','red'].includes(color) ? <View><Text style={{color:'yellow' == (color ? 'black' : 'white'),fontSize: 100}}>{color.toUpperCase()}<Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text></View> : null}
-        {showDigits && start && elapsed ? <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>{new Date(elapsed).toTimeString().match(/[0-9]{2}\:([^\s]+)/)[1]}</Text> : null}
     </View>
     </ScrollView>
     </View>

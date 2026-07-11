@@ -27,11 +27,13 @@
     "expo": "^55.0.6",
     "expo-asset": "~55.0.8",
     "expo-build-properties": "~55.0.9",
+    "expo-clipboard": "~55.0.14",
     "expo-constants": "~55.0.7",
     "expo-dev-client": "^55.0.16",
     "expo-font": "^55.0.4",
     "expo-keep-awake": "~55.0.8",
     "expo-linking": "~55.0.7",
+    "expo-localization": "~55.0.16",
     "expo-router": "^55.0.5",
     "expo-splash-screen": "~55.0.10",
     "expo-status-bar": "~55.0.4",
@@ -66,6 +68,9 @@
     "typescript": "~5.9.2"
   },
   "private": true,
+  "overrides": {
+    "expo-localization": "~55.0.16"
+  },
   "permissions": [
     {
       "android:name": "android.permission.DETECT_SCREEN_CAPTURE"

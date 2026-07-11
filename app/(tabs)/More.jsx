@@ -60,7 +60,7 @@ export default function More (props) {
                 <TranslatedText term={'Translation'} style={styles.blueText} />
             </Pressable>
             <Pressable style={styles.button} onPress={() => {router.navigate('/Settings')}}>
-                <TranslatedText term={'Settings'} style={styles.buttonText} />
+                <TranslatedText term={'Add Clubs'} style={styles.buttonText} />
             </Pressable>
             {(clubs.length > 1) ? clubs.map(
           (clubChoice, index) => {

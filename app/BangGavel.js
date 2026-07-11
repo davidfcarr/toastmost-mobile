@@ -44,11 +44,6 @@ export default function CleanGavelLoading() {
 
   return (
     <View style={styles.container}>
-      {/* Header Titles */}
-      <View style={styles.textContainer}>
-        <Text style={styles.titleText}>ORDER! ORDER!</Text>
-        <Text style={styles.subtitleText}>LET'S GET ORGANIZED.</Text>
-      </View>
 
       {/* Main Focus Stage */}
       <View style={styles.stage}>

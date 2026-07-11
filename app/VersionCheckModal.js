@@ -19,14 +19,14 @@ const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000; // in milliseconds
 export default function VersionCheckModal() {
   const [isVisible, setIsVisible] = useState(false);
   const [storeUrl, setStoreUrl] = useState('');
+  const { lastSnoozed, setLastSnoozed } = useClubMeetingStore();
 
   useEffect(() => {
     checkVersionRequirement();
   }, []);
 
   const checkVersionRequirement = async () => {
-    const { lastSnoozed, setLastSnoozed } = useClubMeetingStore();
-    
+
     // Skip version check on web
     if (!VersionCheck || Platform.OS === 'web') {
       return;
