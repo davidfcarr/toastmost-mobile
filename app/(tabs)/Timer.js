@@ -1,14 +1,14 @@
-import { Text, View, ScrollView, TextInput, Pressable, Dimensions, StyleSheet, AppState } from "react-native";
+import { Text, View, ScrollView, TextInput, Pressable, Switch, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect} from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Octicons } from '@expo/vector-icons'
 //import Autocomplete from 'react-native-autocomplete-input';
 import SelectDropdown from 'react-native-select-dropdown'
 import BrandHeader from '../BrandHeader';
 import useClubMeetingStore from '../store';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
-import { useKeepAwake } from 'expo-keep-awake';
-import { useIsFocused } from 'expo-router';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
+import { useFocusEffect } from 'expo-router';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -23,12 +23,14 @@ export function ErrorBoundary({ error, retry }) {
 }
 
 export default function Timer (props) {
-  const isFocused = useIsFocused();
-
-  // The hook will only prevent sleeping if the tag is actively focused
-  if (isFocused) {
-    useKeepAwake();
-  }
+  useFocusEffect(
+    useCallback(() => {
+      activateKeepAwakeAsync('timer-screen');
+      return () => {
+        deactivateKeepAwake('timer-screen').catch(() => {});
+      };
+    }, [])
+  );
 
   const {queryData,agenda} = useClubMeetingStore();
   const members = (queryData && queryData.members) ? queryData.members : [];
@@ -41,6 +43,7 @@ export default function Timer (props) {
   const [tracker, setTracker] = useState(null);
   const [log, setLog] = useState([]);
   const [clockColor, setClockColor] = useState('white');
+  const [showDigits, setShowDigits] = useState(false);
   useEffect(() => {
     if(start) {
         if(tracker)
@@ -292,10 +295,24 @@ export default function Timer (props) {
     <Pressable style={styles.stopButton} onPress={() => {setStart(0);setPause(0); let time = new Date(elapsed).toTimeString(); let match = time.match(/[0-9]{2}\:([^\s]+)/); log.push(match[1]+' '+timing.role+' '+timing.name); setLog(log); setColor('white'); }}><Text style={styles.buttonText}><TranslatedText term="Stop" /></Text></Pressable>
     <Pressable style={styles.pauseButton} onPress={() => {setStart(0);setPause(elapsed);}}><Text style={styles.buttonText}><TranslatedText term="Pause" /></Text></Pressable>
     </View>
+    <View style={styles.buttonRow}>
+    <Switch
+          trackColor={{false: '#767577', true: '#81b0ff'}}
+          thumbColor={showDigits ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          value={showDigits}
+          onValueChange={() => {
+            const newshow = !showDigits;
+            setShowDigits(newshow);
+          }}
+    /><TranslatedText term="Show elapsed time" />      
+    </View>
     {!roles.length && !members.length ? <Text style={{fontStyle:'italic'}}>Stand-alone mode. This Timer works best when connected to a club's membership list and meeting agendas.</Text> : null}
-    {!start && log.length ? log.map( (entry,entryindex) => { return (entryindex == log.length - 1) ? <Text style={{fontWeight: 'bold'}}>{entry}</Text> : <Text>{entry}</Text> } ) : null}    
+    {!start && log.length ? log.map( (entry,entryindex) => { return (entryindex == log.length - 1) ? <Text key={'log'+entryindex} style={{fontWeight: 'bold'}}>{entry}</Text> : <Text key={'log'+entryindex}>{entry}</Text> } ) : null}    
     {!start && log.length ? <Pressable onPress={() => {setLog([])}} style={styles.clearButton}><TranslatedText style={styles.buttonText} term="Clear Log" /></Pressable> : null}    
-    <View style={{backgroundColor: color, width: '100%',height: 1000 }}>{'black' == color && <Text style={{color:'white'}}>Timing <Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text>}{['green','yellow','red'].includes(color) ? <View><Text style={{color:'yellow' == (color ? 'black' : 'white'),fontSize: 100}}>{color.toUpperCase()}<Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text></View> : null}</View>
+    <View style={{backgroundColor: color, width: '100%',height: 1000 }}>{'black' == color && <Text style={{color:'white'}}>Timing <Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text>}{['green','yellow','red'].includes(color) ? <View><Text style={{color:'yellow' == (color ? 'black' : 'white'),fontSize: 100}}>{color.toUpperCase()}<Octicons name="clock" size={24} color={clockColor} selectable={undefined} style={{ width: 24 }} /></Text></View> : null}
+        {showDigits && start && elapsed ? <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>{new Date(elapsed).toTimeString().match(/[0-9]{2}\:([^\s]+)/)[1]}</Text> : null}
+    </View>
     </ScrollView>
     </View>
         </SafeAreaView>

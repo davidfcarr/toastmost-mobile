@@ -9,9 +9,10 @@ const ClubProvider = ({ children }) => {
   const [members, setMembers] = useState([]);
   const [user_id, setUserId] = useState(0);
   const [pollingInterval, setPollingInterval] = useState(null);
+  const [lastSnoozed, setLastSnoozed] = useState(null);
 
   return (
-    <ClubContext.Provider value={{ club, setClub, meeting, setMeeting, agenda, setAgenda, members, setMembers, user_id, setUserId, pollingInterval, setPollingInterval }}>
+    <ClubContext.Provider value={{ club, setClub, meeting, setMeeting, agenda, setAgenda, members, setMembers, user_id, setUserId, pollingInterval, setPollingInterval, lastSnoozed, setLastSnoozed }}>
       {children}
     </ClubContext.Provider>
   );

@@ -1,4 +1,4 @@
-import { Text, View, Pressable, FlatList, ScrollView, Switch, AppState } from "react-native";
+import { Text, View, Pressable, FlatList, ScrollView, Switch, AppState, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect, useRef } from "react";
 import { Octicons } from '@expo/vector-icons'
@@ -11,11 +11,14 @@ import BrandHeader from '../BrandHeader';
 import useAgenda from '../useAgenda';
 import Settings from './Settings';
 import { useFocusEffect } from 'expo-router';
-import useClubMeetingStore from '../store';
 import Promo from '../Promo';
 import TranslatedText from '../TranslatedText'; /* <TranslatedText term="" /> */
 import { Link } from 'expo-router';
-import RenderHtml from "react-native-render-html";
+import useClubMeetingStore from '../store';
+import OrderLoadingScreen from '../BangGavel';
+
+// Import VersionCheckModal - Metro automatically uses .web.js on web platform
+import VersionCheckModal from '../VersionCheckModal';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -64,6 +67,7 @@ export default function Home (props) {
     console.log('loading message agenda',agenda);
     console.log('loading message queryData',queryData);
     return <SafeAreaView><View><BrandHeader  isHome={true} /><Text>Loading ...</Text>
+    <OrderLoadingScreen />
             <Pressable
                   onPress={() => {
                     getToastData(clubs[0],'button');
@@ -261,6 +265,7 @@ export default function Home (props) {
               </View>
             ) : null}
           </View>
+        <VersionCheckModal />
         </SafeAreaView>
       );
 

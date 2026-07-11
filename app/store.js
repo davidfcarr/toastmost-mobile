@@ -16,6 +16,7 @@ const useClubMeetingStore = create((set) => ({
     logMissedTranslation: false,
     progress: '',
     newsite: '',
+    lastSnoozed: null,
     setNewsite: (l) => {
       set((state) => ({
         progress: l
@@ -69,6 +70,11 @@ const useClubMeetingStore = create((set) => ({
     setMessage: (msg) => {
       set((state) => ({
         message: msg
+      }))
+    },
+    setLastSnoozed: (timestamp) => {
+      set((state) => ({
+        lastSnoozed: timestamp
       }))
     },
 }))
