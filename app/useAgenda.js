@@ -6,6 +6,92 @@ import useClubMeetingStore from './store';
 import * as Linking from 'expo-linking';
 import { translateTerm } from './TranslatedText';
 
+function makeClubUrl(domain, code) {
+  return 'https://' + domain + '/wp-json/rsvptm/v1/mobile/' + code;
+}
+
+function haveClubsChanged(currentClubs, nextClubs) {
+  if(currentClubs.length !== nextClubs.length) {
+    return true;
+  }
+  return currentClubs.some((club, index) => {
+    const nextClub = nextClubs[index] || {};
+    return club.domain !== nextClub.domain || club.code !== nextClub.code || club.url !== nextClub.url;
+  });
+}
+
+function haveDomainsChanged(currentDomains, nextDomains) {
+  if(currentDomains.length !== nextDomains.length) {
+    return true;
+  }
+  return currentDomains.some((domain, index) => domain !== nextDomains[index]);
+}
+
+function normalizeDomains(domains = []) {
+  const seen = new Set();
+  return domains
+    .filter((domain) => typeof domain === 'string')
+    .map((domain) => domain.trim())
+    .filter((domain) => {
+      if(!domain || seen.has(domain)) {
+        return false;
+      }
+      seen.add(domain);
+      return true;
+    });
+}
+
+function mergeClubAccess(currentClubs, activeClub, otherDomains = [], accessCode = '', excludedDomains = []) {
+  if(!activeClub || !activeClub.domain) {
+    return currentClubs;
+  }
+
+  const blockedDomains = new Set(normalizeDomains(excludedDomains));
+  const siblingDomains = new Set(
+    [activeClub.domain, ...((Array.isArray(otherDomains) ? otherDomains : []).filter((domain) => typeof domain === 'string'))]
+      .map((domain) => domain.trim())
+      .filter((domain) => domain && !blockedDomains.has(domain))
+  );
+  const sharedCode = accessCode || activeClub.code;
+  if(!sharedCode) {
+    return currentClubs;
+  }
+
+  const merged = [];
+  const seen = new Set();
+
+  function pushClub(club, forceSharedCode = false) {
+    if(!club || typeof club.domain !== 'string') {
+      return;
+    }
+    const domain = club.domain.trim();
+    if(!domain || seen.has(domain)) {
+      return;
+    }
+    const code = forceSharedCode ? sharedCode : (club.code || sharedCode);
+    if(!code) {
+      return;
+    }
+    merged.push({
+      ...club,
+      domain,
+      code,
+      url: makeClubUrl(domain, code),
+    });
+    seen.add(domain);
+  }
+
+  pushClub(activeClub, true);
+  currentClubs.forEach((club) => {
+    pushClub(club, siblingDomains.has(club.domain.trim()));
+  });
+  siblingDomains.forEach((domain) => {
+    pushClub({domain}, true);
+  });
+
+  return merged;
+}
+
 export default function useAgenda() {
     //const [meeting, setMeeting] = useState(0);
     //const [clubs, setClubs] = useState([]);
@@ -19,7 +105,7 @@ export default function useAgenda() {
     const [user_id, setUserId] = useState(0);
     const [sendPlatform, setSendPlatform] = useState(true);
     const [pageUrl, setPageUrl] = useState('');
-    const {queryData, setQueryData,clubs, setClubs, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage, nextUpdate, setNextUpdate, setNewsite} = useClubMeetingStore();
+    const {queryData, setQueryData,clubs, setClubs, excludedDomains, setExcludedDomains, meeting, setMeeting,agenda,setAgenda, message, setMessage, language, setLanguage, nextUpdate, setNextUpdate, setNewsite} = useClubMeetingStore();
     const url = Linking.useURL();
     const appActive = AppState.currentState == 'active';
 
@@ -64,6 +150,16 @@ export default function useAgenda() {
       }
 
       try {
+        jsonValue = await AsyncStorage.getItem("excludedDomains")
+        const storedExcludedDomains = jsonValue != null ? JSON.parse(jsonValue) : null
+        if (Array.isArray(storedExcludedDomains)) {
+          setExcludedDomains(normalizeDomains(storedExcludedDomains));
+        }
+      } catch (e) {
+        console.error(e)
+      }
+
+      try {
         const l = await AsyncStorage.getItem("language")
         if (l) {
           setLanguage(l);
@@ -90,6 +186,15 @@ export default function useAgenda() {
     }
   }
 
+  const storeExcludedDomains = async () => {
+    try {
+      const jsonValue = JSON.stringify(excludedDomains)
+      await AsyncStorage.setItem("excludedDomains", jsonValue)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
 async function saveLanguage(l) {
   setLanguage(l);
   try {
@@ -110,6 +215,10 @@ async function saveLanguage(l) {
     }
     getToastData(clubs[0],'useEffect clubs list changed');
   }, [clubs])
+
+  useEffect(() => {
+    storeExcludedDomains();
+  }, [excludedDomains])
 
   useEffect(() => {
     if('' == message)
@@ -180,6 +289,10 @@ async function saveLanguage(l) {
       if(data.domain != clubs[0].domain) {
         return getToastData(clubs[0],'returned data domain not matching');
       }
+      const mergedClubs = mergeClubAccess(clubs, currentClub, data.other_domains, currentClub.code || data.code, excludedDomains);
+      if(haveClubsChanged(clubs, mergedClubs)) {
+        setClubs(mergedClubs);
+      }
       setLastUpdate(timeNow);
       setQueryData(data);
       console.log('clear newsite after successful update');
@@ -234,11 +347,26 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
   }
 
   function addClub (newclub) {
-    newclub.url = 'https://'+newclub.domain+'/wp-json/rsvptm/v1/mobile/'+newclub.code;
-    const newclubs = [newclub, ...clubs]
+    newclub.url = makeClubUrl(newclub.domain, newclub.code);
+    const normalizedDomain = newclub.domain.trim();
+    const nextExcludedDomains = excludedDomains.filter((domain) => domain !== normalizedDomain);
+    if(haveDomainsChanged(excludedDomains, nextExcludedDomains)) {
+      setExcludedDomains(nextExcludedDomains);
+    }
+    const newclubs = mergeClubAccess(clubs, newclub, [], newclub.code, nextExcludedDomains);
     setClubs(newclubs);
     setMessage('New club set to '+newclub.domain);
     router.replace('/');
+  }
+
+  function removeClub (domainToRemove) {
+    const normalizedDomain = domainToRemove.trim();
+    const nextClubs = clubs.filter((club) => club.domain.trim() !== normalizedDomain);
+    setClubs(nextClubs);
+    const nextExcludedDomains = normalizeDomains([...excludedDomains, normalizedDomain]);
+    if(haveDomainsChanged(excludedDomains, nextExcludedDomains)) {
+      setExcludedDomains(nextExcludedDomains);
+    }
   }
 
   function updateClub (input, name) {
@@ -355,6 +483,6 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
   }
       
    return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
-    addClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, agenda, members, user_id, 
+    addClub, removeClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, agenda, members, user_id, 
     emailAgenda, absence, saveLanguage, suggestTranslations, getProgress, initToastmost, appActive, resetClubData};
 }

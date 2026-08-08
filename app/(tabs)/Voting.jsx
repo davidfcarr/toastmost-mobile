@@ -62,17 +62,31 @@ export default function Voting(props) {
       }
 }, []);
 
-  if(Date.now() > nextCheck && pageUrl.includes('Voting') && appActive) {
-    setNextCheck(Date.now() + 60000);
-    getBallots();
-  }
+  useEffect(() => {
+    if(!pageUrl.includes('Voting') || !appActive) {
+      return;
+    }
+    if(Date.now() > nextCheck) {
+      setNextCheck(Date.now() + 60000);
+      getBallots();
+    }
+  }, [appActive, nextCheck, pageUrl]);
+
+  useEffect(() => {
+    if(votingdata.post_id && votingdata.post_id != agenda.post_id) {
+      setVotingdata({});
+      setNextCheck(Date.now());
+    }
+  }, [agenda.post_id, votingdata.post_id]);
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(votingdata.winners);
+    setMessage('Winners list copied to clipboard. You can paste it into an email or text message to send to members.');
   };
 
   const copyWebLinkToClipboard = async () => {
     await Clipboard.setStringAsync(votingdata.weblink);
+    setMessage('Web voting link copied to clipboard. You can paste it into an email or text message to send to members.');
   };
 
       function getBallots() {
@@ -110,6 +124,7 @@ export default function Voting(props) {
   function sendVotingUpdate(update) {
     const ts = new Date().getTime();
     const url = 'https://'+club.domain+'/wp-json/rsvptm/v1/regularvoting/'+agenda.post_id+'?mobile='+club.code+'&t='+ts;
+    setMessage('Saving ...');
     fetch(url, {method: 'POST', body: JSON.stringify(update)}).then((res) => res.json()).then((data) => {
       setMessage('');
       setVotingdata(data);
@@ -122,6 +137,7 @@ export default function Voting(props) {
 
 function sendBallotLink(toWho) {
   console.log('sendBallotLink',toWho);
+    setMessage('Sending ballot link ...');
     fetch(clubs[0].url, {method: 'POST', body: JSON.stringify({sendBallot:toWho,post_id:agenda.post_id})}).then((res) => res.json()).then((data) => {
         setMessage('Sent ballot link to '+toWho+' by email');
       }).catch((e) => {
@@ -183,7 +199,7 @@ function sendBallotLink(toWho) {
               </Pressable>
             </View>
 
-              {votingdata.winners != '' ? <Pressable onPress={() => { copyToClipboard(); }} style={{ marginTop: 10, flexDirection: 'row' }}>
+              {votingdata.winners && votingdata.winners != '' ? <Pressable onPress={() => { copyToClipboard(); }} style={{ marginTop: 10, flexDirection: 'row' }}>
               <MaterialCommunityIcons name="content-copy" size={24} color="black" /><Text>Copy Winners to Clipboard</Text>
               </Pressable> : null}
 
@@ -292,9 +308,10 @@ function sendBallotLink(toWho) {
         value={currentBallot.signature_required}
       /><TranslatedText term="Signature required (example: voting in a new member)." /></View>
       </View>                    
-                        {currentBallot.status == 'publish' ? <View><Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'draft'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Unpublish</Text></Pressable></Text></View> 
-                        : <Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'publish'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});} }><Text style={styles.buttonText}>Publish</Text></Pressable></Text>}
-                <Pressable style={[styles.button,{backgroundColor:'red'}]} onPress={() => { const bigUpdate = {...votingdata.ballot}; delete bigUpdate[c]; console.log('ballot update for '+c,bigUpdate); setMessage('Delete: '+c); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier}); }}><TranslatedText term="Delete" style={styles.buttonText} /></Pressable>
+                        {currentBallot.status == 'publish' ? <View><Text>Published</Text><Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'draft'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier}); setMessage('Unpublishing ...'); } }><Text style={styles.buttonText}>Unpublish</Text></Pressable></Text></View> 
+                        : <Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'publish'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});  setMessage('Publishing ...'); } }><Text style={styles.buttonText}>Publish</Text></Pressable></Text>}
+                <Pressable style={[styles.button,{backgroundColor:'red'}]} onPress={() => { const bigUpdate = {...votingdata.ballot}; delete bigUpdate[c]; console.log('ballot update for '+c,bigUpdate); setMessage('Delete: '+c); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});  setMessage('Deleting ...'); }}><TranslatedText term="Delete" style={styles.buttonText} /></Pressable>
+                <Text>{message}</Text>
                 </View>
                 }
             )}
@@ -419,16 +436,17 @@ function sendBallotLink(toWho) {
                     return (<View key={'contest'+cindex}>
                         <Text style={styles.h2}><TranslatedText term={c} /></Text>
                         {currentBallot.contestants.length ? <TranslatedText term="Vote for:" /> : null}
-                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5, fontSize: 60}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id,signature: (currentBallot.signature_required) ? queryData.name : '' }; console.log('vote',vote); sendVotingUpdate(vote);} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 30}}>{contestant}</Text></View>})}
+                        {currentBallot.contestants.map((contestant,index) => {return <View style={styles.choice} key={'contestant'+index}><Pressable style={{backgroundColor: 'black',padding:5,borderRadius: 8, marginRight: 5, fontSize: 60, width: 100}} onPress={() => {const vote = {'vote':contestant,'key':c,identifier:identifier,post_id:agenda.post_id,signature: (currentBallot.signature_required) ? queryData.name : '' }; console.log('vote',vote); sendVotingUpdate(vote); setMessage('Saving ...')} }><Text style={styles.buttonText}>✓</Text></Pressable><Text style={{fontSize: 30}}>{contestant}</Text></View>})}
                         {currentBallot.signature_required ? <Text><TranslatedText term={'Vote will be signed by:'} /> {queryData.name}</Text> : null}
                     </View>)
                 }
             )}
-          {!votingdata.is_vote_counter && (!openBallots) ? 
-          <View><Text>The current vote counter is "{(votingdata.vote_counter_name) ? votingdata.vote_counter_name : '(none assigned)'}" but no ballots have been created yet.</Text>
-          <Text style={styles.h2}><TranslatedText term='Take over as Vote Counter?' /></Text>
+          {!votingdata.is_vote_counter ? 
+          <View><Text style={styles.h2}>Vote counter: {(votingdata.vote_counter_name.trim()) ? votingdata.vote_counter_name : '(none assigned)'}</Text>
+          {!votingdata.vote_counter_logged_in ? <View><Text style={styles.h2}><TranslatedText term='Take over as Vote Counter?' /></Text>
           <Text>If no Vote Counter is available, any member can assume the role.</Text>
           {votingdata.authorized_user ? <View><Pressable style={styles.button} onPress={() => {sendVotingUpdate({post_id:agenda.post_id,identifier:identifier,take_vote_counter:true}) }}><Text style={styles.buttonText}><TranslatedText term='Take Role' /></Text></Pressable></View> : null}
+          </View> : null}
           </View> : null}
           {votingdata.is_vote_counter ? <View><Text style={styles.h2}><TranslatedText term='Back to Vote Counter Controls?' /></Text>
           <Pressable style={styles.button} onPress={() => {setControls('')} }><Text style={styles.buttonText}><TranslatedText term='Go Back' /></Text></Pressable></View> : null}
