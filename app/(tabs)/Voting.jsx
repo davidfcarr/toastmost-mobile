@@ -14,6 +14,7 @@ import { ErrorBoundaryProps } from 'expo-router';
 import * as Linking from 'expo-linking';
 import TranslatedText, {translateTerm} from '../TranslatedText'; /* <TranslatedText term="" /> */
 import * as Clipboard from 'expo-clipboard';
+import { buildCloseBallotPayload, isSignedBallotClosable } from '../../votingBallotUtils';
 
 export function ErrorBoundary({ error, retry }) {
   return (
@@ -43,6 +44,7 @@ export default function Voting(props) {
   const [signatureRequired,setSignatureRequired] = useState(false);
   const [yesNo,setYesNo] = useState(false);
   const [votesToAdd,setVotesToAdd] = useState(false);
+  const [closeBallotSelection,setCloseBallotSelection] = useState(0);
   const [pollingInterval,setPollingInterval] = useState(null);
   const { width } = useWindowDimensions();
   const [appIsReady, setAppIsReady] = React.useState(false);
@@ -203,7 +205,8 @@ function sendBallotLink(toWho) {
               <MaterialCommunityIcons name="content-copy" size={24} color="black" /><Text>Copy Winners to Clipboard</Text>
               </Pressable> : null}
 
-<RenderHtml source={source} contentWidth={width - 20} />
+<View style={{ marginLeft: 15, marginRight: 15 }}><RenderHtml source={source} contentWidth={width - 20} />
+</View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -248,7 +251,8 @@ function sendBallotLink(toWho) {
                     const currentBallot = votingdata.ballot[c];
                     console.log('currentBallot key',c);
                     console.log('currentBallot',currentBallot);
-                    if(!currentBallot || !currentBallot.contestants)
+                    const canCloseSignedBallot = isSignedBallotClosable(currentBallot, votingdata);
+                    if(!currentBallot || !currentBallot.contestants || currentBallot.status === 'closed')
                       return;
                     return <View key={'contest'+cindex}>
                         <Text style={styles.h2}>{c}</Text>
@@ -308,7 +312,10 @@ function sendBallotLink(toWho) {
         value={currentBallot.signature_required}
       /><TranslatedText term="Signature required (example: voting in a new member)." /></View>
       </View>                    
-                        {currentBallot.status == 'publish' ? <View><Text>Published</Text><Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'draft'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier}); setMessage('Unpublishing ...'); } }><Text style={styles.buttonText}>Unpublish</Text></Pressable></Text></View> 
+                        {currentBallot.status == 'publish' ? <View><Text>Published</Text><Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'draft'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier}); setMessage('Unpublishing ...'); } }><Text style={styles.buttonText}>Unpublish</Text></Pressable></Text>
+                        {canCloseSignedBallot ? <View><Pressable style={styles.button} onPress={() => { const closePayload = buildCloseBallotPayload(currentBallot.ballot_post_id, agenda.post_id, identifier); console.log('close signed ballot payload', closePayload); sendVotingUpdate(closePayload); setMessage('Closing voting ...'); } }><Text style={styles.buttonText}>Close Voting</Text></Pressable></View> : ''}
+                        {currentBallot.signature_required && votingdata.signed_ballot_link ? <Pressable style={styles.button} onPress={async () => { await Clipboard.setStringAsync(votingdata.signed_ballot_link); setMessage('Signed ballot link copied to clipboard.'); }}><Text style={styles.buttonText}>Copy Signed Ballot Link</Text></Pressable> : null}
+                        </View> 
                         : <Text><Pressable style={styles.button} onPress={() => { const update = {...currentBallot,status:'publish'}; const bigUpdate = {...votingdata.ballot}; bigUpdate[c] = update; console.log('ballot update for '+c,bigUpdate); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});  setMessage('Publishing ...'); } }><Text style={styles.buttonText}>Publish</Text></Pressable></Text>}
                 <Pressable style={[styles.button,{backgroundColor:'red'}]} onPress={() => { const bigUpdate = {...votingdata.ballot}; delete bigUpdate[c]; console.log('ballot update for '+c,bigUpdate); setMessage('Delete: '+c); sendVotingUpdate({ballot:bigUpdate,post_id:agenda.post_id,identifier:identifier});  setMessage('Deleting ...'); }}><TranslatedText term="Delete" style={styles.buttonText} /></Pressable>
                 <Text>{message}</Text>
@@ -367,6 +374,32 @@ function sendBallotLink(toWho) {
                     </View>
                 }
             )}
+            {Array.isArray(votingdata.open_club_ballots) && votingdata.open_club_ballots.length ? <View>
+                <Text style={styles.h2}>Close Ballots (Signed Votes)</Text>
+                <Text>Once you have received the required number of votes, close the voting. Voting results will be saved as a club minutes document on the website.</Text>
+                <SelectDropdown
+                  data={[
+                    { value: 0, label: 'Select Ballot to Close' },
+                    ...votingdata.open_club_ballots.map((item) => typeof item === 'object' ? item : { value: item, label: item })
+                  ]}
+                  defaultValue={{ value: 0, label: 'Select Ballot to Close' }}
+                  onSelect={(selectedItem) => { setCloseBallotSelection(Number(selectedItem && selectedItem.value ? selectedItem.value : 0)); }}
+                  renderButton={(selectedItem, isOpened) => (
+                    <View style={styles.dropdownButtonStyle}>
+                      <Octicons name="chevron-down" size={24} color='black' selectable={undefined} style={{ width: 24 }} />
+                      <Text style={styles.dropdownButtonTxtStyle}>{selectedItem && selectedItem.label}</Text>
+                    </View>
+                  )}
+                  renderItem={(item, index, isSelected) => (
+                    <View key={index} style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+                      <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
+                    </View>
+                  )}
+                  showsVerticalScrollIndicator={false}
+                  dropdownStyle={styles.dropdownMenuStyle}
+                />
+                <Pressable style={styles.button} onPress={() => { if(!closeBallotSelection) { setMessage('Select a ballot to close.'); return; } const payload = buildCloseBallotPayload(closeBallotSelection, agenda.post_id, identifier); console.log('close ballots selection payload', payload); sendVotingUpdate(payload); setCloseBallotSelection(0); }}><Text style={styles.buttonText}>Close</Text></Pressable>
+              </View> : null}
             <Text style={[styles.h2,{marginTop:100}]}><TranslatedText term='Send Web Voting Link' /></Text>
             {message ? <Text>{message}</Text> : null}
             <Text style={{textAlign: 'center'}} ><TranslatedText term="Members can vote using the app or a web link." /></Text>
