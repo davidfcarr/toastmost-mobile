@@ -48,6 +48,7 @@ const memberlist = [{ID:'',name:'Choose member'},...members];
 const defaultValue = {ID:'',name:'Choose member'};
 
 function sendSuggestion(payload) {
+  setMessage('Sending suggestion ...');
     fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(payload)}).then((res) => res.json()).then((data) => {
         setMessage('Successfully sent message');
         console.log('results of role update',data);

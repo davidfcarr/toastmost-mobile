@@ -7,6 +7,7 @@ function combineClubs(newclub, clubs) {
 
 const useClubMeetingStore = create((set) => ({
     clubs: [],
+  excludedDomains: [],
     meeting: 0,
     queryData: {},
     agenda: {},
@@ -45,6 +46,11 @@ const useClubMeetingStore = create((set) => ({
     setClubs: (newclubs) => {
       set((state) => ({
         clubs: newclubs
+      }))
+    },
+    setExcludedDomains: (newExcludedDomains) => {
+      set((state) => ({
+        excludedDomains: newExcludedDomains
       }))
     },
     setQueryData: (newq) => {

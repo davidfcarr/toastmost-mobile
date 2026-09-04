@@ -78,7 +78,7 @@ export default function CleanGavelLoading() {
       </View>
 
       {/* Footer Loading Text */}
-      <Text style={styles.loadingText}>LOADING...</Text>
+      <Text style={styles.loadingText}>LOADING Club Data...</Text>
     </View>
   );
 }
@@ -86,26 +86,12 @@ export default function CleanGavelLoading() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0D', // Deep retro black background
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: height * 0.08,
   },
   textContainer: {
     alignItems: 'center',
-  },
-  titleText: {
-    color: '#FFB800', // Classic golden font color
-    fontSize: 34,
-    fontWeight: '900',
-    letterSpacing: 2,
-  },
-  subtitleText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
-    marginTop: 6,
-    letterSpacing: 1,
   },
 
   /* MAIN DISPLAY STAGE */
@@ -182,7 +168,6 @@ const styles = StyleSheet.create({
 
   /* FOOTER */
   loadingText: {
-    color: '#4E4E5A',
     fontSize: 16,
     fontWeight: '800',
     letterSpacing: 4,

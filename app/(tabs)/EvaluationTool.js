@@ -156,6 +156,7 @@ export default function EvaluationTool(props) {
             post_id: queryData.post_id 
         };
         console.log('send evaluation', ev);
+        setMessage('Sending evaluation ...');
         fetch('https://' + clubs[0].domain + '/wp-json/rsvptm/v1/evaluation?speaker='+evaluation.ID+'&project='+evaluation.project+'_locale=user&mobile=' + clubs[0].code, {
             method: 'POST',
             headers: {
