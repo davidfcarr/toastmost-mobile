@@ -50,6 +50,7 @@ export default function More (props) {
           return (
             <SafeAreaView  style={styles.container}>    
               <BrandHeader />
+              <ScrollView style={{flex:1, width: '100%'}}>
               <Pressable style={styles.blueButton} onPress={() => {router.navigate('/Progress')}}>
                 <TranslatedText term={'Progress Report'} style={styles.yellowText} />
             </Pressable>
@@ -76,6 +77,7 @@ export default function More (props) {
         )
         : null}
 
-        </SafeAreaView>
+              </ScrollView>
+            </SafeAreaView>
     )
 } 

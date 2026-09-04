@@ -17,7 +17,7 @@ export default function BrandHeader(props) {
     const [lastName,setLastName] = useState('');
 
     function sendNameChange() {
-        
+      setMessage('Updating name ...');
         fetch(clubs[0].url+'?language=en_EN&mobileos=web', {
             method: 'POST',
             headers: {
@@ -71,7 +71,7 @@ return (
             {queryData && queryData.name  && queryData.name.includes('Test Account') ? <Pressable style={styles.plusbutton} onPress={() => {setChangeName(true)}}><TranslatedText style={styles.buttonText} term="Set Name" /></Pressable> : null}
           </View>
     }
-    {changeName ? <View><TranslatedText term="First Name" /><TextInput style={styles.input} onChangeText={(input) => setFirstName(input)} /><TranslatedText term="Last Name" /><TextInput  style={styles.input} onChangeText={(input) => setLastName(input)} /><Pressable onPress={() => {sendNameChange(),setChangeName(false),setMessage('Updating name')}} style={styles.button} ><TranslatedText style={styles.buttonText} term="Save" /></Pressable> </View> : null}
+    {changeName ? <View><TranslatedText term="First Name" /><TextInput style={styles.input} onChangeText={(input) => setFirstName(input)} /><TranslatedText term="Last Name" /><TextInput  style={styles.input} onChangeText={(input) => setLastName(input)} /><Pressable onPress={() => {sendNameChange(); setChangeName(false);}} style={styles.button} ><TranslatedText style={styles.buttonText} term="Save" /></Pressable> </View> : null}
     </View>
 )
 }

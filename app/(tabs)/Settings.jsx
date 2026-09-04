@@ -28,9 +28,9 @@ export function ErrorBoundary({ error, retry }) {
 
 export default function Settings (props) {
     const [emailPrompt,setEmailPrompt] = useState(false);
-    const {toastmostData, sendEmail, setReset, saveLanguage, resetClubData} = useAgenda();
+  const {toastmostData, sendEmail, setReset, saveLanguage, resetClubData, removeClub} = useAgenda();
     const url = Linking.useURL();
-    const {setAgenda, queryData, setQueryData,clubs, setClubs, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
+    const {setAgenda, queryData, setQueryData,clubs, setClubs, setExcludedDomains, setDefaultClub, addClub, meeting, setMeeting, message, setMessage, language} = useClubMeetingStore();
     const [tempClub,setTempClub] = useState(!clubs || !clubs.length ? {domain:'demo.toastmost.org',code:'',url:''} : {domain:'',code:'',url:''});
     
 function addFromUrl() {
@@ -167,7 +167,7 @@ function addFromUrl() {
           (clubChoice, index) => {
             return (
               <View style={{flexDirection: 'row'}} key={index}>
-                <Pressable key={'remove'+index} onPress={() => { let current = [...clubs]; current.splice(index, 1); setClubs(current); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}>
+                <Pressable key={'remove'+index} onPress={() => { removeClub(clubChoice.domain); } } style={[styles.chooseButton,{'backgroundColor': 'red','width':25}]}> 
                   <Text style={styles.addButtonText}>-</Text>
                 </Pressable>
                 <Pressable key={'choose'+index} onPress={() => {const newclubs = [...clubs]; newclubs.splice(index,1); newclubs.unshift(clubChoice); setClubs(newclubs); resetClubData(newclubs[0]); setAgenda({}); } } style={styles.chooseButton}>
@@ -179,22 +179,11 @@ function addFromUrl() {
         )
         : null}
         {(clubs.length > 0) ?
-        <Pressable onPress={() => {setReset(true); setClubs([]); } } style={styles.chooseButton}>
+        <Pressable onPress={() => {setReset(true); setClubs([]); setExcludedDomains([]); } } style={styles.chooseButton}>
         <TranslatedText style={styles.addButtonText} term="Reset Clubs List" />
         </Pressable>
          : null}
   
-        {(queryData && different.length) ? <View><Text>Click to Add Any of These:</Text>{different.map(
-          (domain, index) => {
-            return (
-              <View style={{flexDirection: 'row'}} key={'different'+index}>
-                <Pressable key={'choose'+index} onPress={() => {addDomainSame(domain); } } style={styles.chooseButton}>
-                  <Text style={styles.addButtonText}><TranslatedText props="Add" /> {domain}</Text>
-                </Pressable>
-              </View>
-            )
-          })}</View> : null
-        }  
         <Promo />
         </View>
         <Text>{url}</Text>

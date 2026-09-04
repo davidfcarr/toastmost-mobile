@@ -33,7 +33,7 @@ export default function Timer (props) {
     }, [])
   );
 
-  const {queryData,agenda} = useClubMeetingStore();
+  const {queryData,agenda,setMessage} = useClubMeetingStore();
   const members = (queryData && queryData.members) ? queryData.members : [];
   const speakerLabel = (queryData.translations && queryData.translations['Speaker']) ? queryData.translations['Speaker'] : 'Speaker';
   const evaluatorLabel = (queryData.translations && queryData.translations['Evaluator']) ? queryData.translations['Evaluator'] : 'Evaluator';

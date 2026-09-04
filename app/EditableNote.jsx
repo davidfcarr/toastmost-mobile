@@ -13,6 +13,7 @@ export default function EditableNote ({ item, post_id }) {
     const {clubs,setMessage,setQueryData} = useClubMeetingStore();
 
 function sendNoteUpdate(payload) {
+  setMessage('Saving note ...');
     fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(payload)}).then((res) => res.json()).then((data) => {
         setMessage('Updated note');
         console.log('results of note update update',data);
