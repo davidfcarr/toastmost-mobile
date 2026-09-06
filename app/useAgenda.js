@@ -449,15 +449,69 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
     })
   }
 
-  function absence(request) {
+  async function absence(request) {
     setMessage('Updating planned absence ...');
-    fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(request)}).then((res) => res.json()).then((data) => {
-      setMessage('');
+    try {
+      const postId = request?.post_id || queryData?.agendas?.[meeting]?.post_id || queryData?.post_id;
+      const actingUserId = request?.user_id || queryData?.user_id;
+      const mutationBody = {...request};
+      delete mutationBody.post_id;
+      delete mutationBody.user_id;
+
+      const clubDomain = clubs?.[0]?.domain || queryData?.domain;
+      const endpoint = `https://${clubDomain}/wp-json/rsvptm/v1/absences?post_id=${encodeURIComponent(postId || '')}&user_id=${encodeURIComponent(actingUserId || '')}&_locale=user`;
+      let data;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(mutationBody),
+        });
+        if(!res.ok) {
+          throw new Error('absence endpoint status ' + res.status);
+        }
+        data = await res.json();
+      } catch (endpointError) {
+        // Keep legacy support while clubs migrate to the new endpoint.
+        console.log('absence endpoint failed, trying legacy route', endpointError);
+        const legacyRes = await fetch(clubs[0].url, {method: 'POST', body: JSON.stringify(request)});
+        data = await legacyRes.json();
+      }
+
       console.log('results of absence',data);
-    }).catch((e) => {
+      setMessage('');
+      if (clubs[0]?.url) {
+        getToastData(clubs[0], 'absence update');
+      }
+      return data;
+    } catch (e) {
       console.log('update error',e);
-      setMessage('email agenda error');
-    })
+      setMessage('Unable to update planned absence');
+      return null;
+    }
+  }
+
+  async function fetchAbsences(request = {}) {
+    try {
+      const postId = request?.post_id || queryData?.agendas?.[meeting]?.post_id || queryData?.post_id;
+      const actingUserId = request?.user_id || queryData?.user_id;
+      const clubDomain = clubs?.[0]?.domain || queryData?.domain;
+
+      if(!clubDomain || !postId || !actingUserId) {
+        return null;
+      }
+
+      const endpoint = `https://${clubDomain}/wp-json/rsvptm/v1/absences?post_id=${encodeURIComponent(postId)}&user_id=${encodeURIComponent(actingUserId)}&_locale=user`;
+      const res = await fetch(endpoint);
+      if(!res.ok) {
+        throw new Error('fetchAbsences status ' + res.status);
+      }
+      return await res.json();
+    } catch (error) {
+      console.log('fetch absences error', error);
+      return null;
+    }
   }
 
   function getProgress(request) {
@@ -484,5 +538,5 @@ https://demo.toastmost.org/wp-json/rsvptm/v1/mobile/1-xbIc3a00?ask=role_status&r
       
    return {setDefaultClub, toastmostData, getToastData, setReset, lastUpdate, setLastUpdate, refreshTime, version,pageUrl,
     addClub, removeClub, updateClub, updateRole, sendEmail, takeVoteCounter, getAgenda, getCurrentClub, agenda, members, user_id, 
-    emailAgenda, absence, saveLanguage, suggestTranslations, getProgress, initToastmost, appActive, resetClubData};
+    emailAgenda, absence, fetchAbsences, saveLanguage, suggestTranslations, getProgress, initToastmost, appActive, resetClubData};
 }

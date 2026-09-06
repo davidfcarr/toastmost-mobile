@@ -1,6 +1,10 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
 
+jest.mock('@/hooks/useColorScheme', () => ({
+  useColorScheme: () => 'light',
+}));
+
 import { ThemedText } from '../ThemedText';
 
 it(`renders correctly`, () => {
